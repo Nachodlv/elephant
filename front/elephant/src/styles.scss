@@ -1,4 +1,70 @@
-/* You can add global styles to this file, and also import other style files */
+@import "app/vars";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+li{
+  display: block;
+}
+
+.clickable{
+  cursor: pointer;
+}
+
+.overflow-auto{
+  overflow: auto;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+}
+
+h1, h2, h3, h4 {
+  font-family: Calibri, arial, serif;
+  text-shadow: 0 3px 3px rgba(255,255,255,0.5);
+  color: $elephant-light-black;
+}
+h1 {
+  font-size: 36px;
+  letter-spacing: 5px;
+}
+p {
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+  color: $elephant-light-black;
+}
+span {
+  font-family: "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+// Form Validation
+input.ng-dirty.ng-invalid{
+  border: 1px solid $elephant-dark-red;
+}
+
+.ui-toast{
+  z-index: 99999!important;
+
+}
+.ui-toast .ui-toast-summary {
+  margin-top: 5px!important;
+}
+
+.ui-toast-icon {
+  left: 0.7em!important;
+  top: .6em!important;
+  font-size: 1.4em!important;
+}
+
+.ui-toast-close-icon {
+  font-size: 1em!important;
+  top: .5em!important;
+  right: .5em!important;
+}
+
+.full-width{
+  width: 100%;
+}
