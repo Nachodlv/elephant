@@ -1,4 +1,4 @@
-package com.example.sqLite_demo.dao.configuration;
+package com.example.sqLite_demo.repository.configuration;
 
 import javax.sql.DataSource;
 
