@@ -1,17 +1,14 @@
 package com.example.sqLite_demo.controller;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.example.sqLite_demo.model.Cube;
 import com.example.sqLite_demo.model.Point;
 import com.example.sqLite_demo.service.CubeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import com.example.sqLite_demo.model.Cube;
-import com.example.sqLite_demo.service.CubeServiceImpl;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/cube")
@@ -50,5 +47,8 @@ public class CubeController {
 		throw new ResponseStatusException(
 				HttpStatus.NOT_FOUND, "Cube Not Found");
 	}
-
+	@DeleteMapping(path = "/delete/{id}")
+	public void deletePoint(@PathVariable("id") Integer id) {
+		cubeService.delete(id);
+	}
 }

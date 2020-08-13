@@ -1,15 +1,13 @@
 package com.example.sqLite_demo.service;
 
-import java.util.List;
-import java.util.Optional;
-
-import com.example.sqLite_demo.repository.PointRepository;
+import com.example.sqLite_demo.model.Cube;
 import com.example.sqLite_demo.model.Point;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.sqLite_demo.repository.CubeRepository;
+import com.example.sqLite_demo.repository.PointRepository;
 import org.springframework.stereotype.Service;
 
-import com.example.sqLite_demo.repository.CubeRepository;
-import com.example.sqLite_demo.model.Cube;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CubeServiceImpl implements CubeService {
@@ -46,5 +44,8 @@ public class CubeServiceImpl implements CubeService {
 		return Optional.empty();
  	}
 
-
+	@Override
+	public void delete(Integer id) {
+    findCube(id).ifPresent(cubeRepository::delete);
+  }
 }
