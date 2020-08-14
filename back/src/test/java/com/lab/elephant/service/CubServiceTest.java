@@ -1,10 +1,9 @@
-package com.example.sqLite_demo.service;
+package com.lab.elephant.service;
 
-import com.example.sqLite_demo.model.Cube;
-import com.example.sqLite_demo.model.Point;
-import com.example.sqLite_demo.repository.CubeRepository;
-import com.example.sqLite_demo.repository.PointRepository;
-import com.example.sqLite_demo.repository.PointRepositoryTest;
+import com.lab.elephant.model.Cube;
+import com.lab.elephant.model.Point;
+import com.lab.elephant.repository.CubeRepository;
+import com.lab.elephant.repository.PointRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

@@ -1,9 +1,9 @@
-package com.example.sqLite_demo.repository;
+package com.lab.elephant.repository;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.sqLite_demo.model.Cube;
+import com.lab.elephant.model.Cube;
 import org.springframework.stereotype.Repository;
 
 @Repository

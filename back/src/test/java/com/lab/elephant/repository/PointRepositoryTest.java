@@ -1,6 +1,6 @@
-package com.example.sqLite_demo.repository;
+package com.lab.elephant.repository;
 
-import com.example.sqLite_demo.model.Point;
+import com.lab.elephant.model.Point;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,15 +1,12 @@
-package com.example.sqLite_demo.controller;
+package com.lab.elephant.controller;
 
-import com.example.sqLite_demo.model.Cube;
-import com.example.sqLite_demo.service.CubeServiceImpl;
+import com.lab.elephant.model.Cube;
+import com.lab.elephant.service.CubeServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;

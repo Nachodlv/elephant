@@ -1,7 +1,7 @@
-package com.example.sqLite_demo.service;
+package com.lab.elephant.service;
 
-import com.example.sqLite_demo.model.Cube;
-import com.example.sqLite_demo.model.Point;
+import com.lab.elephant.model.Cube;
+import com.lab.elephant.model.Point;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

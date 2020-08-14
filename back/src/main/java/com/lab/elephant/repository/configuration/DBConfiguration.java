@@ -1,4 +1,4 @@
-package com.example.sqLite_demo.repository.configuration;
+package com.lab.elephant.repository.configuration;
 
 import javax.sql.DataSource;
 
