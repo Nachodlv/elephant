@@ -1,16 +1,14 @@
-package com.example.sqLite_demo.controller;
+package com.lab.elephant.controller;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.example.sqLite_demo.model.Point;
-import com.example.sqLite_demo.service.CubeService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lab.elephant.model.Point;
+import com.lab.elephant.service.CubeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.sqLite_demo.model.Cube;
-import com.example.sqLite_demo.service.CubeServiceImpl;
+import com.lab.elephant.model.Cube;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController

@@ -1,4 +1,4 @@
-package com.example.sqLite_demo.model;
+package com.lab.elephant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 

@@ -1,8 +1,7 @@
-package com.example.sqLite_demo.repository;
+package com.lab.elephant.repository;
 
-import com.example.sqLite_demo.model.Point;
+import com.lab.elephant.model.Point;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

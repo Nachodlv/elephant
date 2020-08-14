@@ -1,15 +1,14 @@
-package com.example.sqLite_demo.service;
+package com.lab.elephant.service;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.example.sqLite_demo.repository.PointRepository;
-import com.example.sqLite_demo.model.Point;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lab.elephant.repository.PointRepository;
+import com.lab.elephant.model.Point;
 import org.springframework.stereotype.Service;
 
-import com.example.sqLite_demo.repository.CubeRepository;
-import com.example.sqLite_demo.model.Cube;
+import com.lab.elephant.repository.CubeRepository;
+import com.lab.elephant.model.Cube;
 
 @Service
 public class CubeServiceImpl implements CubeService {
