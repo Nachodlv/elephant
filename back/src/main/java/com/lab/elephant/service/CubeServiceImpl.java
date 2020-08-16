@@ -21,18 +21,22 @@ public class CubeServiceImpl implements CubeService {
 		this.pointRepository = pointRepository;
 	}
 
+	@Override
 	public List<Cube> findAllCubes() {
 		return cubeRepository.findAll();
 	}
 
+	@Override
 	public Cube addCube(Cube cube) {
 		return cubeRepository.save(cube);
 	}
 
+	@Override
 	public Optional<Cube> findCube(long id) {
 		return cubeRepository.findById(id);
 	}
 
+	@Override
 	public Optional<Cube> addPointToCube(long cubeId, Point point) {
 		Optional<Cube> optionalCube = cubeRepository.findById(cubeId);
 		if(optionalCube.isPresent()) {
@@ -45,5 +49,10 @@ public class CubeServiceImpl implements CubeService {
 		return Optional.empty();
  	}
 
+	@Override
+	public void deleteCube(long id) {
+	    if (findCube(id).isPresent())
+	        cubeRepository.deleteById(id);
+	}
 
 }

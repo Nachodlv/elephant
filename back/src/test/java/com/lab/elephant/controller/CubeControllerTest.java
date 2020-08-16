@@ -16,6 +16,7 @@ import java.util.Optional;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +54,21 @@ public class CubeControllerTest {
         mvc.perform(get("/cube/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void deleteCube_WhenIdExists_ShouldDeleteIt() throws Exception {
+        Cube cube = new Cube();
+        cube.setName("Cube1");
+        Cube cube2 = new Cube();
+        cube2.setName("Cube2");
+
+        List<Cube> allCubes = Arrays.asList(cube, cube2);
+        given(cubeService.findAllCubes()).willReturn(allCubes);
+
+        mvc.perform(delete("/cube/delete/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
 }

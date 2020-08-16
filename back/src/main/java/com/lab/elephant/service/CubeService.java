@@ -16,4 +16,6 @@ public interface CubeService {
     Optional<Cube> findCube(long id);
 
     Optional<Cube> addPointToCube(long cubeId, Point point);
+
+    void deleteCube(long id);
 }

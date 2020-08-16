@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping(value = "/cube")
 public class CubeController {
-	
+
 	private final CubeService cubeService;
 
 	public CubeController(CubeService cubeService) {
@@ -26,7 +26,7 @@ public class CubeController {
 		return cubeService.findAllCubes();
 	}
 
-	@GetMapping("{id}")
+	@GetMapping("/{id}")
 	public Cube getCube(@PathVariable("id") long id) {
 		Optional<Cube> cube = cubeService.findCube(id);
 		if(cube.isPresent()) return cube.get();
@@ -49,4 +49,8 @@ public class CubeController {
 				HttpStatus.NOT_FOUND, "Cube Not Found");
 	}
 
+	@DeleteMapping(path = "/delete/{id}")
+	public void deleteCube(@PathVariable("id") long id){
+		cubeService.deleteCube(id);
+	}
 }

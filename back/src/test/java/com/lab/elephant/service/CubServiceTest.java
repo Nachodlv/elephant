@@ -57,4 +57,19 @@ public class CubServiceTest {
         assertThat(optionalCube.get().getPoints().size()).isEqualTo(1);
         assertThat(optionalCube.get().getPoints().get(0)).isEqualTo(point);
     }
+
+    @Test
+    public void DeleteCube_WhenExistingIt_ShouldBeDeleted() {
+        Cube cube = new Cube();
+        cube.setName("Cubo");
+
+        Mockito.when(cubeRepository.findById(0L)).thenReturn(Optional.of(cube));
+
+        Optional<Cube> optionalCube = cubeService.findCube(0L);
+        assertThat(optionalCube.isPresent()).isTrue();
+
+        cubeService.deleteCube(cube.getId());
+
+        assertThat(cubeService.findAllCubes().contains(cube)).isFalse();
+    }
 }
