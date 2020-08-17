@@ -1,0 +1,40 @@
+<div class="p-d-flex p-dir-col" style="border: 1px solid #333333; padding: 1rem; margin: 10% 20%">
+  <div class="p-text-center p-mb-4" style="padding: 1rem; font-size: 2rem">
+    <span>Registrarse</span>
+  </div>
+
+  <form class="p-d-flex p-dir-col" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="p-grid p-col-align-end">
+      <div class="p-col-12 p-md-6">
+        <div class="p-inputgroup">
+          <input formControlName="firstName" type="text" pInputText placeholder="Nombre"/>
+        </div>
+      </div>
+
+      <div class="p-col-12 p-md-6">
+        <div class="p-inputgroup">
+          <input formControlName="password" type="text" pInputText placeholder="Contraseña"/>
+        </div>
+      </div>
+
+
+      <div class="p-col-12 p-md-6">
+        <div class="p-inputgroup">
+          <input formControlName="email" type="text" pInputText placeholder="Email"/>
+        </div>
+      </div>
+
+
+      <div class="p-col-12 p-md-6">
+        <div class="p-inputgroup">
+          <input type="text" pInputText placeholder="Confirmar contraseña"/>
+        </div>
+      </div>
+    </div>
+
+    <button pButton class="p-as-center p-mt-4" type="submit" label="Registrarse"></button>
+
+  </form>
+
+</div>
+

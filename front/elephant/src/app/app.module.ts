@@ -7,7 +7,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -21,12 +21,17 @@ import {MessageService} from 'primeng/api';
 import {ToastModule} from 'primeng/toast';
 import {ButtonModule} from 'primeng/button';
 import { HomeComponent } from './components/home/home.component';
+import {InputTextModule} from 'primeng/inputtext';
+import { RegisterComponent } from './components/register/register.component';
+import { LoginComponent } from './components/login/login.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ExamplePipe,
-    HomeComponent
+    HomeComponent,
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +40,9 @@ import { HomeComponent } from './components/home/home.component';
     HttpClientModule,
     FormsModule,
     ToastModule,
-    ButtonModule
+    ButtonModule,
+    InputTextModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: ErrorService },
