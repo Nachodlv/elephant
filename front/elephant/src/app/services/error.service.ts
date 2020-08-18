@@ -1,6 +1,4 @@
 import {ErrorHandler, Injectable, Injector} from '@angular/core';
-import {MessageService} from 'primeng/api';
-import {CommonMessage, ElephantMessage, MessageSeverity} from '../models/elephant-message.model';
 
 @Injectable()
 export class ErrorService implements ErrorHandler {
@@ -10,7 +8,7 @@ export class ErrorService implements ErrorHandler {
   }
 
   handleError(error: Error): void {
-    const messageService = this.injector.get(MessageService);
+    // const messageService = this.injector.get(MessageService);
 
     let message;
     // let stackTrace;
@@ -18,7 +16,7 @@ export class ErrorService implements ErrorHandler {
     // Client Error
     message = this.getClientMessage(error);
     // stackTrace = this.getClientStack(error);
-    messageService.add(new ElephantMessage(MessageSeverity.ERROR, CommonMessage.ERROR_TITLE, message));
+    // messageService.add(new ElephantMessage(MessageSeverity.ERROR, CommonMessage.ERROR_TITLE, message));
 
     // Always log errors
     // logger.logError(message, stackTrace);
