@@ -17,9 +17,6 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatCardModule} from '@angular/material/card';
 import {ErrorService} from './services/error.service';
 import {ExamplePipe} from './pipes/time-left.pipe';
-import {MessageService} from 'primeng/api';
-import {ToastModule} from 'primeng/toast';
-import {ButtonModule} from 'primeng/button';
 import { HomeComponent } from './components/home/home.component';
 
 @NgModule({
@@ -33,13 +30,10 @@ import { HomeComponent } from './components/home/home.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule,
-    ToastModule,
-    ButtonModule
+    FormsModule
   ],
   providers: [
-    { provide: ErrorHandler, useClass: ErrorService },
-    MessageService
+    { provide: ErrorHandler, useClass: ErrorService }
   ],
   bootstrap: [AppComponent]
 })

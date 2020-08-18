@@ -44,27 +44,3 @@ span {
 input.ng-dirty.ng-invalid{
   border: 1px solid $elephant-dark-red;
 }
-
-.ui-toast{
-  z-index: 99999!important;
-
-}
-.ui-toast .ui-toast-summary {
-  margin-top: 5px!important;
-}
-
-.ui-toast-icon {
-  left: 0.7em!important;
-  top: .6em!important;
-  font-size: 1.4em!important;
-}
-
-.ui-toast-close-icon {
-  font-size: 1em!important;
-  top: .5em!important;
-  right: .5em!important;
-}
-
-.full-width{
-  width: 100%;
-}
