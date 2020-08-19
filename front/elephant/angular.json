@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "elephant"
+  "defaultProject": "elephant",
+  "cli": {
+    "analytics": "35ced55b-0e74-4421-9c3e-b1d23a687164"
+  }
 }

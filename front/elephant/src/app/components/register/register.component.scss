@@ -1,0 +1,49 @@
+.div-container {
+  text-align: center;
+  border: 1px solid;
+  padding: 3%;
+  margin: 6% 30%;
+  border-radius: 1rem;
+
+}
+
+.span-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container {
+  margin-top: 5%;
+}
+
+.register-span {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.error-span {
+  border: 1px solid;
+  border-color: #e02222;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  margin: auto;
+  color: #e02222;
+}
+
+.form-button {
+  margin-top: 5%;
+  background-color: #37863a;
+  color: white;
+}
+
+.fakeTooltip {
+  position: absolute;
+  right: 46.5%;
+  margin: 1.8rem auto;
+  background: #151414;
+  border-radius: 0.25em;
+  padding: 0.75em;
+  color: white;
+  height: fit-content;
+  width: fit-content;
+}

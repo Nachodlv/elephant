@@ -1,0 +1,50 @@
+<div class="div-container">
+
+  <div class="span-container">
+    <span class="register-span">Registrarse</span>
+    <span class="error-span" *ngIf="showError">Ha ocurrido un error al registrarse, vuelva a intentarlo</span>
+  </div>
+
+  <form class="form-container" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <mat-grid-list cols="2" rowHeight="3rem">
+
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="fullName">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Constraseña</mat-label>
+          <input matInput formControlName="password" validateEqual="confirmPassword" reverse="true">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="fill">
+          <mat-label>Confirmar contraseña</mat-label>
+          <input matInput formControlName="confirmPassword" validateEqual="password">
+        </mat-form-field>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+
+    <button class="form-button"
+            type="submit"
+            mat-raised-button>
+      Registrarse
+    </button>
+    <div *ngIf="success" class="fakeTooltip">
+      ¡Registro exitoso!
+    </div>
+  </form>
+</div>
