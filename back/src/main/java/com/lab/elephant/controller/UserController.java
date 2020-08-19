@@ -2,10 +2,12 @@ package com.lab.elephant.controller;
 
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.util.Optional;
@@ -21,13 +23,13 @@ public class UserController {
   }
   
   @PostMapping(path = "/create")
-  public String createUser(@RequestBody @Valid User user) {
+  public void createUser(@RequestBody @Valid User user) {
     final Optional<User> userByEmail = userService.getByEmail(user.getEmail());
     if (userByEmail.isPresent())
-      return "400";
+      throw new ResponseStatusException(
+              HttpStatus.BAD_REQUEST, "Email already in use");
     
     userService.addUser(user);
-    return "200";
   }
   //todo ver bien que devolver.
 }

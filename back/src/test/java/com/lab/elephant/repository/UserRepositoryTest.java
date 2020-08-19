@@ -43,9 +43,7 @@ public class UserRepositoryTest {
   
     final Optional<User> user = userRepository.findByEmail(email);
     assertThat(user.isPresent()).isTrue();
-    assertThat(user.get()).isSameAs(userRepository.findById(1L).get());
-    assertThat(user.get()).isNotSameAs(userRepository.findById(2L).get());
-//    assertThat(user).isEqualTo(userRepository.findById(1L));
-//    assertThat(user).isNotEqualTo(userRepository.findById(2L));
+    assertThat(user.get().getUuid()).isEqualTo(userRepository.findById(1L).get().getUuid());
+    assertThat(user.get().getUuid()).isNotEqualTo(userRepository.findById(2L).get().getUuid());
   }
 }
