@@ -2,7 +2,6 @@
 
   <div class="span-container">
     <span class="register-span">Registrarse</span>
-    <span class="error-span" *ngIf="showError">Ha ocurrido un error al registrarse, vuelva a intentarlo</span>
   </div>
 
   <form class="form-container" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
@@ -43,8 +42,5 @@
             mat-raised-button>
       Registrarse
     </button>
-    <div *ngIf="success" class="fakeTooltip">
-      ¡Registro exitoso!
-    </div>
   </form>
 </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../services/user.service";
 import {Router} from "@angular/router";
+import {SnackbarService} from "../../services/snackbar.service";
 
 @Component({
   selector: 'app-register',
@@ -11,14 +12,12 @@ import {Router} from "@angular/router";
 export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
-  success = false;
-  showError = false;
-
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private snackBar : SnackbarService
   ) { }
 
   ngOnInit(): void {
@@ -34,17 +33,17 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
 
     if(this.registerForm.invalid){
+      this.snackBar.openSnackbar("¡Credenciales invalidas!", 0);
       return;
     }
 
     this.userService.register(this.registerForm.value)
       .subscribe(
         data => {
-          this.success = true;
-          this.router.navigate(['/login']);
+          this.snackBar.openSnackbar("¡Registro Exitoso!", 0);
+          //this.router.navigate(['/login']);
         },
         error => {
-          this.showError = true;
           console.error(error);
         }
       )
