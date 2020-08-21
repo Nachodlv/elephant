@@ -27,9 +27,8 @@ public class UserController {
     final Optional<User> userByEmail = userService.getByEmail(user.getEmail());
     if (userByEmail.isPresent())
       throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "Email already in use");
+              HttpStatus.CONFLICT, "Email already in use");
     
     userService.addUser(user);
   }
-  //todo ver bien que devolver.
 }

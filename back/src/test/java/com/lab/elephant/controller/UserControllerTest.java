@@ -41,7 +41,6 @@ public class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
-//            .andExpect(status());
   }
   
   @Test
@@ -55,6 +54,17 @@ public class UserControllerTest {
     user.setEmail(email);
     Optional<User> oUser = Optional.of(user);
     given(userService.getByEmail(email)).willReturn(oUser);
+    ObjectMapper o = new ObjectMapper();
+    final String json = o.writeValueAsString(user);
+    mvc.perform(post("/user/create").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isConflict());
+  }
+  
+  @Test
+  public void addUser_whenUserisNull_ShouldReturnBadRequest() throws Exception {
+    User user = null;
     ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
     mvc.perform(post("/user/create").content(json)

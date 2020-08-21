@@ -46,4 +46,26 @@ public class UserRepositoryTest {
     assertThat(user.get().getUuid()).isEqualTo(userRepository.findById(1L).get().getUuid());
     assertThat(user.get().getUuid()).isNotEqualTo(userRepository.findById(2L).get().getUuid());
   }
+  
+  @Test
+  public void findEmail_WhenEmailDoesNotExist() {
+    final User user1 = new User();
+    final User user2 = new User();
+    
+    user1.setFirstName("John");
+    user1.setLastName("Smith");
+    user1.setPassword("foGMeyUAX34D13s2");
+    user1.setEmail("john@elephant.com");
+  
+    user2.setFirstName("Steve");
+    user2.setLastName("Smith");
+    user2.setPassword("dja891D11@");
+    user2.setEmail("steve@elephant.com");
+  
+    userRepository.save(user1);
+    userRepository.save(user2);
+  
+    final Optional<User> user = userRepository.findByEmail("hi@gmail.com");
+    assertThat(user.isPresent()).isFalse();
+  }
 }
