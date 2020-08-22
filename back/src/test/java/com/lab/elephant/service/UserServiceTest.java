@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class UserServiceTest {
   
   @Autowired
   private UserService userService;
-  @Autowired
+  @MockBean
   private PasswordEncoder passwordEncoder;
   @MockBean
   private UserRepository userRepository;
@@ -61,8 +61,8 @@ public class UserServiceTest {
   
   @Test
   public void getByEmail_WhenEmailDoesExist() {
-    final User user1 = new User();
-    final User user2 = new User();
+    User user1 = new User();
+    User user2 = new User();
     
     String email = "john@elephant.com";
     
@@ -80,9 +80,10 @@ public class UserServiceTest {
     
     Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user1));
   
-    userService.addUser(user1);
-    userService.addUser(user2);
-    
+    user1 = userService.addUser(user1);
+    user2 = userService.addUser(user2);
+    user1.setUuid(0);
+    user2.setUuid(1);
     final Optional<User> user = userService.getByEmail(email);
     assertThat(user.isPresent()).isTrue();
     assertThat(user.get().getUuid()).isEqualTo(user1.getUuid());
@@ -91,8 +92,8 @@ public class UserServiceTest {
   
   @Test
   public void getByEmail_WhenEmailDoesNotExist() {
-    final User user1 = new User();
-    final User user2 = new User();
+    User user1 = new User();
+    User user2 = new User();
     
     user1.setFirstName("John");
     user1.setLastName("Smith");
@@ -104,9 +105,9 @@ public class UserServiceTest {
     user2.setPassword("dja891D11@");
     user2.setEmail("steve@elephant.com");
     
-    userService.addUser(user1);
-    userService.addUser(user2);
-    Mockito.when(userRepository.findByEmail("hi@gmail.com")).thenReturn(Optional.of(null));
+    user1 = userService.addUser(user1);
+    user2 = userService.addUser(user2);
+    Mockito.when(userRepository.findByEmail("hi@gmail.com")).thenReturn(Optional.empty());
   
     final Optional<User> user = userService.getByEmail("hi@gmail.com");
     assertThat(user.isPresent()).isFalse();

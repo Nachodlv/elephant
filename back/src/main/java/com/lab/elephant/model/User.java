@@ -65,4 +65,8 @@ public class User {
   public void setPassword(String password) {
     this.password = password;
   }
+  
+  public void setUuid(long uuid) {
+    this.uuid = uuid;
+  }
 }

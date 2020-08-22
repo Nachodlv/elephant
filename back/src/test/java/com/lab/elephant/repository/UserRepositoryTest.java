@@ -23,8 +23,8 @@ public class UserRepositoryTest {
   
   @Test
   public void findByEmail_WhenEmailDoesExist() {
-    final User user1 = new User();
-    final User user2 = new User();
+    User user1 = new User();
+    User user2 = new User();
   
     String email = "john@elephant.com";
   
@@ -38,8 +38,8 @@ public class UserRepositoryTest {
     user2.setPassword("dja891D11@");
     user2.setEmail("steve@elephant.com");
     
-    userRepository.save(user1);
-    userRepository.save(user2);
+    user1 = userRepository.save(user1);
+    user2 = userRepository.save(user2);
   
     final Optional<User> user = userRepository.findByEmail(email);
     assertThat(user.isPresent()).isTrue();
