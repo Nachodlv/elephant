@@ -1,0 +1,47 @@
+package com.lab.elephant.controller;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lab.elephant.model.Note;
+import com.lab.elephant.service.NoteServiceImpl;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import java.sql.Timestamp;
+import java.util.Date;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest(NoteController.class)
+public class NoteControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @MockBean
+    private NoteServiceImpl noteService;
+
+    @Test
+    public void addNewNote_WhenNoteCreated_ShouldReturnNewNote() throws Exception {
+        Timestamp ts = new Timestamp(new Date().getTime());
+        Note note = new Note("Nueva Nota", "", ts);
+
+        final String noteJson = objectMapper.writeValueAsString(note);
+
+        mvc.perform(post("/note/new")
+                .content(noteJson)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+    }
+
+}
