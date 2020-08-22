@@ -1,6 +1,7 @@
 package com.lab.elephant.repository;
 
 import com.lab.elephant.model.User;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,10 @@ public class UserRepositoryTest {
   
   @Autowired
   private UserRepository userRepository;
-  
+  @Before
+  public void deleteDB() {
+    userRepository.deleteAll();
+  }
   @Test
   public void findByEmail_WhenEmailDoesExist() {
     User user1 = new User();
@@ -40,7 +44,6 @@ public class UserRepositoryTest {
     
     user1 = userRepository.save(user1);
     user2 = userRepository.save(user2);
-  
     final Optional<User> user = userRepository.findByEmail(email);
     assertThat(user.isPresent()).isTrue();
     assertThat(user.get().getUuid()).isEqualTo(user1.getUuid());
