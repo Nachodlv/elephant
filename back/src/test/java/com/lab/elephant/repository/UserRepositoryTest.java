@@ -22,7 +22,7 @@ public class UserRepositoryTest {
   private UserRepository userRepository;
   
   @Test
-  public void findByEmailTest() {
+  public void findByEmail_WhenEmailDoesExist() {
     final User user1 = new User();
     final User user2 = new User();
   
@@ -43,12 +43,12 @@ public class UserRepositoryTest {
   
     final Optional<User> user = userRepository.findByEmail(email);
     assertThat(user.isPresent()).isTrue();
-    assertThat(user.get().getUuid()).isEqualTo(userRepository.findById(1L).get().getUuid());
-    assertThat(user.get().getUuid()).isNotEqualTo(userRepository.findById(2L).get().getUuid());
+    assertThat(user.get().getUuid()).isEqualTo(user1.getUuid());
+    assertThat(user.get().getUuid()).isNotEqualTo(user2.getUuid());
   }
   
   @Test
-  public void findEmail_WhenEmailDoesNotExist() {
+  public void findByEmail_WhenEmailDoesNotExist() {
     final User user1 = new User();
     final User user2 = new User();
     

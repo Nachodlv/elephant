@@ -44,7 +44,7 @@ public class UserControllerTest {
   }
   
   @Test
-  public void addUser_whenEmailDoesExist_ShouldReturn400() throws Exception {
+  public void addUser_whenEmailDoesExist_ShouldReturn409() throws Exception {
     
     String email = "john@elephant.com";
     User user = new User();
