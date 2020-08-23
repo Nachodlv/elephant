@@ -9,9 +9,9 @@ import java.util.Optional;
 @Service
 public interface NoteService {
 
-    Note addNote(Note note);
+  Note addNote(Note note);
 
-    Optional<Note> getNote(long id);
+  Optional<Note> getNote(long id);
 
-    List<Note> getAllNotes();
+  List<Note> getAllNotes();
 }

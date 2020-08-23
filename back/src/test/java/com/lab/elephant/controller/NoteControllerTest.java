@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Optional;
 
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,25 +25,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(NoteController.class)
 public class NoteControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
-    @Autowired
-    private ObjectMapper objectMapper;
-    @MockBean
-    private NoteServiceImpl noteService;
+  @Autowired
+  private MockMvc mvc;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @MockBean
+  private NoteServiceImpl noteService;
 
-    @Test
-    public void addNewNote_WhenNoteCreated_ShouldReturnNewNote() throws Exception {
-        Timestamp ts = new Timestamp(new Date().getTime());
-        Note note = new Note("Nueva Nota", "", ts);
+  @Test
+  public void addNewNote_WhenNoteCreated_ShouldReturnNewNote() throws Exception {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Nueva Nota", "", ts);
+    Optional<Note> optionalNote = Optional.of(note);
+    given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
+    final String noteJson = objectMapper.writeValueAsString(note);
+    mvc.perform(post("/note/new").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
 
-        final String noteJson = objectMapper.writeValueAsString(note);
+  @Test
+  public void addNewNote_WhenTitleLengthIsMoreThan60_ShouldReturnBadRequest() throws Exception {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Este titulo contiene mas de 60 letras, por lo cual debe tirar un error",
+            "", ts);
 
-        mvc.perform(post("/note/new")
-                .content(noteJson)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(status().isOk());
-    }
+    final String noteJson = objectMapper.writeValueAsString(note);
+
+    mvc.perform(post("/note/new").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest());
+  }
 
 }

@@ -7,55 +7,59 @@ import java.sql.Timestamp;
 @Table(name = "note")
 public class Note {
 
-    @Id
-    @GeneratedValue
-    private long uuid;
+  @Id
+  @GeneratedValue
+  private long uuid;
 
-    private String title;
+  private String title;
 
-    private String content;
+  private String content;
 
-    private Timestamp created;
+  private Timestamp created;
 
-    public Note(String title, String content, Timestamp created) {
-        this.title = title;
-        this.content = content;
-        this.created = created;
-    }
+  public Note(String title, String content, Timestamp created) {
+    this.title = title;
+    this.content = content;
+    this.created = created;
+  }
 
-    public Note() {
-    }
+  public Note(String title) {
+    this.title = title;
+  }
 
-    public long getUuid() {
-        return uuid;
-    }
+  public Note() {
+  }
 
-    public void setUuid(long uuid) {
-        this.uuid = uuid;
-    }
+  public long getUuid() {
+    return uuid;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setUuid(long uuid) {
+    this.uuid = uuid;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public String getContent() {
-        return content;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+  public String getContent() {
+    return content;
+  }
 
-    public Timestamp getCreated() {
-        return created;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public void setCreated(Timestamp created) {
-        this.created = created;
-    }
+  public Timestamp getCreated() {
+    return created;
+  }
+
+  public void setCreated(Timestamp created) {
+    this.created = created;
+  }
 
 }
