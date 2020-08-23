@@ -24,14 +24,14 @@
       <mat-grid-tile>
         <mat-form-field appearance="fill">
           <mat-label>Constraseña</mat-label>
-          <input matInput formControlName="password" validateEqual="confirmPassword" reverse="true">
+          <input type="password" matInput formControlName="password" appValidateEqual="confirmPassword" reverse="true">
         </mat-form-field>
       </mat-grid-tile>
 
       <mat-grid-tile>
         <mat-form-field appearance="fill">
           <mat-label>Confirmar contraseña</mat-label>
-          <input matInput formControlName="confirmPassword" validateEqual="password">
+          <input type="password" matInput formControlName="confirmPassword" appValidateEqual="password">
         </mat-form-field>
       </mat-grid-tile>
 

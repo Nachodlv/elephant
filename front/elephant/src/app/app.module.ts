@@ -10,7 +10,7 @@ import {ErrorService} from './services/error.service';
 import {ExamplePipe} from './pipes/time-left.pipe';
 import {HomeComponent} from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
-import {EqualValidator} from "./directives/equal-validator.directive";
+import {EqualValidator} from './directives/equal-validator.directive';
 
 @NgModule({
   declarations: [
