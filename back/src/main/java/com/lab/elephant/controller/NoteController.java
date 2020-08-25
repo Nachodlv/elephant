@@ -8,6 +8,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/note")
 public class NoteController {
