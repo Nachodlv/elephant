@@ -66,18 +66,23 @@ public class NoteControllerTest {
 
     noteService.addNote(note);
 
-    given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+    given(noteService.getNote(1L)).willReturn(Optional.of(note));
+    final String noteJson = objectMapper.writeValueAsString(note);
 
-    noteService.deleteNote(1);
-
-    mvc.perform(delete("/note/1/delete")
+    mvc.perform(delete("/note/delete/1").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
   }
 
   @Test
-  public void deleteNote_WhenNoteNotExists_ShouldReturnNotFound() {
+  public void deleteNote_WhenNoteNotExists_ShouldReturnNotFound() throws Exception {
+    given(noteService.getNote(1L)).willReturn(Optional.empty());
+
+    mvc.perform(delete("/note/delete/1")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound());
 
   }
 

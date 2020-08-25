@@ -12,10 +12,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 public class NoteServiceTest {
@@ -96,4 +98,32 @@ public class NoteServiceTest {
     assertThat(notes.containsAll(Arrays.asList(note1, note2))).isTrue();
   }
 
+  @Test
+  public void DeleteNote_WhenNoteExists_ShouldDeleteTheNote() {
+    Note note = new Note("This is the new note");
+
+    Mockito.when(noteRepository.findById(note.getUuid())).thenReturn(Optional.of(note));
+    noteService.addNote(note);
+
+    Mockito.when(noteRepository.save(note)).thenReturn(note);
+    Mockito.when(noteRepository.findAll()).thenReturn(Collections.singletonList(note));
+
+    List<Note> notes = noteService.getAllNotes();
+    assertThat(notes.size()).isEqualTo(1);
+    assertThat(notes.contains(note)).isTrue();
+
+
+    noteService.deleteNote(note.getUuid());
+
+    List<Note> noteList = noteService.getAllNotes();
+    assertThat(noteList.size()).isEqualTo(0);
+    assertThat(noteList.contains(note)).isFalse();
+  }
+
+  @Test
+  public void DeleteNote_WhenNoteNotExists_ShouldReturnNotFound() {
+    given(noteService.getNote(1L)).willReturn(Optional.empty());
+
+
+  }
 }

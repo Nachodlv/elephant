@@ -27,7 +27,7 @@ public class NoteController {
     return noteService.addNote(note);
   }
 
-  @DeleteMapping(path = "/{id}/delete")
+  @DeleteMapping(path = "/delete/{id}")
   public void deleteNote(@PathVariable("id") long id) {
     Optional<Note> optionalNote = noteService.getNote(id);
     if (optionalNote.isPresent()) {
