@@ -1,5 +1,11 @@
-<nav>
-  <h1 style="text-align: center" routerLink="/home">
+<mat-toolbar>
+  <h1 class="title-center" routerLink="/home">
     Elephant
   </h1>
-</nav>
+  <button style="color: white;" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item routerLink="/register">Register</button>
+  </mat-menu>
+</mat-toolbar>
