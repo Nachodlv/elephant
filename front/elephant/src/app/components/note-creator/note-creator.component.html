@@ -1,6 +1,6 @@
 <h2>Note create</h2>
 <form [formGroup]="noteForm" (ngSubmit)="createNote()">
-  <label>Name</label>
-  <input type="text" class="form-control" formControlName="name">
+  <label>Title</label>
+  <input type="text" class="form-control" formControlName="title" maxlength="60">
   <button type="submit" [disabled]="disabled()" class="btn btn-primary"> create note</button>
 </form>

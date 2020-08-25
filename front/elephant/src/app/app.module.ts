@@ -20,6 +20,7 @@ import {ExamplePipe} from './pipes/time-left.pipe';
 import { HomeComponent } from './components/home/home.component';
 import { NoteComponent } from './components/note/note.component';
 import { NoteCreatorComponent } from './components/note-creator/note-creator.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { NoteCreatorComponent } from './components/note-creator/note-creator.com
     ExamplePipe,
     HomeComponent,
     NoteComponent,
-    NoteCreatorComponent
+    NoteCreatorComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

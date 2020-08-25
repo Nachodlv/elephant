@@ -17,16 +17,16 @@ export class NoteCreatorComponent implements OnInit {
 
   ngOnInit() {
     this.noteForm = this.formBuilder.group({
-      name: ["", Validators.required]
+      title: ["", Validators.required]
     })
 
   }
 
- disabled(){return this.noteForm.value.name==="";}
+ disabled(){return this.noteForm.value.title==="";}
 
   createNote() {
-    console.log(this.noteForm.controls.name);
-    //note: Note = new Note(id,name);
+    console.log(this.noteForm.controls.title);
+    //note: Note = new Note(id,title);
     //la logica de cuando se hace una nota
     //send to Back/ api
   }

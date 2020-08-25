@@ -1,10 +1,14 @@
+import {Timestamp} from "rxjs";
+
 export class Note {
-  id: number;
-  name: string;
+  uuid: number;
+  title: string;
+  content: string;
+  created: string;
 
   constructor(id: number, name: string) {
-    this.id = id;
-    this.name = name;
+    this.uuid = id;
+    this.title = name;
   }
 
 }
