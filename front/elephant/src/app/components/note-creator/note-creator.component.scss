@@ -1,9 +1,10 @@
 .div-container {
   text-align: center;
   border: 1px solid;
-  padding: 3%;
-  margin: 4% 38%;
+  padding:2%;
+  margin: 10% 38%;
   border-radius: 1rem;
+  height: 10rem;
 }
 .span-container{
   display: flex;
@@ -11,28 +12,30 @@
 }
 .create-span{
   font-size: 2rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 .form-container {
   margin-top: 5%;
 }
 .form-button {
-  margin-top: 5%;
-  margin-left: 30%;
-  background-color: #37863a;
-  color: white;
+  margin-top: 10%;
+  margin-left: 50%;
+  background-color: white;
   border: 1px solid;
   border-radius: 0.3rem;
+  height: 2rem;
+  cursor: pointer;
 }
 .note-label{
-  margin-right:44%;
+  margin-right:36%;
 }
 .create-input{
   border: 1px solid;
   border-radius: 0.3rem;
 }
 .close-button{
-  text-align: right;
- margin-left: 10%;
-
+  margin-top: -13%;
+  margin-right: 3%;
+  margin-left: 96%;
+  cursor: pointer;
 }

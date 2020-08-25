@@ -1,12 +1,14 @@
 <div class="div-container">
   <div class="span-container">
-    <span class="create-span">Nueva Nota</span>
-    <span class="close-button" mat-button routerLink="/home"><mat-icon>close</mat-icon></span>
+    <span class="create-span">Nueva Nota
+    <p class="close-button" mat-button routerLink="/home"><mat-icon>close</mat-icon>
+    </p>
+    </span>
   </div>
 
 
   <form class="form-container" [formGroup]="noteForm" (ngSubmit)="createNote()">
-    <label class="note-label">Name</label>
+    <label class="note-label">Nombre</label>
 
     <br>
 
@@ -14,7 +16,7 @@
 
     <br>
 
-    <button type="submit" [disabled]="disabled()" class="form-button"> create note</button>
+    <button type="submit" [disabled]="disabled()" class="form-button"> Crear Nota</button>
 
   </form>
 </div>
