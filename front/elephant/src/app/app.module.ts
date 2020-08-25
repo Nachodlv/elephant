@@ -7,7 +7,7 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {HttpClientModule} from '@angular/common/http';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatInputModule} from '@angular/material/input';
@@ -18,19 +18,24 @@ import {MatCardModule} from '@angular/material/card';
 import {ErrorService} from './services/error.service';
 import {ExamplePipe} from './pipes/time-left.pipe';
 import { HomeComponent } from './components/home/home.component';
+import { NoteComponent } from './components/note/note.component';
+import { NoteCreatorComponent } from './components/note-creator/note-creator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ExamplePipe,
-    HomeComponent
+    HomeComponent,
+    NoteComponent,
+    NoteCreatorComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     { provide: ErrorHandler, useClass: ErrorService }
