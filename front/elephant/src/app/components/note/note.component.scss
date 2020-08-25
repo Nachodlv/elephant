@@ -1,8 +1,17 @@
-.create-button{
-  margin : 20px;
-  background-color: #eee;
+.create-button {
+  margin: 20px;
+  background-color: #cccccc;
+  width: 18rem;
+  height: 15rem;
+  border: 1px solid;
+  border-radius: 1rem;
 }
 
-.plus-create{
+.plus-create {
   font-size: 100px;
+  margin-right: 25%;
+}
+.create-text{
+  margin-top: 5%;
+  font-size: 20px;
 }
