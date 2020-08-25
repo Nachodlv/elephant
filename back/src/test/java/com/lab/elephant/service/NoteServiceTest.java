@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
 public class NoteServiceTest {
@@ -102,7 +101,7 @@ public class NoteServiceTest {
   public void DeleteNote_WhenNoteExists_ShouldDeleteTheNote() {
     Note note = new Note("This is the new note");
 
-    Mockito.when(noteRepository.findById(note.getUuid())).thenReturn(Optional.of(note));
+    Mockito.when(noteRepository.findById(1L)).thenReturn(Optional.of(note));
     noteService.addNote(note);
 
     Mockito.when(noteRepository.save(note)).thenReturn(note);
@@ -112,18 +111,15 @@ public class NoteServiceTest {
     assertThat(notes.size()).isEqualTo(1);
     assertThat(notes.contains(note)).isTrue();
 
-
     noteService.deleteNote(note.getUuid());
+
+    Mockito.when(noteRepository.findAll()).thenReturn(Collections.emptyList());
 
     List<Note> noteList = noteService.getAllNotes();
     assertThat(noteList.size()).isEqualTo(0);
     assertThat(noteList.contains(note)).isFalse();
+
+    assertThat(noteService.getAllNotes().contains(note)).isFalse();
   }
 
-  @Test
-  public void DeleteNote_WhenNoteNotExists_ShouldReturnNotFound() {
-    given(noteService.getNote(1L)).willReturn(Optional.empty());
-
-
-  }
 }

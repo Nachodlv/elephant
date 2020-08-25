@@ -83,7 +83,6 @@ public class NoteControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
-
   }
 
 }
