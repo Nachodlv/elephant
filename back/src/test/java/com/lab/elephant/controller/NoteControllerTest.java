@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,6 +58,27 @@ public class NoteControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void deleteNote_WhenNoteExists_ShouldDeleteIt() throws Exception {
+    Note note = new Note("This is the new note");
+
+    noteService.addNote(note);
+
+    given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+
+    noteService.deleteNote(1);
+
+    mvc.perform(delete("/note/1/delete")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  public void deleteNote_WhenNoteNotExists_ShouldReturnNotFound() {
+
   }
 
 }
