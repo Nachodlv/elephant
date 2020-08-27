@@ -27,6 +27,14 @@ public class NoteController {
     return noteService.addNote(note);
   }
 
+  @GetMapping("{id}")
+  public Note getNote(@PathVariable("id") long id) {
+    Optional<Note> note = noteService.getNote(id);
+    if (note.isPresent()) return note.get();
+    throw new ResponseStatusException(
+            HttpStatus.NOT_FOUND, "Note Not Found");
+  }
+
   @DeleteMapping(path = "/delete/{id}")
   public void deleteNote(@PathVariable("id") long id) {
     Optional<Note> optionalNote = noteService.getNote(id);
