@@ -34,4 +34,14 @@ public class NoteController {
     throw new ResponseStatusException(
             HttpStatus.NOT_FOUND, "Note Not Found");
   }
+
+  @DeleteMapping(path = "/delete/{id}")
+  public boolean deleteNote(@PathVariable("id") long id) {
+    Optional<Note> optionalNote = noteService.getNote(id);
+    if (optionalNote.isPresent()) {
+      noteService.deleteNote(id);
+      return true;
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+  }
 }
