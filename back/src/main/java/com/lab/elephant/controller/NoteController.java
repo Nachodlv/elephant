@@ -39,7 +39,8 @@ public class NoteController {
   public boolean deleteNote(@PathVariable("id") long id) {
     Optional<Note> optionalNote = noteService.getNote(id);
     if (optionalNote.isPresent()) {
-      return noteService.deleteNote(id);
+      noteService.deleteNote(id);
+      return true;
     }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
   }
