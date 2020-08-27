@@ -15,5 +15,5 @@ public interface NoteService {
 
   List<Note> getAllNotes();
 
-  void deleteNote(long id);
+  boolean deleteNote(long id);
 }
