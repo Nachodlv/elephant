@@ -8,7 +8,9 @@ import {User} from '../models/user-model';
 })
 export class UserService {
 
-  constructor(private httpService: HttpService) {
+  constructor(
+    private httpService: HttpService
+  ) {
   }
 
   register(user): Observable<User> {
@@ -17,6 +19,8 @@ export class UserService {
     return of(formUser);
     // return this.httpService.post('/user/register', formUser);
   }
+
+
 
   createUser(user): User {
     const fullName = user.fullName;

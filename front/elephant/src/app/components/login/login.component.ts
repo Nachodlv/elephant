@@ -4,52 +4,51 @@ import {UserService} from '../../services/user.service';
 import {Router} from '@angular/router';
 import {SnackbarService} from '../../services/snackbar.service';
 import {Subscription} from 'rxjs';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss']
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
 
-  registerForm: FormGroup;
-  registerSubscription: Subscription;
+  loginForm: FormGroup;
+  loginSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private snackBar: SnackbarService
+    private snackBar: SnackbarService,
+    private authService: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.registerForm = this.formBuilder.group({
-      fullName: ['', Validators.required],
+    this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
     });
   }
 
   ngOnDestroy(): void {
-    this.registerSubscription?.unsubscribe();
+    this.loginSubscription?.unsubscribe();
   }
-
 
   onSubmit(): void {
 
-    if (this.registerForm.invalid){
-      this.snackBar.openSnackbar('¡Credenciales inválidas!', 0);
+    if (this.loginForm.invalid){
       return;
     }
 
-    this.registerSubscription = this.userService.register(this.registerForm.value)
+    this.loginSubscription = this.authService.login(this.loginForm.value)
       .subscribe(
         data => {
-          this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
-          this.router.navigate(['/login']);
+          this.snackBar.openSnackbar('¡Login Exitoso!', 0);
+          this.router.navigate(['/home']);
         },
         error => {
+          this.snackBar.openSnackbar('El email o la contraseña son incorrectos', 0);
           console.error(error);
         }
       );
