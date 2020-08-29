@@ -2,25 +2,27 @@ import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {HttpService} from './http.service';
 import {User} from '../models/user-model';
+import {map, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  constructor(
-    private httpService: HttpService
-  ) {
+
+  constructor(private httpService: HttpService) {
   }
 
   register(user): Observable<User> {
     const formUser = this.createUser(user);
 
-    return of(formUser);
-    // return this.httpService.post('/user/register', formUser);
+    return this.httpService.post('/user/create', JSON.stringify(formUser))
+      .pipe(tap((_ => {
+        }), err => console.log(err)
+      ), map(res => {
+        return User.fromJson(res.body);
+      }));
   }
-
-
 
   createUser(user): User {
     const fullName = user.fullName;

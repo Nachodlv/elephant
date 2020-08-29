@@ -18,11 +18,11 @@ export class HttpService {
   constructor(private http: HttpClient) {
     // const loc = (platformLocation as any).location;
     // this.baseUrl = 'http://' + loc.hostname + ':8080'; // get base url
-    this.baseUrl = 'http://localhost:8080';
+    this.baseUrl = 'http://localhost:2019';
   }
 
-  get defaultHeaders(): HttpHeaders {
-    return new HttpHeaders(this.DEFAULT_HEADERS);
+  get defaultHeaders(): any {
+    return this.DEFAULT_HEADERS;
   }
 
   get defaultOptions(): any {
@@ -39,8 +39,10 @@ export class HttpService {
 
   public getImage(url: string, options?: any, ignoreBaseUrl?: boolean): Observable<any> {
     return this.http.get((ignoreBaseUrl ? '' : this.baseUrl) + url,
-      {headers: this.requestOptions(options),
-        responseType: 'blob'});
+      {
+        headers: this.requestOptions(options),
+        responseType: 'blob'
+      });
   }
 
   public post(url: string, body: any, options?: any): Observable<HttpResponse<any>> {

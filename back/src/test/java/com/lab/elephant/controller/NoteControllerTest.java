@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,6 +59,54 @@ public class NoteControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void getANote_WhenNoteAdded_ShouldReturnTheNote() throws Exception {
+    Note note1 = new Note("Nueva nota 1");
+    noteService.addNote(note1);
+
+    given(noteService.getNote(1L)).willReturn(Optional.of(note1));
+    final String noteJson = objectMapper.writeValueAsString(note1);
+
+    mvc.perform(get("/note/1").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  public void getNote_WhenIdDoesNotExists_ShouldReturnNotFound() throws Exception {
+    given(noteService.getNote(1L)).willReturn(Optional.empty());
+
+    mvc.perform(get("/note/1")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void deleteNote_WhenNoteExists_ShouldDeleteIt() throws Exception {
+    Note note = new Note("This is the new note");
+
+    noteService.addNote(note);
+
+    given(noteService.getNote(1L)).willReturn(Optional.of(note));
+    final String noteJson = objectMapper.writeValueAsString(note);
+
+    mvc.perform(delete("/note/delete/1").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  public void deleteNote_WhenNoteNotExists_ShouldReturnNotFound() throws Exception {
+    given(noteService.getNote(1L)).willReturn(Optional.empty());
+
+    mvc.perform(delete("/note/delete/1")
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound());
   }
 
 }
