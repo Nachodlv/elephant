@@ -20,7 +20,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     private userService: UserService,
     private router: Router,
     private snackBar: SnackbarService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.registerForm = this.formBuilder.group({
