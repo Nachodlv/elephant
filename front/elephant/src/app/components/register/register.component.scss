@@ -1,3 +1,5 @@
+@import "../../_vars.scss";
+
 .div-container {
   text-align: center;
   border: 1px solid;
@@ -23,6 +25,6 @@
 
 .form-button {
   margin-top: 5%;
-  background-color: #37863a;
+  background-color: $elephant-green;
   color: white;
 }
