@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.registerSubscription.unsubscribe();
+    this.registerSubscription?.unsubscribe();
   }
 
 
@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
-          // this.router.navigate(['/login']);
+          this.router.navigate(['/login']);
         },
         error => {
           if (error.status === 409) {
