@@ -28,7 +28,11 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                   FilterChain chain) throws IOException, ServletException {
     String header = req.getHeader(HEADER_STRING);
     
-    if (header == null || !header.startsWith(TOKEN_PREFIX)) {
+    //this if ignores the Token
+    if (        header == null
+            || !header.startsWith(TOKEN_PREFIX)
+            || req.getRequestURI().equals(SIGN_UP_URL)
+            || req.getRequestURI().equals(TOKEN_VERIFY_URL)) {
       chain.doFilter(req, res);
       return;
     }
