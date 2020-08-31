@@ -14,22 +14,17 @@ export class NoteCreatorComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
   }
-
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.noteForm = this.formBuilder.group({
       title: ['', Validators.required]
     });
 
   }
-
-  // tslint:disable-next-line:typedef
-  disabled() {
+  disabled(): boolean  {
     return this.noteForm.value.title === '';
   }
 
-  // tslint:disable-next-line:typedef
-  createNote() {
+  createNote(): void {
     console.log(this.noteForm.controls.title);
     /*note: Note = new Note(id,title);
     la logica de cuando se hace una nota

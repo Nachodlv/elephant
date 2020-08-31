@@ -1,22 +1,19 @@
-<div class="div-container">
-  <div class="span-container">
-    <span class="create-span">Nueva Nota
-    <p class="close-button" mat-button routerLink="/home"><mat-icon>close</mat-icon>
-    </p>
-    </span>
-  </div>
+
+<h2 class="dialog-title" mat-dialog-title>Nueva Nota
+  <mat-dialog-actions>
+    <button class="close-button" mat-button mat-dialog-close routerLink="/home">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</h2>
 
 
-  <form class="form-container" [formGroup]="noteForm" (ngSubmit)="createNote()">
-    <label class="note-label">Nombre</label>
-
-    <br>
-
-    <input placeholder="Nota 1" type="text" class="form-control create-input" formControlName="title" maxlength="60">
-
-    <br>
-
-    <button type="submit" [disabled]="disabled()" class="form-button"> Crear Nota</button>
-
+  <form class="create-note-form" [formGroup]="noteForm" (ngSubmit)="createNote()">
+    <label class="create-label">Nombre</label>
+    <input placeholder="Nota 1" type="text" class="form-control create-input" formControlName="title"
+           maxlength="60">
   </form>
-</div>
+  <mat-dialog-actions>
+    <button type="submit" mat-dialog-close="false" class="create-button" (click)="createNote()"> Crear Nota</button>
+  </mat-dialog-actions>
+

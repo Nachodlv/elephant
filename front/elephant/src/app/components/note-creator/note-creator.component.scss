@@ -1,41 +1,31 @@
-.div-container {
-  text-align: center;
-  border: 1px solid;
-  padding:2%;
-  margin: 10% 38%;
-  border-radius: 1rem;
-  height: 10rem;
-}
-.span-container{
-  display: flex;
-  flex-direction: column;
-}
-.create-span{
-  font-size: 2rem;
-  margin-bottom: 2rem;
-}
-.form-container {
-  margin-top: 5%;
-}
-.form-button {
-  margin-top: 10%;
-  margin-left: 50%;
-  background-color: white;
-  border: 1px solid;
-  border-radius: 0.3rem;
-  height: 2rem;
+.close-button{
+  margin-top: -37%;
+  margin-left: 85%;
   cursor: pointer;
 }
-.note-label{
-  margin-right:36%;
+.dialog-title{
+  text-align: center;
+  margin-bottom: -22%;
+  font-size: 23px;
+}
+.create-note-form{
+  margin-top: 10%;
+  margin-left:30%;
+  font-size: 20px;
+}
+.create-button{
+  margin-left: 60%;
+  height: 2rem;
+  border-radius: 0.3rem;
+  background-color: white;
+  font-size: 15px;
+  border: 1px solid;
 }
 .create-input{
+  margin-left: -7%;
+  width: 12rem;
+  border-radius: 0.4rem;
+  height: 1.5rem;
+  font-size: 15px;
   border: 1px solid;
-  border-radius: 0.3rem;
-}
-.close-button{
-  margin-top: -13%;
-  margin-right: 3%;
-  margin-left: 96%;
-  cursor: pointer;
 }
