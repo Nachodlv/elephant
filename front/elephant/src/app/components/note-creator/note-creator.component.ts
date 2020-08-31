@@ -20,7 +20,7 @@ export class NoteCreatorComponent implements OnInit {
     });
 
   }
-  disabled(): boolean  {
+  disabled(): boolean{
     return this.noteForm.value.title === '';
   }
 
