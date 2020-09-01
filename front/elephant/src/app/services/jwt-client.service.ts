@@ -10,12 +10,10 @@ export class JwtClientService {
   constructor(private httpService: HttpService) { }
 
   public generateToken(request): Observable<any> {
-    return of({token: 'tokenFromBack'});
-    // return this.httpService.post('/login', request);
+     return this.httpService.post('/login', request);
   }
 
-  public authenticate(token): Observable<any>{
-    return of({valid: true});
-    // return this.httpService.get('/validateToken', token);
+  public authenticate(): Observable<any>{
+    return this.httpService.get('/token/verify');
   }
 }
