@@ -57,9 +57,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if (user != null) {
           return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
         }
-      } catch (TokenExpiredException e) {
-        //todo ask about this! :)
-      }
+      } catch (TokenExpiredException ignored) {}
       return null;
     }
     return null;
