@@ -1,5 +1,7 @@
 .container {
   margin: 2% 4%;
+  display: flex;
+  flex-direction: row;
 }
 
 .title {
@@ -9,4 +11,9 @@
 
 .content {
   font-size: 1vw;
+}
+
+.divider {
+  height: 90vh;
+  border-color: #333333
 }
