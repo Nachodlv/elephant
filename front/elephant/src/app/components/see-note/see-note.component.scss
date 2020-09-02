@@ -1,11 +1,24 @@
+@import "../../_vars.scss";
+
 .container {
   margin: 2% 4%;
   display: flex;
   flex-direction: row;
 }
 
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .title {
   font-size: 2vw;
+}
+
+.date {
+  margin-right: 2%;
 }
 
 
@@ -15,5 +28,5 @@
 
 .divider {
   height: 90vh;
-  border-color: #333333
+  border-color: $elephant-light-black;
 }

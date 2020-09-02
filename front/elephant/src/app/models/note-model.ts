@@ -1,6 +1,6 @@
 export class Note {
   constructor(
-    public uuid?: string,
+    public uuid?: number,
     public title?: string,
     public content?: string,
     public created?: string,

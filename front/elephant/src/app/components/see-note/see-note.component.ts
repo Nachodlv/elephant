@@ -12,6 +12,7 @@ export class SeeNoteComponent implements OnInit {
   public id;
   public title;
   public content;
+  public created;
 
   constructor(private noteService: NoteService, private route: ActivatedRoute) { }
 
@@ -25,6 +26,9 @@ export class SeeNoteComponent implements OnInit {
     this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
+
+      const timeStamp = res.created.split('T');
+      this.created = timeStamp[0];
     });
   }
 
