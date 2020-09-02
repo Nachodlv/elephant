@@ -42,12 +42,15 @@ public class UserController {
     String token = request.getHeader(HEADER_STRING);
 
     if (token != null) {
+      // get payload encoded
       final DecodedJWT decode = JWT.decode(token.replace(TOKEN_PREFIX, ""));
       String payload = decode.getPayload();
 
+      // decode payload to get the email
       String[] body = new String(Base64.getDecoder().decode(payload)).split("\"");
       String email = body[3];
 
+      // verify and return if user exists with that email
       Optional<User> optionalUser = userService.getByEmail(email);
       if (optionalUser.isPresent()) {
         return optionalUser.get();
@@ -56,7 +59,7 @@ public class UserController {
       }
     }
 
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Token Not Found");
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token Not Found");
   }
 
 }

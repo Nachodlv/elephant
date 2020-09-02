@@ -1,5 +1,6 @@
 package com.lab.elephant.controller;
 
+import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
@@ -16,8 +17,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.util.Date;
 import java.util.Optional;
 
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
+import static com.lab.elephant.security.SecurityConstants.*;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -72,7 +76,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void addUser_whenUserisNull_ShouldReturnBadRequest() throws Exception {
+  public void addUser_whenUserIsNull_ShouldReturnBadRequest() throws Exception {
     User user = null;
     ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
@@ -90,12 +94,54 @@ public class UserControllerTest {
 
     ObjectMapper o = new ObjectMapper();
     final String noteJson = o.writeValueAsString(user);
+
+    given(userService.getUser(1L)).willReturn(Optional.of(user));
+    given(userService.getByEmail(user.getEmail())).willReturn(Optional.of(user));
+
+    String token = JWT.create().withSubject(user.getEmail())
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+
+    mvc.perform(get("/user/get").content(noteJson)
+            .header("Authorization", TOKEN_PREFIX + token)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  public void getUser_whenTokenNotSend_ShouldReturnBadRequest() throws Exception {
+    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
+
+    userService.addUser(user);
+
+    ObjectMapper o = new ObjectMapper();
+    final String noteJson = o.writeValueAsString(user);
     given(userService.getUser(1L)).willReturn(Optional.of(user));
 
     mvc.perform(get("/user/get").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void getUser_whenUserNotExists_ShouldReturnNotFound() throws Exception {
+    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
+
+    String token = JWT.create().withSubject(user.getEmail())
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+
+    ObjectMapper o = new ObjectMapper();
+    final String noteJson = o.writeValueAsString(user);
+    given(userService.getUser(1L)).willReturn(Optional.of(user));
+
+    mvc.perform(get("/user/get").content(noteJson)
+            .header("Authorization", TOKEN_PREFIX + token)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound());
   }
 
 }
