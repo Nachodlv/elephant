@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,6 +35,7 @@ public class UserControllerTest {
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {
     User user = new User();
@@ -41,7 +43,7 @@ public class UserControllerTest {
     user.setLastName("Smith");
     user.setPassword("foGMeyUAX34D13s2");
     user.setEmail("john@elephant.com");
-    
+
     ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
     mvc.perform(post("/user/create").content(json)
@@ -49,10 +51,10 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
   }
-  
+
   @Test
   public void addUser_whenEmailDoesExist_ShouldReturn409() throws Exception {
-    
+
     String email = "john@elephant.com";
     User user = new User();
     user.setFirstName("John");
@@ -68,7 +70,7 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isConflict());
   }
-  
+
   @Test
   public void addUser_whenUserisNull_ShouldReturnBadRequest() throws Exception {
     User user = null;
@@ -79,4 +81,21 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isBadRequest());
   }
+
+  @Test
+  public void getUser_whenUserDoesExist_ShouldReturnTheUser() throws Exception {
+    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
+
+    userService.addUser(user);
+
+    ObjectMapper o = new ObjectMapper();
+    final String noteJson = o.writeValueAsString(user);
+    given(userService.getUser(1L)).willReturn(Optional.of(user));
+
+    mvc.perform(get("/user/get").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+
 }
