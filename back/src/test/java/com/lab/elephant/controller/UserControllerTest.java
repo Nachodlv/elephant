@@ -72,7 +72,7 @@ public class UserControllerTest {
   }
   
   @Test
-  public void addUser_whenUserisNull_ShouldReturnBadRequest() throws Exception {
+  public void addUser_whenUserIsNull_ShouldReturnBadRequest() throws Exception {
     User user = null;
     ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
