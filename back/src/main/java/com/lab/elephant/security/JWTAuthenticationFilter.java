@@ -13,7 +13,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -30,6 +29,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
     this.authenticationManager = authenticationManager;
   }
+  
   @Override
   @Autowired
   public void setAuthenticationManager(AuthenticationManager authenticationManager) {
@@ -42,13 +42,13 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     try {
       User creds = new ObjectMapper()
               .readValue(req.getInputStream(), User.class);
-      
-      return authenticationManager.authenticate(
-              new UsernamePasswordAuthenticationToken(
-                      creds.getEmail(),
-                      creds.getPassword(),
-                      new ArrayList<>())
-      );
+  
+      final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
+              creds.getEmail(),
+              creds.getPassword(),
+              new ArrayList<>());
+      final Authentication authenticatedToken = authenticationManager.authenticate(token);
+      return authenticatedToken;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
@@ -58,7 +58,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   protected void successfulAuthentication(HttpServletRequest req,
                                           HttpServletResponse res,
                                           FilterChain chain,
-                                          Authentication auth) throws IOException, ServletException {
+                                          Authentication auth) {
     String token = JWT.create()
             .withSubject(((UserDetailsImpl) auth.getPrincipal()).getUsername())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))

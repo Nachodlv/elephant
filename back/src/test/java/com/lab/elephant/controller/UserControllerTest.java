@@ -35,6 +35,8 @@ public class UserControllerTest {
   private MockMvc mvc;
   @MockBean
   private UserServiceImpl userService;
+  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean

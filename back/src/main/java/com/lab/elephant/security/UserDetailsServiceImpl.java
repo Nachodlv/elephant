@@ -20,7 +20,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     this.userRepository = userRepository;
   }
   
-  //
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
     
     Optional<User> oUser = userRepository.findByEmail(email);
