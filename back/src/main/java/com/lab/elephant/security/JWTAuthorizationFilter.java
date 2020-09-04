@@ -30,7 +30,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     String header = req.getHeader(HEADER_STRING);
     
     //this if ignores the Token
-    if (        header == null
+    if (header == null
             || !header.startsWith(TOKEN_PREFIX)
             || req.getRequestURI().equals(SIGN_UP_URL)
             || req.getRequestURI().equals(TOKEN_VERIFY_URL)) {
@@ -57,9 +57,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         if (user != null) {
           return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
         }
-      } catch (TokenExpiredException e) {
-        //todo ask about this! :)
-      }
+      } catch (TokenExpiredException ignored) {}
       return null;
     }
     return null;
