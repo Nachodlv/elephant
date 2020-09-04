@@ -37,16 +37,15 @@ public class NoteControllerTest {
   private ObjectMapper objectMapper;
   @MockBean
   private NoteServiceImpl noteService;
+  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
-
-  
   
   @Test
   public void addNewNote_WhenNoteCreated_ShouldReturnNewNote() throws Exception {
-    
     Timestamp ts = new Timestamp(new Date().getTime());
     Note note = new Note("Nueva Nota", "", ts);
     Optional<Note> optionalNote = Optional.of(note);
@@ -119,5 +118,4 @@ public class NoteControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
-
 }

@@ -30,10 +30,13 @@ public class UserControllerTest {
   private MockMvc mvc;
   @MockBean
   private UserServiceImpl userService;
+  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {
     User user = new User();
@@ -52,7 +55,6 @@ public class UserControllerTest {
   
   @Test
   public void addUser_whenEmailDoesExist_ShouldReturn409() throws Exception {
-    
     String email = "john@elephant.com";
     User user = new User();
     user.setFirstName("John");

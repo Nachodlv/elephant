@@ -2,7 +2,6 @@ package com.lab.elephant.security;
 
 import com.lab.elephant.model.User;
 import com.lab.elephant.model.UserDetailsImpl;
-import com.lab.elephant.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +20,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  public class LogInTest {
   @Autowired
   private MockMvc mvc;
-  @MockBean
-  private UserService userService;
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @Autowired

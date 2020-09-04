@@ -28,6 +28,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class JWTControllerTest {
   @Autowired
   private MockMvc mvc;
+  // UserService, UserDetailsServiceImpl and BCryptPasswordEncoder
+  // are not used but are needed for the tests to run.
   @MockBean
   private UserService userService;
   @MockBean
