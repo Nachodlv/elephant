@@ -55,4 +55,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     mvc.perform(post("/login").content(json).header("Content-Type", "application/json"))
             .andExpect(status().isUnauthorized());
   }
+  
+  @Test
+  public void logIn_withIncorrectPassword_ShouldReturn_401() throws Exception {
+    final String email = "john@elephant.com";
+    final String password = "5tr0ng p455w0rd";
+    final String wrongPassword = "123456";
+    final String json = "{\n" +
+            "    \"email\": \"" + email + "\",\n" +
+            "    \"password\": \"" +  wrongPassword + "\"\n" + "}";
+    final User user = new User();
+    user.setEmail(email);
+    user.setPassword(passwordEncoder.encode(password));
+    final UserDetailsImpl ud = new UserDetailsImpl(user);
+    given(userDetailsService.loadUserByUsername(email)).willReturn(ud);
+    mvc.perform(post("/login").content(json).header("Content-Type", "application/json"))
+            .andExpect(status().isUnauthorized());
+  }
 }
