@@ -12,6 +12,7 @@ import {HomeComponent} from './components/home/home.component';
 import { RegisterComponent } from './components/register/register.component';
 import {EqualValidator} from './directives/equal-validator.directive';
 import {LoginComponent} from './components/login/login.component';
+import { SeeNoteComponent } from './components/see-note/see-note.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import {LoginComponent} from './components/login/login.component';
     HomeComponent,
     RegisterComponent,
     LoginComponent,
-    EqualValidator
+    EqualValidator,
+    SeeNoteComponent
   ],
   imports: [
     BrowserModule,
