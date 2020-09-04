@@ -25,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(JWTController.class)
-//@AutoConfigureMockMvc(addFilters = false)
 public class JWTControllerTest {
   @Autowired
   private MockMvc mvc;
