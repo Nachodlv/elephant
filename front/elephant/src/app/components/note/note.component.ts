@@ -8,7 +8,6 @@ import {NoteCreatorComponent} from '../note-creator/note-creator.component';
   styleUrls: ['./note.component.scss']
 })
 export class NoteComponent implements OnInit {
-  submitted = false;
   cardName: string;
 
   constructor(public dialog: MatDialog) {

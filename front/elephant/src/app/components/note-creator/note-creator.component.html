@@ -9,9 +9,9 @@
 
 
   <form class="create-note-form" [formGroup]="noteForm" (ngSubmit)="createNote()">
-    <label class="create-label">Nombre</label>
-    <input placeholder="Nota 1" type="text" class="form-control create-input" formControlName="title"
-        name="title" ngModel maxlength="60">
+    <label for="note-name" class="create-label">Nombre</label>
+    <input id="note-name" placeholder="Nota 1" type="text" class="form-control create-input" formControlName="title"
+        name="title" maxlength="60" value="">
   </form>
   <mat-dialog-actions>
     <button type="submit" mat-dialog-close="false" class="create-button" [disabled]="disabled()" (click)="createNote()"> Crear Nota</button>

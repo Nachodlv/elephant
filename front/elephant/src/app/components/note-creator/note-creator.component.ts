@@ -9,8 +9,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class NoteCreatorComponent implements OnInit {
   noteForm: FormGroup;
-  submitted = false;
-
 
   constructor(private formBuilder: FormBuilder) {
   }
