@@ -21,7 +21,6 @@ export class NoteService {
       return Note.fromJson(response.body);
     }));
   }
-
   getNote(id): Observable<Note> {
     /*return this.httpService.get(`/note/${id}`).pipe(tap((_ => {
       }), err => console.log(err)
