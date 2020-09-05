@@ -39,7 +39,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
 
-    if (this.registerForm.invalid){
+    if (this.registerForm.invalid) {
       this.snackBar.openSnackbar('¡Credenciales inválidas!', 0);
       return;
     }
@@ -48,9 +48,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
-          // this.router.navigate(['/login']);
+          this.router.navigate(['/login']);
         },
         error => {
+          if (error.status === 409) {
+            this.snackBar.openSnackbar('El email utilizado ya está en uso, pruebe con otro', 0);
+          }
           console.error(error);
         }
       );

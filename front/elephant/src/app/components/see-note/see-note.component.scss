@@ -1,0 +1,34 @@
+@import "../../_vars.scss";
+
+.container {
+  margin: 0 4%;
+  display: flex;
+  flex-direction: row;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-size: 2vw;
+}
+
+.date {
+  margin-right: 2%;
+  font-size: 1.2vw;
+}
+
+
+.content {
+  font-size: 1vw;
+  margin-right: 1.7vw;
+}
+
+.divider {
+  height: 90vh;
+  border-color: $elephant-light-black;
+}

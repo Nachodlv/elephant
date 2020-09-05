@@ -15,6 +15,8 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegisterComponent } from './components/register/register.component';
 import {EqualValidator} from './directives/equal-validator.directive';
 import { MatDialogModule} from '@angular/material/dialog';
+import {LoginComponent} from './components/login/login.component';
+import { SeeNoteComponent } from './components/see-note/see-note.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,9 @@ import { MatDialogModule} from '@angular/material/dialog';
     NavbarComponent,
     RegisterComponent,
     EqualValidator,
+    LoginComponent,
+    EqualValidator,
+    SeeNoteComponent
   ],
   imports: [
     BrowserModule,
