@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpService} from './http.service';
 import {Note} from '../models/Note';
 import {map, tap} from 'rxjs/operators';
@@ -12,6 +12,7 @@ export class NoteService {
 
   constructor(private httpService: HttpService) {
   }
+
   createNote(note: Note): Observable<Note> {
     return this.httpService.post('/note/new', JSON.stringify(note)).pipe(tap((_ => {
     }), err => {
@@ -19,6 +20,7 @@ export class NoteService {
     }), map(response => {
       return Note.fromJson(response.body);
     }));
+  }
 
   getNote(id): Observable<Note> {
     /*return this.httpService.get(`/note/${id}`).pipe(tap((_ => {
