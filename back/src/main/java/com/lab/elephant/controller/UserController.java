@@ -1,8 +1,8 @@
 package com.lab.elephant.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.lab.elephant.model.User;
+import com.lab.elephant.service.TokenService;
+import com.lab.elephant.service.TokenServiceImpl;
 import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,11 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Base64;
 import java.util.Optional;
 
 import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
-import static com.lab.elephant.security.SecurityConstants.TOKEN_PREFIX;
 
 @CrossOrigin
 @RestController
@@ -38,17 +36,14 @@ public class UserController {
 
   @GetMapping(path = "/get")
   public User getUser(HttpServletRequest request) {
+    // Have to instance it inside method, otherwise it is not functioning
+    TokenService tokenService = new TokenServiceImpl();
 
     String token = request.getHeader(HEADER_STRING);
 
     if (token != null) {
-      // get payload encoded
-      final DecodedJWT decode = JWT.decode(token.replace(TOKEN_PREFIX, ""));
-      String payload = decode.getPayload();
 
-      // decode payload to get the email
-      String[] body = new String(Base64.getDecoder().decode(payload)).split("\"");
-      String email = body[3];
+      String email = tokenService.getEmailByToken(token);
 
       // verify and return if user exists with that email
       Optional<User> optionalUser = userService.getByEmail(email);

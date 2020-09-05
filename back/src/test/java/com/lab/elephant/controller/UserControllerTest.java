@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.TokenServiceImpl;
 import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,6 +36,9 @@ public class UserControllerTest {
   private MockMvc mvc;
   @MockBean
   private UserServiceImpl userService;
+  @MockBean
+  private TokenServiceImpl tokenService;
+
   // Both UserDetailsServiceImpl and BCryptPasswordEncoder
   // are not used but are necessary for the tests to run.
   @MockBean
@@ -103,6 +107,8 @@ public class UserControllerTest {
     String token = JWT.create().withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
             .sign(HMAC512(SECRET.getBytes()));
+
+    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
 
     mvc.perform(get("/user/get").content(noteJson)
             .header("Authorization", TOKEN_PREFIX + token)
