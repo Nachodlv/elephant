@@ -1,6 +1,8 @@
+@import "../../_vars.scss";
+
 .create-button {
   margin: 20px;
-  background-color: #333333;
+  background-color: $elephant-light-black;
   width: 18rem;
   height: 15rem;
   border: 1px solid;

@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {SnackbarService} from "../../services/snackbar.service";
 
 
 @Component({
@@ -10,20 +11,25 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 export class NoteCreatorComponent implements OnInit {
   noteForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private snackBar: SnackbarService
+  ) {
   }
+
   ngOnInit(): void {
     this.noteForm = this.formBuilder.group({
       title: ['', Validators.required]
     });
 
   }
-  disabled(): boolean{
+
+  disabled(): boolean {
     return this.noteForm.value.title === '';
   }
 
   createNote(): void {
     console.log(this.noteForm.controls.title);
+    this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
     /*note: Note = new Note(id,title);
     la logica de cuando se hace una nota
     send to Back/ api
