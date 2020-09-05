@@ -1,11 +1,11 @@
 <mat-toolbar>
-  <h1 class="title-center" routerLink="/home">
+  <a class="title-center" routerLink="/home">
     Elephant
-  </h1>
-  <button style="color: white;" mat-icon-button [matMenuTriggerFor]="menu">
+  </a>
+  <button class="option-button" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item (click) = resgisterUser()>Regisrarse</button>
+    <button mat-menu-item (click)="registerUser()">Registrarse</button>
   </mat-menu>
 </mat-toolbar>

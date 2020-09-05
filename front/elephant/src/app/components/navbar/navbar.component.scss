@@ -1,11 +1,20 @@
+@import "../../_vars.scss";
+
 mat-toolbar{
-  background-color: #2e7c31;
+  background-color: $elephant-green;
 }
 
-h1{
+a{
   color: white;
+  cursor: pointer;
+  font-size: 23px;
+  text-decoration: none;
 }
 
 .title-center {
   margin: 0 auto;
+}
+
+.option-button{
+  color: white;
 }

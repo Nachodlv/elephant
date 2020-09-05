@@ -33,4 +33,9 @@ public class NoteServiceImpl implements NoteService {
   public List<Note> getAllNotes() {
     return noteRepository.findAll();
   }
+
+  @Override
+  public void deleteNote(long id) {
+    noteRepository.deleteById(id);
+  }
 }

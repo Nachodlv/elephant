@@ -1,38 +1,38 @@
-.div-container {
+.close-button{
+  margin-top: -37%;
+  margin-left: 85%;
+  cursor: pointer;
+}
+.dialog-title{
   text-align: center;
-  border: 1px solid;
-  padding: 3%;
-  margin: 4% 38%;
-  border-radius: 1rem;
+  margin-bottom: -22%;
+  font-size: 23px;
 }
-.span-container{
-  display: flex;
-  flex-direction: column;
+.create-note-form{
+  margin-top: 10%;
+  margin-left:30%;
+  font-size: 20px;
 }
-.create-span{
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-.form-container {
-  margin-top: 5%;
-}
-.form-button {
-  margin-top: 5%;
-  margin-left: 30%;
-  background-color: #37863a;
-  color: white;
-  border: 1px solid;
+.create-button{
+  margin-left: 60%;
+  height: 2rem;
   border-radius: 0.3rem;
-}
-.note-label{
-  margin-right:44%;
+  background-color: white;
+  font-size: 15px;
+  border: 1px solid;
+  cursor: pointer;
 }
 .create-input{
+  margin-left: -10%;
+  width: 12rem;
+  border-radius: 0.4rem;
+  height: 1.5rem;
+  font-size: 15px;
   border: 1px solid;
-  border-radius: 0.3rem;
+  display:block;
 }
-.close-button{
-  text-align: right;
- margin-left: 10%;
+.create-label{
+  margin-left: -10%;
+  display:block;
+}
 
-}

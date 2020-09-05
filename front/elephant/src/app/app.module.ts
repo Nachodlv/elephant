@@ -14,6 +14,7 @@ import { NoteCreatorComponent } from './components/note-creator/note-creator.com
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegisterComponent } from './components/register/register.component';
 import {EqualValidator} from './directives/equal-validator.directive';
+import { MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,7 @@ import {EqualValidator} from './directives/equal-validator.directive';
     NoteCreatorComponent,
     NavbarComponent,
     RegisterComponent,
-    EqualValidator
+    EqualValidator,
   ],
   imports: [
     BrowserModule,
@@ -33,12 +34,14 @@ import {EqualValidator} from './directives/equal-validator.directive';
     AppMaterialModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule,
   ],
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [],
 })
 export class AppModule {
 }

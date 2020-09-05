@@ -14,8 +14,7 @@ export class NavbarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  // tslint:disable-next-line:typedef
-  resgisterUser() {
+  registerUser(): void {
     this.router.navigate(['/register']);
   }
 }

@@ -1,4 +1,4 @@
-<button class="create-button" routerLink="/note/create">
-  <div><mat-icon class="plus-create">add</mat-icon></div>
-  <div class="create-text">Crear nueva nota</div>
-</button>
+<mat-card class="card create-button" (click)="openDialog()">
+  <mat-card-title><mat-icon class="plus-create">add</mat-icon></mat-card-title>
+  <mat-card-content class="create-text">Crear nueva nota</mat-card-content>
+</mat-card>

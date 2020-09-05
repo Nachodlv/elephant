@@ -1,4 +1,6 @@
 import {Component, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {NoteCreatorComponent} from '../note-creator/note-creator.component';
 
 @Component({
   selector: 'app-note',
@@ -6,8 +8,16 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./note.component.scss']
 })
 export class NoteComponent implements OnInit {
+  cardName: string;
 
-  constructor() {
+  constructor(public dialog: MatDialog) {
+  }
+
+  openDialog(): void {
+    this.dialog.open(NoteCreatorComponent, {
+      width: '400px',
+      height: '230px',
+    });
   }
 
   ngOnInit(): void {

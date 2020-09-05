@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {SnackbarService} from '../../services/snackbar.service';
+import {NoteService} from '../../services/note.service';
+import {Note} from '../../models/Note';
 
 
 @Component({
@@ -9,28 +12,32 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class NoteCreatorComponent implements OnInit {
   noteForm: FormGroup;
-  submitted = false;
 
-
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder,
+              private snackBar: SnackbarService,
+              private noteService: NoteService,
+  ) {
   }
 
-  // tslint:disable-next-line:typedef
-  ngOnInit() {
+  ngOnInit(): void {
     this.noteForm = this.formBuilder.group({
       title: ['', Validators.required]
     });
 
   }
 
-  // tslint:disable-next-line:typedef
-  disabled() {
+  disabled(): boolean {
     return this.noteForm.value.title === '';
   }
 
-  // tslint:disable-next-line:typedef
-  createNote() {
-    console.log(this.noteForm.controls.title);
+  createNote(): void {
+    const title = this.noteForm.value.title;
+    console.log(title);
+    this.noteService.createNote(new Note(title)).subscribe(res => {
+      this.snackBar.openSnackbar('¡Creación de Nota Exitosa!', 0);
+    }, error => {
+      this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
+    });
     /*note: Note = new Note(id,title);
     la logica de cuando se hace una nota
     send to Back/ api
