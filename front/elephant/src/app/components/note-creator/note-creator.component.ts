@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {SnackbarService} from "../../services/snackbar.service";
+import {SnackbarService} from '../../services/snackbar.service';
+import {NoteService} from '../../services/note.service';
+import {Note} from '../../models/Note';
 
 
 @Component({
@@ -12,7 +14,8 @@ export class NoteCreatorComponent implements OnInit {
   noteForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder,
-              private snackBar: SnackbarService
+              private snackBar: SnackbarService,
+              private noteService: NoteService,
   ) {
   }
 
@@ -28,8 +31,13 @@ export class NoteCreatorComponent implements OnInit {
   }
 
   createNote(): void {
-    console.log(this.noteForm.controls.title);
-    this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
+    const title = this.noteForm.value.title;
+    console.log(title);
+    this.noteService.createNote(new Note(title)).subscribe(res => {
+      this.snackBar.openSnackbar('¡Creación de Nota Exitosa!', 0);
+    }, error => {
+      this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
+    });
     /*note: Note = new Note(id,title);
     la logica de cuando se hace una nota
     send to Back/ api
