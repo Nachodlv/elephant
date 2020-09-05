@@ -1,0 +1,46 @@
+<div class="div-container">
+
+  <div class="span-container">
+    <span class="register-span">Perfil</span>
+  </div>
+
+  <form class="form-container" (ngSubmit)="saveProfile()">
+    <mat-grid-list cols="1" rowHeight="5rem">
+
+      <mat-grid-tile>
+        <mat-form-field appearance="none">
+          <label>Nombre</label>
+          <input class="profile-name" type="text" disabled matInput formControlName="name" value="Numa">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="none">
+          <label>Apellido</label>
+          <input class="profile-last-name" type="text" disabled matInput formControlName="password" value="Leone">
+        </mat-form-field>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+
+    <button class="save-button"
+            type="submit"
+            mat-raised-button>
+      Guardar
+    </button>
+  </form>
+
+  <mat-divider class="margin-top-1"></mat-divider>
+
+  <div class="form-container">
+
+    <button class="change-password"
+            mat-raised-button>
+      Cambiar contrasena
+    </button>
+    <button class="delete-user"
+            mat-stroked-button>
+      Eliminar usuario
+    </button>
+  </div>
+</div>

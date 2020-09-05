@@ -7,6 +7,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {SeeNoteComponent} from './components/see-note/see-note.component';
 import {NoteCreatorComponent} from './components/note-creator/note-creator.component';
 import {NoteComponent} from './components/note/note.component';
+import {SeeProfileComponent} from './components/see-profile/see-profile.component';
 
 
 const routes: Routes = [
@@ -15,7 +16,8 @@ const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'note/:id', component: SeeNoteComponent, canActivate: [AuthGuard] }
+  { path: 'note/:id', component: SeeNoteComponent, canActivate: [AuthGuard] },
+  { path: 'profile', component: SeeProfileComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

@@ -17,6 +17,7 @@ import {EqualValidator} from './directives/equal-validator.directive';
 import { MatDialogModule} from '@angular/material/dialog';
 import {LoginComponent} from './components/login/login.component';
 import { SeeNoteComponent } from './components/see-note/see-note.component';
+import { SeeProfileComponent } from './components/see-profile/see-profile.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { SeeNoteComponent } from './components/see-note/see-note.component';
     EqualValidator,
     LoginComponent,
     EqualValidator,
-    SeeNoteComponent
+    SeeNoteComponent,
+    SeeProfileComponent
   ],
   imports: [
     BrowserModule,

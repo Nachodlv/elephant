@@ -17,4 +17,8 @@ export class NavbarComponent implements OnInit {
   registerUser(): void {
     this.router.navigate(['/register']);
   }
+
+  seeProfile(): void{
+    this.router.navigate(['/profile']);
+  }
 }
