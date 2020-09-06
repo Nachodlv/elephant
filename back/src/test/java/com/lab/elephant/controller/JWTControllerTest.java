@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 
 import com.auth0.jwt.JWT;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class JWTControllerTest {
   @Autowired
   private MockMvc mvc;
-  // UserService, UserDetailsServiceImpl and BCryptPasswordEncoder
+  // UserService, UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are needed for the tests to run.
   @MockBean
   private UserService userService;
@@ -36,6 +37,8 @@ public class JWTControllerTest {
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  @MockBean
+  private BlackListedTokenServiceImpl tokenService;
   
   @Test
   public void verifyValidToken_shouldReturnTrue() throws Exception {

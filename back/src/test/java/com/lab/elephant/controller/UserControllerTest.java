@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,12 +31,14 @@ public class UserControllerTest {
   private MockMvc mvc;
   @MockBean
   private UserServiceImpl userService;
-  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  @MockBean
+  private BlackListedTokenServiceImpl tokenService;
   
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {

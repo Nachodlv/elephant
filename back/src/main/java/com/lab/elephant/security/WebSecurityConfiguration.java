@@ -1,5 +1,6 @@
 package com.lab.elephant.security;
 
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,12 +10,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import static com.lab.elephant.security.SecurityConstants.SIGN_UP_URL;
-import static com.lab.elephant.security.SecurityConstants.TOKEN_VERIFY_URL;
+import static com.lab.elephant.security.SecurityConstants.*;
 
 @Configuration
 @EnableWebSecurity
@@ -22,24 +23,25 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   
   private final UserDetailsServiceImpl userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
-  
-  public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
+  private final BlackListedTokenServiceImpl blackListedTokenService;
+  public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, BlackListedTokenServiceImpl blackListedTokenService) {
     this.userDetailsService = userDetailsService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    this.blackListedTokenService = blackListedTokenService;
   }
   
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable().authorizeRequests()
-            .antMatchers(SIGN_UP_URL, TOKEN_VERIFY_URL).permitAll()
-//            .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll()
-//            .antMatchers(HttpMethod.GET, TOKEN_VERIFY_URL).permitAll()
+            .antMatchers(SIGN_UP_URL, TOKEN_VERIFY_URL, LOGOUT_URL).permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-            .addFilter(new JWTAuthorizationFilter(authenticationManager()))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), blackListedTokenService))
             // this disables session creation on Spring Security
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and().logout()
+            .logoutUrl(LOGOUT_URL).addLogoutHandler(logoutHandler());
   }
   @Override
   protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -55,5 +57,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
     return source;
+  }
+  @Bean
+  LogoutHandler logoutHandler() {
+    return new JWTLogoutHandler();
   }
 }
