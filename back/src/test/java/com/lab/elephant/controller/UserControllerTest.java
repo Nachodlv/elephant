@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.TokenServiceImpl;
 import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
@@ -11,7 +12,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -38,6 +41,14 @@ public class UserControllerTest {
   private UserServiceImpl userService;
   @MockBean
   private TokenServiceImpl tokenService;
+
+  @TestConfiguration
+  static class TokenServiceImplTestContextConfiguration {
+    @Bean
+    public TokenService tokenService() {
+      return new TokenServiceImpl();
+    }
+  }
 
   // Both UserDetailsServiceImpl and BCryptPasswordEncoder
   // are not used but are necessary for the tests to run.
@@ -110,7 +121,7 @@ public class UserControllerTest {
 
     given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
 
-    mvc.perform(get("/user/get").content(noteJson)
+    mvc.perform(get("/user").content(noteJson)
             .header("Authorization", TOKEN_PREFIX + token)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
@@ -127,7 +138,7 @@ public class UserControllerTest {
     final String noteJson = o.writeValueAsString(user);
     given(userService.getUser(1L)).willReturn(Optional.of(user));
 
-    mvc.perform(get("/user/get").content(noteJson)
+    mvc.perform(get("/user").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isBadRequest());
@@ -145,7 +156,7 @@ public class UserControllerTest {
     final String noteJson = o.writeValueAsString(user);
     given(userService.getUser(1L)).willReturn(Optional.of(user));
 
-    mvc.perform(get("/user/get").content(noteJson)
+    mvc.perform(get("/user").content(noteJson)
             .header("Authorization", TOKEN_PREFIX + token)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())

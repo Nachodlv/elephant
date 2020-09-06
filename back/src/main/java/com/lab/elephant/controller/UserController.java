@@ -2,7 +2,6 @@ package com.lab.elephant.controller;
 
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.TokenService;
-import com.lab.elephant.service.TokenServiceImpl;
 import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,11 @@ import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
 @RequestMapping(path = "/user")
 public class UserController {
   private final UserService userService;
+  private final TokenService tokenService;
 
-  public UserController(UserService userService) {
+  public UserController(UserService userService, TokenService tokenService) {
     this.userService = userService;
+    this.tokenService = tokenService;
   }
 
   @PostMapping(path = "/create")
@@ -34,10 +35,8 @@ public class UserController {
     userService.addUser(user);
   }
 
-  @GetMapping(path = "/get")
+  @GetMapping()
   public User getUser(HttpServletRequest request) {
-    // Have to instance it inside method, otherwise it is not functioning
-    TokenService tokenService = new TokenServiceImpl();
 
     String token = request.getHeader(HEADER_STRING);
 
