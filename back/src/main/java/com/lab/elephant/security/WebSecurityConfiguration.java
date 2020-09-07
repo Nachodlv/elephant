@@ -18,6 +18,10 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+
+import static com.lab.elephant.security.SecurityConstants.SIGN_UP_URL;
+import static com.lab.elephant.security.SecurityConstants.TOKEN_VERIFY_URL;
 import static com.lab.elephant.security.SecurityConstants.*;
 
 @Configuration
@@ -60,7 +64,9 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+    CorsConfiguration config = new CorsConfiguration();
+    source.registerCorsConfiguration("/**", config.applyPermitDefaultValues());
+    config.setExposedHeaders(Arrays.asList("Authorization"));
     return source;
   }
   @Bean

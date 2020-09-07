@@ -2,6 +2,7 @@ package com.lab.elephant.controller;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,7 @@ import java.util.Date;
 import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
 import static com.lab.elephant.security.SecurityConstants.TOKEN_PREFIX;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/token")
 public class JWTController {
