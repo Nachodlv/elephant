@@ -51,7 +51,6 @@ public class UserControllerTest {
     }
   }
 
-  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
   // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are necessary for the tests to run.
   @MockBean
@@ -61,7 +60,6 @@ public class UserControllerTest {
   @MockBean
   private BlackListedTokenServiceImpl blackListedTokenService;
   
-
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {
     User user = new User();
@@ -80,7 +78,6 @@ public class UserControllerTest {
 
   @Test
   public void addUser_whenEmailDoesExist_ShouldReturn409() throws Exception {
-
     String email = "john@elephant.com";
     User user = new User();
     user.setFirstName("John");
@@ -167,5 +164,4 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
-
 }

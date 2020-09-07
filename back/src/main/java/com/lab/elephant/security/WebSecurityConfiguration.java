@@ -20,8 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 
-import static com.lab.elephant.security.SecurityConstants.SIGN_UP_URL;
-import static com.lab.elephant.security.SecurityConstants.TOKEN_VERIFY_URL;
 import static com.lab.elephant.security.SecurityConstants.*;
 
 @Configuration
