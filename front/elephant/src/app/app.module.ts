@@ -27,7 +27,6 @@ import { SeeNoteComponent } from './components/see-note/see-note.component';
     NoteCreatorComponent,
     NavbarComponent,
     RegisterComponent,
-    EqualValidator,
     LoginComponent,
     EqualValidator,
     SeeNoteComponent
@@ -45,8 +44,7 @@ import { SeeNoteComponent } from './components/see-note/see-note.component';
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }
