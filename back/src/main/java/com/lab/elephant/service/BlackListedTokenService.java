@@ -17,4 +17,6 @@ public interface BlackListedTokenService {
   Optional<BlackListedToken> findToken(String token);
   
   void delete(BlackListedToken token);
+  
+  void update();
 }
