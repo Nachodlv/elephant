@@ -11,8 +11,8 @@ import {SeeProfileComponent} from './components/see-profile/see-profile.componen
 
 
 const routes: Routes = [
-  {path: 'note/create', component: NoteCreatorComponent},
-  {path: 'note', component: NoteComponent},
+  {path: 'note/create', component: NoteCreatorComponent, canActivate: [AuthGuard]},
+  {path: 'note', component: NoteComponent, canActivate: [AuthGuard]},
   { path: '', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },

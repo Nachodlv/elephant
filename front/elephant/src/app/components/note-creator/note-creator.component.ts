@@ -38,10 +38,6 @@ export class NoteCreatorComponent implements OnInit {
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
     });
-    /*note: Note = new Note(id,title);
-    la logica de cuando se hace una nota
-    send to Back/ api
-     */
   }
 
 }
