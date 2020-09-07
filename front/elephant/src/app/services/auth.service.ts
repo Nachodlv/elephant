@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {JwtClientService} from './jwt-client.service';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {User} from '../models/user-model';
 import {map} from 'rxjs/operators';
 import {Router} from '@angular/router';
