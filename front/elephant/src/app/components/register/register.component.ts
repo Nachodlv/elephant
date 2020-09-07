@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
-          this.router.navigate(['/login']);
+          this.router.navigate(['/']);
         },
         error => {
           if (error.status === 409) {
