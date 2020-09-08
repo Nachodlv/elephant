@@ -15,10 +15,10 @@
       </mat-grid-tile>
 
       <mat-grid-tile>
-        <div class="email-alignment">
+        <mat-form-field appearance="none">
           <label for="profile-email" class="profile-email-label">Email</label>
-          <span id="profile-email" class="profile-email">n@g</span>
-        </div>
+          <input id="profile-email" class="profile-email" type="text" matInput value="n@g" readonly>
+        </mat-form-field>
       </mat-grid-tile>
 
     </mat-grid-list>
@@ -36,7 +36,7 @@
 
     <button class="change-password"
             mat-raised-button>
-      Cambiar contraseña
+      Cambiar Contraseña
     </button>
     <button class="delete-user"
             mat-stroked-button>

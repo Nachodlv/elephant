@@ -18,26 +18,26 @@
   margin-top: 5%;
 }
 
-.register-span {
+.profile-span {
   font-size: 2rem;
   margin-bottom: 1rem;
 }
 
-.save-button {
-  margin-top: 5%;
+.edit-button {
   background-color: $elephant-green;
 }
 
 .change-password {
   margin-top: 5%;
-  margin-right: 2%;
   background-color: $elephant-green;
+  height: 2.2rem;
 }
 
 .delete-user {
   margin-top: 5%;
   border-color: red;
   color: red;
+  height: 2.2rem;
 }
 
 
@@ -45,11 +45,23 @@
   margin-top: 1rem;
 }
 
-.profile-name, .profile-last-name {
-  width: 12rem;
+.profile-name-lastname {
+  width: 13rem;
   border-radius: 0.4rem;
-  height: 1.5rem;
+  height: 2rem;
   font-size: 15px;
   border: 1px solid;
+  display: block;
+  margin-top: 2%;
+}
+
+.profile-email {
+  text-align: left;
+  font-size: 15px;
+  display: block;
+  margin-top: 2%;
+}
+
+.profile-email-label {
   display: block;
 }
