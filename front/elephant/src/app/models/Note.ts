@@ -8,6 +8,7 @@ export class Note {
     this.uuid = id;
     this.title = name;
   }
+
   static fromJson(data: any): Note {
     return Object.assign(new Note(), data);
   }
