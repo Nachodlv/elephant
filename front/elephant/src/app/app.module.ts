@@ -9,8 +9,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ErrorService} from './services/error.service';
 import {ExamplePipe} from './pipes/time-left.pipe';
 import {HomeComponent} from './components/home/home.component';
+import { NoteComponent } from './components/note/note.component';
+import { NoteCreatorComponent } from './components/note-creator/note-creator.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegisterComponent } from './components/register/register.component';
 import {EqualValidator} from './directives/equal-validator.directive';
+import { MatDialogModule} from '@angular/material/dialog';
 import {LoginComponent} from './components/login/login.component';
 import { SeeNoteComponent } from './components/see-note/see-note.component';
 
@@ -19,6 +23,9 @@ import { SeeNoteComponent } from './components/see-note/see-note.component';
     AppComponent,
     ExamplePipe,
     HomeComponent,
+    NoteComponent,
+    NoteCreatorComponent,
+    NavbarComponent,
     RegisterComponent,
     LoginComponent,
     EqualValidator,
@@ -31,7 +38,8 @@ import { SeeNoteComponent } from './components/see-note/see-note.component';
     AppMaterialModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule,
   ],
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
