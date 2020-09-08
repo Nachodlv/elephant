@@ -1,8 +1,11 @@
 package com.lab.elephant.controller;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.User;
 import com.lab.elephant.service.NoteService;
+import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,9 +17,11 @@ import java.util.Optional;
 public class NoteController {
 
   private final NoteService noteService;
-
-  public NoteController(NoteService noteService) {
+  private final UserService userService;
+  
+  public NoteController(NoteService noteService, UserService userService) {
     this.noteService = noteService;
+    this.userService = userService;
   }
 
   @PostMapping("/new")
@@ -24,7 +29,10 @@ public class NoteController {
     if (note.getTitle().length() > 60)
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Title is too long");
-    return noteService.addNote(note);
+  
+    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final Optional<User> user = userService.getByEmail(string);
+    return noteService.addNote(note, user.get());
   }
 
   @GetMapping("{id}")

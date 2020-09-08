@@ -1,6 +1,7 @@
 package com.lab.elephant.service;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.User;
 import com.lab.elephant.repository.NoteRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +26,11 @@ public class NoteServiceTest {
   static class CubeServiceImplTestContextConfiguration {
     @Autowired
     private NoteRepository noteRepository;
-
+    @Autowired
+    private PermissionService permissionService;
     @Bean
     public NoteService employeeService() {
-      return new NoteServiceImpl(noteRepository);
+      return new NoteServiceImpl(noteRepository, permissionService);
     }
   }
 
@@ -36,7 +38,10 @@ public class NoteServiceTest {
   private NoteService noteService;
   @MockBean
   private NoteRepository noteRepository;
-
+  //this is not used but needed for the Application Context to load
+  @MockBean
+  private PermissionService permissionService;
+  
   @Test
   public void AddNote_WhenAddingANewNote_ShouldReturnANewNote() {
 
@@ -44,8 +49,7 @@ public class NoteServiceTest {
 
     Mockito.when(noteRepository.save(note)).thenReturn(note);
     Mockito.when(noteRepository.findById(note.getUuid())).thenReturn(Optional.of(note));
-
-    noteService.addNote(note);
+    noteService.addNote(note, new User());
 
     Optional<Note> optionalNote = noteRepository.findById(note.getUuid());
 
@@ -66,9 +70,8 @@ public class NoteServiceTest {
 
     Mockito.when(noteRepository.save(note2)).thenReturn(note2);
     Mockito.when(noteRepository.findById(note2.getUuid())).thenReturn(Optional.of(note2));
-
-    noteService.addNote(note1);
-    noteService.addNote(note2);
+    noteService.addNote(note1, new User());
+    noteService.addNote(note2, new User());
 
     Optional<Note> optionalNote1 = noteService.getNote(note1.getUuid());
     Optional<Note> optionalNote2 = noteService.getNote(note2.getUuid());
@@ -84,9 +87,8 @@ public class NoteServiceTest {
     Note note2 = new Note("Nueva Nota");
 
     Mockito.when(noteRepository.findAll()).thenReturn(Arrays.asList(note1, note2));
-
-    noteService.addNote(note1);
-    noteService.addNote(note2);
+    noteService.addNote(note1, new User());
+    noteService.addNote(note2, new User());
 
     Mockito.when(noteRepository.save(note1)).thenReturn(note1);
     Mockito.when(noteRepository.save(note2)).thenReturn(note2);
@@ -102,7 +104,7 @@ public class NoteServiceTest {
     Note note = new Note("This is the new note");
 
     Mockito.when(noteRepository.findById(1L)).thenReturn(Optional.of(note));
-    noteService.addNote(note);
+    noteService.addNote(note, new User());
 
     Mockito.when(noteRepository.save(note)).thenReturn(note);
     Mockito.when(noteRepository.findAll()).thenReturn(Collections.singletonList(note));

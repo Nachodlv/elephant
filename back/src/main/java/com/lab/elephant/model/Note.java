@@ -2,6 +2,8 @@ package com.lab.elephant.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "note")
@@ -17,6 +19,9 @@ public class Note {
 
   private Timestamp created;
 
+  @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
+  private List<Permission> permissions = new ArrayList<>();
+  
   public Note(String title, String content, Timestamp created) {
     this.title = title;
     this.content = content;
@@ -61,5 +66,12 @@ public class Note {
   public void setCreated(Timestamp created) {
     this.created = created;
   }
-
+  
+  public List<Permission> getPermissions() {
+    return permissions;
+  }
+  
+  public void setPermissions(List<Permission> permissions) {
+    this.permissions = permissions;
+  }
 }

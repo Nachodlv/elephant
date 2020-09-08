@@ -1,6 +1,8 @@
 package com.lab.elephant.service;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.PermissionType;
+import com.lab.elephant.model.User;
 import com.lab.elephant.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +14,20 @@ import java.util.Optional;
 public class NoteServiceImpl implements NoteService {
 
   private final NoteRepository noteRepository;
-
-  public NoteServiceImpl(NoteRepository noteRepository) {
+  private final PermissionService permissionService;
+  
+  public NoteServiceImpl(NoteRepository noteRepository, PermissionService permissionService) {
     this.noteRepository = noteRepository;
+    this.permissionService = permissionService;
   }
 
   @Override
-  public Note addNote(Note note) {
+  public Note addNote(Note note, User user) {
     note.setContent("");
     note.setCreated(new Timestamp(System.currentTimeMillis()));
-    return noteRepository.save(note);
+    final Note savedNote = noteRepository.save(note);
+    permissionService.addRelationShip(user, note, PermissionType.Owner);
+    return savedNote;
   }
 
   @Override

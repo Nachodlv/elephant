@@ -1,9 +1,9 @@
 package com.lab.elephant.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -19,6 +19,8 @@ public class User {
   private String email;
   @NotNull
   private String password;
+  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  private List<Permission> permissions = new ArrayList<>();
   
   public User() {
   }
@@ -68,5 +70,13 @@ public class User {
   
   public void setUuid(long uuid) {
     this.uuid = uuid;
+  }
+  
+  public List<Permission> getPermissions() {
+    return permissions;
+  }
+  
+  public void setPermissions(List<Permission> permissions) {
+    this.permissions = permissions;
   }
 }

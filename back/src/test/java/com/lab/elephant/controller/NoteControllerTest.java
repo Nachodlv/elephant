@@ -2,8 +2,11 @@ package com.lab.elephant.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.NoteServiceImpl;
+import com.lab.elephant.service.PermissionService;
+import com.lab.elephant.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,9 +25,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -37,20 +39,28 @@ public class NoteControllerTest {
   private ObjectMapper objectMapper;
   @MockBean
   private NoteServiceImpl noteService;
-  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  @MockBean
+  private UserService userService;
+  // All of the MockBeans below
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  @MockBean
+  private PermissionService permissionService;
   
   @Test
   public void addNewNote_WhenNoteCreated_ShouldReturnNewNote() throws Exception {
     Timestamp ts = new Timestamp(new Date().getTime());
     Note note = new Note("Nueva Nota", "", ts);
     Optional<Note> optionalNote = Optional.of(note);
-    given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
     final String noteJson = objectMapper.writeValueAsString(note);
+  
+    given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
+    given(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).willReturn("user");
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+    
     mvc.perform(post("/note/new").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
@@ -74,7 +84,8 @@ public class NoteControllerTest {
   @Test
   public void getANote_WhenNoteAdded_ShouldReturnTheNote() throws Exception {
     Note note1 = new Note("Nueva nota 1");
-    noteService.addNote(note1);
+    User user = new User();
+    noteService.addNote(note1, user);
 
     given(noteService.getNote(1L)).willReturn(Optional.of(note1));
     final String noteJson = objectMapper.writeValueAsString(note1);
@@ -97,8 +108,7 @@ public class NoteControllerTest {
   @Test
   public void deleteNote_WhenNoteExists_ShouldDeleteIt() throws Exception {
     Note note = new Note("This is the new note");
-
-    noteService.addNote(note);
+    noteService.addNote(note, new User());
 
     given(noteService.getNote(1L)).willReturn(Optional.of(note));
     final String noteJson = objectMapper.writeValueAsString(note);
