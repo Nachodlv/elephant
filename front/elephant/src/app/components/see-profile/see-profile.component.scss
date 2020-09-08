@@ -24,7 +24,6 @@
 }
 
 .edit-button {
-  margin-top: 5%;
   background-color: $elephant-green;
 }
 
@@ -57,16 +56,13 @@
 }
 
 .profile-email {
+  text-align: left;
   font-size: 15px;
   display: block;
-  margin-left: -200%;
-  margin-top: 2%;
+  margin-left: -14%;
 }
 
 .profile-email-label {
-  margin-left: -200%;
-}
-
-.email-alignment {
-  text-align: left;
+margin-left: 20%;
+  display: block;
 }
