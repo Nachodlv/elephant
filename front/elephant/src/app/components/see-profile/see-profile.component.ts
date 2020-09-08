@@ -21,8 +21,7 @@ export class SeeProfileComponent implements OnInit {
     });
 
   }
-
-  saveProfile(): void {
+  saveProfile(): void{
   }
 
 }

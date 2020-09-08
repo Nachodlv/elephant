@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
 import {RegisterComponent} from './components/register/register.component';
 import {LoginComponent} from './components/login/login.component';
@@ -13,15 +13,16 @@ import {SeeProfileComponent} from './components/see-profile/see-profile.componen
 const routes: Routes = [
   {path: 'note/create', component: NoteCreatorComponent, canActivate: [AuthGuard]},
   {path: 'note', component: NoteComponent, canActivate: [AuthGuard]},
-  { path: '', component: LoginComponent },
-  { path: 'register', component: RegisterComponent },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-  { path: 'note/:id', component: SeeNoteComponent, canActivate: [AuthGuard] },
-  { path: 'profile', component: SeeProfileComponent, canActivate: [AuthGuard] },
+  {path: '', component: LoginComponent},
+  {path: 'register', component: RegisterComponent},
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
+  {path: 'note/:id', component: SeeNoteComponent, canActivate: [AuthGuard]},
+  {path: 'profile', component: SeeProfileComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

@@ -1,7 +1,7 @@
 <div class="div-container">
 
   <div class="span-container">
-    <span class="register-span">Perfil</span>
+    <span class="profile-span">Perfil</span>
   </div>
 
   <form class="form-container" (ngSubmit)="saveProfile()">
@@ -9,24 +9,24 @@
 
       <mat-grid-tile>
         <mat-form-field appearance="none">
-          <label>Nombre</label>
-          <input class="profile-name" type="text" disabled matInput formControlName="name" [value]="user.firstName">
+          <label>Nombre y Apellido</label>
+          <input class="profile-name-lastname" type="text" disabled matInput value="Numa Leone">
         </mat-form-field>
       </mat-grid-tile>
 
       <mat-grid-tile>
-        <mat-form-field appearance="none">
-          <label>Apellido</label>
-          <input class="profile-last-name" type="text" disabled matInput formControlName="password" [value]="user.lastName">
-        </mat-form-field>
+        <div class="email-alignment">
+          <label for="profile-email" class="profile-email-label">Email</label>
+          <span id="profile-email" class="profile-email">n@g</span>
+        </div>
       </mat-grid-tile>
 
     </mat-grid-list>
 
-    <button class="save-button"
+    <button class="edit-button"
             type="submit"
             mat-raised-button>
-      Guardar
+      Editar
     </button>
   </form>
 
@@ -36,7 +36,7 @@
 
     <button class="change-password"
             mat-raised-button>
-      Cambiar contrasena
+      Cambiar contraseña
     </button>
     <button class="delete-user"
             mat-stroked-button>
