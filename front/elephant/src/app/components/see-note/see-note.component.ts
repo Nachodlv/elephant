@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {NoteService} from '../../services/note.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
+import {SnackbarService} from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-see-note',
@@ -14,7 +15,13 @@ export class SeeNoteComponent implements OnInit {
   public content;
   public created;
 
-  constructor(private noteService: NoteService, private route: ActivatedRoute) { }
+  constructor(
+    private noteService: NoteService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private snackBar: SnackbarService
+  ) {
+  }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
@@ -29,6 +36,9 @@ export class SeeNoteComponent implements OnInit {
 
       const timeStamp = res.created.split('T');
       this.created = timeStamp[0];
+    }, error => {
+      this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
+      this.router.navigate(['/home']);
     });
   }
 
