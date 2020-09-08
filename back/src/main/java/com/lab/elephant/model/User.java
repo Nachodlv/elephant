@@ -1,9 +1,11 @@
 package com.lab.elephant.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User {
@@ -20,6 +22,10 @@ public class User {
   @NotNull
   private String password;
   
+  @JsonIgnore
+  @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+  private List<Comment> comments = new ArrayList<>();
+
   public User() {
   }
   
@@ -68,5 +74,17 @@ public class User {
   
   public void setUuid(long uuid) {
     this.uuid = uuid;
+  }
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
+  public void addComment(Comment comment) {
+    comments.add(comment);
   }
 }
