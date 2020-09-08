@@ -1,7 +1,6 @@
 package com.lab.elephant.service;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.lab.elephant.model.BlackListedToken;
 import com.lab.elephant.repository.BlackListedTokenRepository;
 import org.junit.Test;
@@ -110,21 +109,21 @@ public class BlackListedTokenServiceTest {
     list.add(b1);
     list.add(b2);
     list.add(b3);
-    Mockito.when(tokenRepository.findAll()).thenReturn(list);
-    //esto me llama la atencion porque si lo mockeo si o si va a andar.
-    //esta es la implementacion de tokenService.update()
     
-    final List<BlackListedToken> allTokens = tokenService.findAllTokens();
-    for (BlackListedToken t : allTokens) {
-      final DecodedJWT decode = JWT.decode(t.getToken());
-      if (decode.getExpiresAt().before(new Date())) {
-        //tokenService.delete(t);
-        //en vez de hacer el delete, los borro de list que deberia ser equivalente.
-        list.remove(t);
-      }
-    }
-    assertThat(list.size()).isEqualTo(2);
-    assertThat(list.get(0)).isEqualTo(b1);
-    assertThat(list.get(1)).isEqualTo(b3);
+    final List<BlackListedToken> removedTokens = new ArrayList<>();
+    Mockito.doAnswer(invocationOnMock -> {
+      BlackListedToken object = invocationOnMock.getArgument(0);
+      removedTokens.add(object);
+      return null;
+    }).when(tokenRepository).delete(Mockito.any());
+    Mockito.when(tokenRepository.findAll()).thenReturn(list);
+    Mockito.when(tokenRepository.findById(b1.getUuid())).thenReturn(Optional.of(b1));
+    Mockito.when(tokenRepository.findById(b2.getUuid())).thenReturn(Optional.of(b2));
+    Mockito.when(tokenRepository.findById(b3.getUuid())).thenReturn(Optional.of(b3));
+    
+    tokenService.update();
+    
+    assertThat(removedTokens.size()).isEqualTo(1);
+    assertThat(removedTokens.get(0)).isEqualTo(b2);
   }
 }
