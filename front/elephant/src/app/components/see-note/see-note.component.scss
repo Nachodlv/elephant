@@ -2,9 +2,9 @@
 
 .container {
   height: 90%;
-  margin: 0 4%;
   display: flex;
   flex-direction: row;
+  margin: 2vh 4% 0;
 }
 
 .header {
@@ -39,7 +39,7 @@
 }
 
 .divider {
-  min-height: 95vh;
+  min-height: 90vh;
   height: 98%;
   border-color: $elephant-light-black;
 }
