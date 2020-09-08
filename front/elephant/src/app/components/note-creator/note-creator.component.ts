@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SnackbarService} from '../../services/snackbar.service';
 import {NoteService} from '../../services/note.service';
 import {Note} from '../../models/Note';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class NoteCreatorComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
               private snackBar: SnackbarService,
               private noteService: NoteService,
+              private router: Router,
   ) {
   }
 
@@ -35,13 +37,10 @@ export class NoteCreatorComponent implements OnInit {
     console.log(title);
     this.noteService.createNote(new Note(null, title)).subscribe(res => {
       this.snackBar.openSnackbar('¡Creación de Nota Exitosa!', 0);
+      this.router.navigate(['/note/', res.uuid]);
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
     });
-    /*note: Note = new Note(id,title);
-    la logica de cuando se hace una nota
-    send to Back/ api
-     */
   }
 
 }
