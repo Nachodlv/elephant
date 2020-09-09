@@ -25,8 +25,12 @@ public class BlackListedTokenServiceImpl implements BlackListedTokenService {
   }
   
   @Override
-  public BlackListedToken addToken(BlackListedToken token) {
-    return findToken(token.getToken()).isPresent() ? null : repository.save(token);
+  public Optional<BlackListedToken> addToken(BlackListedToken token) {
+    if (findToken(token.getToken()).isPresent())
+      return Optional.empty();
+    final BlackListedToken save = repository.save(token);
+    return Optional.of(save);
+    
   }
   
   @Override
@@ -59,7 +63,7 @@ public class BlackListedTokenServiceImpl implements BlackListedTokenService {
     }
   }
   
-  public BlackListedToken addToken(String token) {
+  public Optional<BlackListedToken> addToken(String token) {
     return addToken(new BlackListedToken(token));
   }
 }

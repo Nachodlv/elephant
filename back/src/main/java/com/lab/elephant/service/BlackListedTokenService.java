@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BlackListedTokenService {
   List<BlackListedToken> findAllTokens();
   
-  BlackListedToken addToken(BlackListedToken token);
+  Optional<BlackListedToken> addToken(BlackListedToken token);
   
   Optional<BlackListedToken> findTokenById(long id);
   

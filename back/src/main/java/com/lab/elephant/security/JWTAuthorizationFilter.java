@@ -34,12 +34,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     String header = req.getHeader(HEADER_STRING);
     
     //this if ignores the Token
-    final String equals = req.getRequestURI();
+    final String uri = req.getRequestURI();
     if (header == null
             || !header.startsWith(TOKEN_PREFIX)
-            || req.getRequestURI().equals(SIGN_UP_URL)
-            || req.getRequestURI().equals(TOKEN_VERIFY_URL)
-            || req.getRequestURI().equals(LOGOUT_URL)) {
+            || uri.equals(SIGN_UP_URL)
+            || uri.equals(TOKEN_VERIFY_URL)
+            || uri.equals(LOGOUT_URL)) {
       chain.doFilter(req, res);
       return;
     }

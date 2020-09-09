@@ -126,4 +126,52 @@ public class BlackListedTokenServiceTest {
     assertThat(removedTokens.size()).isEqualTo(1);
     assertThat(removedTokens.get(0)).isEqualTo(b2);
   }
+  
+  @Test
+  public void addToken_WhenTokenIsNew_ShouldReturnOptionalOfToken() {
+    String token = JWT.create()
+            .withSubject("john@elephant.com")
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+    BlackListedToken b = new BlackListedToken(token);
+    Mockito.when(tokenRepository.findByToken(token)).thenReturn(Optional.empty());
+    Mockito.when(tokenRepository.save(b)).thenReturn(b);
+    final Optional<BlackListedToken> blackListedToken = tokenService.addToken(b);
+    assertThat(blackListedToken.isPresent()).isTrue();
+    assertThat(blackListedToken.get().getToken()).isEqualTo(token);
+  }
+  
+  @Test
+  public void addToken_WhenTokenExists_ShouldReturnEmptyOptional() {
+    String token = JWT.create()
+            .withSubject("john@elephant.com")
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+    BlackListedToken b = new BlackListedToken(token);
+    Mockito.when(tokenRepository.findByToken(token)).thenReturn(Optional.of(b));
+    Mockito.when(tokenRepository.save(b)).thenReturn(b);
+    final Optional<BlackListedToken> blackListedToken = tokenService.addToken(b);
+    assertThat(blackListedToken.isPresent()).isFalse();
+  }
+  
+  @Test
+  public void findTokenById_WhenTokenExists_ShouldReturnIt() {
+    long id = 1;
+    String token = JWT.create()
+            .withSubject("john@elephant.com")
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+    BlackListedToken b = new BlackListedToken(token);
+    b.setUuid(id);
+    Mockito.when(tokenRepository.findById(id)).thenReturn(Optional.of(b));
+    assertThat(tokenService.findTokenById(id).isPresent()).isTrue();
+    assertThat(tokenService.findTokenById(id).get().getUuid()).isEqualTo(id);
+  }
+  
+  @Test
+  public void findTokenById_WhenTokenDoesNotExist_ShouldReturnEmptyOptional() {
+    long id = 1;
+    Mockito.when(tokenRepository.findById(id)).thenReturn(Optional.empty());
+    assertThat(tokenService.findTokenById(id).isPresent()).isFalse();
+  }
 }
