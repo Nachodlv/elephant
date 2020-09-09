@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 
 import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
@@ -34,7 +35,9 @@ public class CommentController {
   }
 
   @PostMapping(path = "/add/{idNote}")
-  public Comment addComment(@PathVariable("idNote") long idNote, @RequestBody Comment comment, HttpServletRequest request) {
+  public Comment addComment(@PathVariable("idNote") long idNote, @RequestBody @Valid Comment comment, HttpServletRequest request) {
+    System.out.println("Aca deberia llegar");
+
     String token = request.getHeader(HEADER_STRING);
 
     if (token != null) {
@@ -51,15 +54,18 @@ public class CommentController {
         Optional<Note> optionalNote = noteService.getNote(idNote);
         if (optionalNote.isPresent()) {
           Note note = optionalNote.get();
+          System.out.println("Aca deberia llegar todo bien");
           return commentService.addComment(note, user, comment);
         } else {
+          System.out.println("note");
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
         }
       } else {
+        System.out.println("user");
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
       }
     }
-
+    System.out.println("token");
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token Not Found");
   }
 

@@ -25,9 +25,8 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public Comment getComment(long id) {
-    Optional<Comment> optionalComment = commentRepository.findById(id);
-    return optionalComment.get();
+  public Optional<Comment> getComment(long id) {
+    return commentRepository.findById(id);
   }
 
 
