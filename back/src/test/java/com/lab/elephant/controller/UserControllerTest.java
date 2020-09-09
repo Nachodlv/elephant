@@ -6,6 +6,7 @@ import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.TokenServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,13 +51,15 @@ public class UserControllerTest {
     }
   }
 
-  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
-
+  @MockBean
+  private BlackListedTokenServiceImpl blackListedTokenService;
+  
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {
     User user = new User();
@@ -75,7 +78,6 @@ public class UserControllerTest {
 
   @Test
   public void addUser_whenEmailDoesExist_ShouldReturn409() throws Exception {
-
     String email = "john@elephant.com";
     User user = new User();
     user.setFirstName("John");
@@ -162,5 +164,4 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
-
 }
