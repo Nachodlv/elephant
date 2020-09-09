@@ -1,6 +1,6 @@
 <div class="dialog-container">
   <h1 mat-dialog-title class="title">Compartir nota</h1>
-  <form class="form" [formGroup]="shareForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="shareForm" (ngSubmit)="onSubmit()">
     <div mat-dialog-content class="dialog-content">
       <mat-form-field appearance="outline" class="email-input">
         <mat-label>Email</mat-label>
