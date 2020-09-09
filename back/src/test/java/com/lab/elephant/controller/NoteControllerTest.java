@@ -9,11 +9,14 @@ import com.lab.elephant.service.PermissionService;
 import com.lab.elephant.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -56,10 +59,18 @@ public class NoteControllerTest {
     Note note = new Note("Nueva Nota", "", ts);
     Optional<Note> optionalNote = Optional.of(note);
     final String noteJson = objectMapper.writeValueAsString(note);
-  
+    
     given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
-    given(SecurityContextHolder.getContext().getAuthentication().getPrincipal()).willReturn("user");
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+  
+  
+  
     
     mvc.perform(post("/note/new").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
