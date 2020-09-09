@@ -12,11 +12,8 @@ import {MatDialogRef} from '@angular/material/dialog';
 })
 export class ShareNoteDialogComponent implements OnInit, OnDestroy {
 
-  @ViewChild('form') form: FormGroupDirective;
   shareForm: FormGroup;
   shareSubscription: Subscription;
-
-  defaultMode: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,11 +23,10 @@ export class ShareNoteDialogComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.defaultMode = 'read';
 
     this.shareForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      mode: ['', Validators.required]
+      mode: ['read', Validators.required]
     });
   }
   ngOnDestroy(): void {

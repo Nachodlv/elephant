@@ -1,7 +1,7 @@
 <div class="dialog-container">
   <h1 mat-dialog-title class="title">Compartir nota</h1>
-  <div mat-dialog-content>
-    <form class="form" [formGroup]="shareForm" (ngSubmit)="onSubmit()" #form="ngForm">
+  <form class="form" [formGroup]="shareForm" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content class="dialog-content">
       <mat-form-field appearance="outline" class="email-input">
         <mat-label>Email</mat-label>
         <input matInput type="text" formControlName="email"/>
@@ -9,15 +9,16 @@
 
       <mat-form-field appearance="outline" class="mode-selector">
         <mat-label>Modo</mat-label>
-        <mat-select matNativeControl required [(ngModel)]="defaultMode" formControlName="mode">
+        <mat-select matNativeControl required formControlName="mode">
           <mat-option value="edit">Editor</mat-option>
           <mat-option value="read">Lector</mat-option>
         </mat-select>
       </mat-form-field>
-    </form>
-  </div>
-  <div class="actions-div" mat-dialog-actions>
-    <button class="close-btn" mat-button mat-dialog-close>Cerrar</button>
-    <button class="share-btn" mat-button (click)="form.ngSubmit.emit()" [disabled]="!form.valid">Compartir</button>
-  </div>
+    </div>
+
+    <div class="actions-div" mat-dialog-actions>
+      <button class="close-btn" mat-button mat-dialog-close>Cerrar</button>
+      <button class="share-btn" mat-button type="submit" [disabled]="!shareForm.valid">Compartir</button>
+    </div>
+  </form>
 </div>
