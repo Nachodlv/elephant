@@ -1,0 +1,46 @@
+<div class="div-container">
+
+  <div class="span-container">
+    <span class="register-span">Registrarse</span>
+  </div>
+
+  <form class="form-container" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <mat-grid-list cols="2" rowHeight="5rem">
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput formControlName="fullName">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Constraseña</mat-label>
+          <input type="password" matInput formControlName="password" appValidateEqual="confirmPassword" reverse="true">
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="outline">
+          <mat-label>Confirmar contraseña</mat-label>
+          <input type="password" matInput formControlName="confirmPassword" appValidateEqual="password">
+        </mat-form-field>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+
+    <button class="form-button"
+            type="submit"
+            mat-raised-button>
+      Registrarse
+    </button>
+  </form>
+</div>
