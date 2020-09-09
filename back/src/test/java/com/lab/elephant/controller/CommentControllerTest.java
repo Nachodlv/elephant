@@ -62,6 +62,8 @@ public class CommentControllerTest {
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  @MockBean
+  private BlackListedTokenServiceImpl blackListedTokenService;
 
   @Test
   public void addNewComment_WhenCommentCreated_ShouldReturnNewComment() throws Exception {
