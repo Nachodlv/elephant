@@ -3,6 +3,8 @@ package com.lab.elephant.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.lab.elephant.model.BlackListedToken;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,13 +16,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import static com.lab.elephant.security.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
-  
-  public JWTAuthorizationFilter(AuthenticationManager authManager) {
+  private final BlackListedTokenServiceImpl tokenService;
+  public JWTAuthorizationFilter(AuthenticationManager authManager, BlackListedTokenServiceImpl tokenService) {
     super(authManager);
+    this.tokenService = tokenService;
   }
   
   @Override
@@ -30,10 +34,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     String header = req.getHeader(HEADER_STRING);
     
     //this if ignores the Token
+    final String uri = req.getRequestURI();
     if (header == null
             || !header.startsWith(TOKEN_PREFIX)
-            || req.getRequestURI().equals(SIGN_UP_URL)
-            || req.getRequestURI().equals(TOKEN_VERIFY_URL)) {
+            || uri.equals(SIGN_UP_URL)
+            || uri.equals(TOKEN_VERIFY_URL)
+            || uri.equals(LOGOUT_URL)) {
       chain.doFilter(req, res);
       return;
     }
@@ -46,7 +52,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
   
   private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String token = request.getHeader(HEADER_STRING);
-    if (token != null) {
+    if (token != null && !isOnBlackList(token)) {
       // parse the token.
       String user;
       try {
@@ -63,4 +69,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     return null;
   }
   
+  private boolean isOnBlackList(String token) {
+    token = token.replace(TOKEN_PREFIX, "");
+    final Optional<BlackListedToken> bToken = tokenService.findToken(token);
+    return bToken.isPresent();
+  }
 }

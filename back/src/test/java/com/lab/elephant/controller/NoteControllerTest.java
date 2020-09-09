@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.NoteServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +22,7 @@ import java.util.Date;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -37,12 +36,14 @@ public class NoteControllerTest {
   private ObjectMapper objectMapper;
   @MockBean
   private NoteServiceImpl noteService;
-  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  @MockBean
+  private BlackListedTokenServiceImpl tokenService;
   
   @Test
   public void addNewNote_WhenNoteCreated_ShouldReturnNewNote() throws Exception {
