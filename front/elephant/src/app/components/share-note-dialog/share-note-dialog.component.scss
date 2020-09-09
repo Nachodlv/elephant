@@ -1,0 +1,36 @@
+@import "../../_vars.scss";
+
+.dialog-container {
+  text-align: center;
+}
+
+.close-btn {
+  background-color: $elephant-red;
+  color: $elephant-white
+}
+
+.share-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
+}
+
+.actions-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.email-input {
+  width: 100%;
+}
+
+.title {
+  font-size: 1.5vw;
+}
+
+.mode-selector{
+  width: 20%;
+}
+
+.dialog-content {
+  display: flex;
+}
