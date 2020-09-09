@@ -67,32 +67,43 @@ public class CommentControllerTest {
   public void addNewComment_WhenCommentCreated_ShouldReturnNewComment() throws Exception {
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
     Note note = new Note("Este es un titulo");
-    Comment comment = new Comment("This is the content of the comment");
-//
-//    user.addComment(comment);
-//    note.addComment(comment);
-//
-//    Optional<User> optionalUser = Optional.of(user);
+    Comment comment = new Comment("This is the content of the comment", user, note);
+
+    user.addComment(comment);
+    note.addComment(comment);
+
+    Optional<User> optionalUser = Optional.of(user);
     Optional<Note> optionalNote = Optional.of(note);
     Optional<Comment> optionalComment = Optional.of(comment);
 
+
+    given(userService.getUser(user.getUuid())).willReturn(optionalUser);
+    given(userService.getByEmail(user.getEmail())).willReturn(optionalUser);
+    given(userService.addUser(user)).willReturn(user);
+
+    given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
+    given(noteService.addNote(note)).willReturn(note);
+
+    given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
+    given(commentService.addComment(note, user, comment)).willReturn(comment);
+
 //    userService.addUser(user);
-    noteService.addNote(note);
+//    noteService.addNote(note);
 //    commentService.addComment(note, user, comment);
 
-//    given(userService.getUser(user.getUuid())).willReturn(optionalUser);
-//    given(userService.getByEmail(user.getEmail())).willReturn(optionalUser);
-    given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
-    given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
-//    given(commentService.addComment(note, user, comment)).willReturn(comment);
+//    System.out.println("user = " + objectMapper.writeValueAsString(user));
+//    System.out.println("note = " + objectMapper.writeValueAsString(note));
+//    System.out.println("comment = " + objectMapper.writeValueAsString(comment));
 
     String token = JWT.create().withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
             .sign(HMAC512(SECRET.getBytes()));
 
     given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
-
     final String commentJson = objectMapper.writeValueAsString(comment);
+
+//    System.out.println("commentJson = " + commentJson);
+//    System.out.println("comment = " + comment);
 
     mvc.perform(post("/comment/add/" + note.getUuid()).content(commentJson)
             .header("Authorization", TOKEN_PREFIX + token)
@@ -102,8 +113,35 @@ public class CommentControllerTest {
   }
 
   @Test
-  public void addNewComment_WhenNoteNotExists_ShouldReturnNotFound() {
-
+  public void addNewComment_WhenNoteNotExists_ShouldReturnNotFound() throws Exception {
+//    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
+//    Note note = new Note("Este es un titulo");
+//    Comment comment = new Comment("This is the content of the comment", user, note);
+//
+//    user.addComment(comment);
+//    note.addComment(comment);
+//
+//    Optional<User> optionalUser = Optional.of(user);
+//    Optional<Comment> optionalComment = Optional.of(comment);
+//
+//    given(userService.getUser(user.getUuid())).willReturn(optionalUser);
+//    given(userService.getByEmail(user.getEmail())).willReturn(optionalUser);
+//    given(userService.addUser(user)).willReturn(user);
+//    given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
+//    given(commentService.addComment(note, user, comment)).willReturn(comment);
+//
+//    String token = JWT.create().withSubject(user.getEmail())
+//            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+//            .sign(HMAC512(SECRET.getBytes()));
+//
+//    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
+//    final String commentJson = objectMapper.writeValueAsString(comment);
+//
+//    mvc.perform(post("/comment/add/" + note.getUuid()).content(commentJson)
+//            .header("Authorization", TOKEN_PREFIX + token)
+//            .contentType(MediaType.APPLICATION_JSON))
+//            .andDo(MockMvcResultHandlers.print())
+//            .andExpect(status().isNotFound());
   }
 
   @Test

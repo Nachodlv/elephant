@@ -19,7 +19,7 @@ import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/comment")
+@RequestMapping(path = "/comment")
 public class CommentController {
 
   private final NoteService noteService;
@@ -36,7 +36,7 @@ public class CommentController {
 
   @PostMapping(path = "/add/{idNote}")
   public Comment addComment(@PathVariable("idNote") long idNote, @RequestBody @Valid Comment comment, HttpServletRequest request) {
-    System.out.println("Aca deberia llegar");
+    System.out.println("Aca no llega?");
 
     String token = request.getHeader(HEADER_STRING);
 
