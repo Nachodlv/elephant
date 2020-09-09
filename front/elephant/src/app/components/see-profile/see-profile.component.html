@@ -10,14 +10,16 @@
       <mat-grid-tile>
         <mat-form-field appearance="none">
           <label>Nombre y Apellido</label>
-          <input class="profile-name-lastname" type="text" disabled matInput value="Numa Leone">
+          <input class="profile-name-lastname" type="text" disabled matInput
+                 [value]="user.lastName">
+          <!-- como user first name aun no funciona, no se lo puede aplicar al html  -->
         </mat-form-field>
       </mat-grid-tile>
 
       <mat-grid-tile>
         <mat-form-field appearance="none">
           <label for="profile-email" class="profile-email-label">Email</label>
-          <input id="profile-email" class="profile-email" type="text" matInput value="n@g" readonly>
+          <input id="profile-email" class="profile-email" type="text" matInput [value]="user.email" readonly>
         </mat-form-field>
       </mat-grid-tile>
 

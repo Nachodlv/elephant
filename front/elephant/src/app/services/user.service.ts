@@ -34,7 +34,7 @@ export class UserService {
   }
 
   getUser(): Observable<User> {
-    return this.httpService.get('/user/get').pipe(tap((_ => {
+    return this.httpService.get('/user').pipe(tap((_ => {
       }), err => console.log(err)
     ), map(res => {
       return User.fromJson(res.body);
