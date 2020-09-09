@@ -17,4 +17,6 @@ public interface NoteService {
   List<Note> getAllNotes();
 
   void deleteNote(long id);
+  
+  Optional<User> getOwner(Note note);
 }

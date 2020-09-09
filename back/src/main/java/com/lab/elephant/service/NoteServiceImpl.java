@@ -1,6 +1,7 @@
 package com.lab.elephant.service;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.Permission;
 import com.lab.elephant.model.PermissionType;
 import com.lab.elephant.model.User;
 import com.lab.elephant.repository.NoteRepository;
@@ -43,5 +44,13 @@ public class NoteServiceImpl implements NoteService {
   @Override
   public void deleteNote(long id) {
     noteRepository.deleteById(id);
+  }
+  
+  @Override
+  public Optional<User> getOwner(Note note) {
+    for (Permission p : note.getPermissions()) {
+      if (p.getType().equals(PermissionType.Owner)) return Optional.of(p.getUser());
+    }
+    return Optional.empty();
   }
 }

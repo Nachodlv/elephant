@@ -123,5 +123,5 @@ public class NoteServiceTest {
 
     assertThat(noteService.getAllNotes().contains(note)).isFalse();
   }
-
+  //todo add test for noteService.findOwner();
 }
