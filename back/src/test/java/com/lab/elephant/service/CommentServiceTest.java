@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -74,6 +75,31 @@ public class CommentServiceTest {
     assertThat(commentTest.getOwner()).isEqualTo(user);
     assertThat(note.getComments().contains(commentTest)).isTrue();
     assertThat(user.getComments().contains(commentTest)).isTrue();
+  }
+
+  @Test
+  public void GetCommentById_WhenCommentDoesExist_ShouldReturnComment() {
+
+    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
+    Note note = new Note("Este es un titulo");
+    Comment comment = new Comment("This is the content of the comment", user, note);
+
+    Mockito.when(commentRepository.save(comment)).thenReturn(comment);
+    Mockito.when(commentRepository.findById(comment.getUuid())).thenReturn(Optional.of(comment));
+
+    commentRepository.save(comment);
+
+    Optional<Comment> optionalComment = commentService.getComment(comment.getUuid());
+    Comment commentTest = null;
+
+    if (optionalComment.isPresent()) {
+      commentTest = optionalComment.get();
+    }
+
+    assertThat(commentTest).isNotNull();
+    assertThat(commentTest).isEqualTo(comment);
+    assertThat(Objects.requireNonNull(commentTest).getUuid()).isEqualTo(comment.getUuid());
+    assertThat(commentTest.getContent()).isEqualTo(comment.getContent());
   }
 
 }
