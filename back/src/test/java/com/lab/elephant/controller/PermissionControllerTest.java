@@ -1,9 +1,7 @@
 package com.lab.elephant.controller;
 
-import com.lab.elephant.model.Note;
-import com.lab.elephant.model.Permission;
-import com.lab.elephant.model.PermissionType;
-import com.lab.elephant.model.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lab.elephant.model.*;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.NoteService;
 import com.lab.elephant.service.PermissionService;
@@ -21,13 +19,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -77,8 +77,17 @@ public class PermissionControllerTest {
     Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
     SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail(email)).willReturn(Optional.of(friend));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
     //le tengo que pasar la info de
     //userEmail, noteId, permissionType
-    mvc.perform(post("/permission/add"));
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
   }
 }

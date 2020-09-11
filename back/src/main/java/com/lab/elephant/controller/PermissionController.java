@@ -2,23 +2,21 @@ package com.lab.elephant.controller;
 
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.PermissionType;
+import com.lab.elephant.model.ShareNoteDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.NoteService;
 import com.lab.elephant.service.PermissionService;
 import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path = "/permission")
+@RequestMapping
 public class PermissionController {
   
   private final UserService userService;
@@ -30,9 +28,11 @@ public class PermissionController {
     this.permissionService = permissionService;
   }
   
-  @PutMapping(path = "/add")
-  public void add(String userEmail, long noteId, String permissionType) {
+  @PutMapping(path = "{noteId}/permission/add")
+  public void add(@RequestBody ShareNoteDTO dto, @PathVariable long noteId) {
     final PermissionType permission;
+    final String permissionType = dto.getPermissionType();
+    final String userEmail = dto.getEmail();
     try {
       permission = PermissionType.valueOf(permissionType);
     } catch (IllegalArgumentException e) {
