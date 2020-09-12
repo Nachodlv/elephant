@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NoteServiceTest {
 
   @TestConfiguration
-  static class CubeServiceImplTestContextConfiguration {
+  static class NoteServiceImplTestContextConfiguration {
     @Autowired
     private NoteRepository noteRepository;
     @Autowired

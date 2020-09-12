@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.NoteServiceImpl;
 import com.lab.elephant.service.PermissionService;
 import com.lab.elephant.service.UserService;
@@ -50,6 +51,8 @@ public class NoteControllerTest {
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
+  @MockBean
+  private BlackListedTokenServiceImpl tokenService;
   @MockBean
   private PermissionService permissionService;
   

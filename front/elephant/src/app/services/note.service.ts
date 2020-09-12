@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Note} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 
@@ -28,5 +28,9 @@ export class NoteService {
     ), map(res => {
       return Note.fromJson(res.body);
     }));
+  }
+
+  shareNote(shareNoteData): Observable<any> {
+    return of({value: true});
   }
 }

@@ -1,5 +1,7 @@
 package com.lab.elephant.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -18,6 +20,10 @@ public class Note {
   private String content;
 
   private Timestamp created;
+
+  @JsonIgnore
+  @OneToMany(cascade = CascadeType.ALL)
+  private List<Comment> comments = new ArrayList<>();
 
   @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
   private List<Permission> permissions = new ArrayList<>();
@@ -65,6 +71,18 @@ public class Note {
 
   public void setCreated(Timestamp created) {
     this.created = created;
+  }
+
+  public List<Comment> getComments() {
+    return comments;
+  }
+
+  public void setComments(List<Comment> comments) {
+    this.comments = comments;
+  }
+
+  public void addComment(Comment comment) {
+    comments.add(comment);
   }
   
   public List<Permission> getPermissions() {

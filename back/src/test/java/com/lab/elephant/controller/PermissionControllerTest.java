@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.*;
 import com.lab.elephant.security.UserDetailsServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.NoteService;
 import com.lab.elephant.service.PermissionService;
 import com.lab.elephant.service.UserService;
@@ -49,7 +50,8 @@ public class PermissionControllerTest {
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder bCryptPasswordEncoder;
-  
+  @MockBean
+  private BlackListedTokenServiceImpl blackListedTokenService;
   @Test
   public void addPermission_WithEverythingOk_ShouldReturn_200() throws Exception {
     //creating user that made the note.
