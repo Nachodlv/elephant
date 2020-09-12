@@ -1,6 +1,8 @@
 package com.lab.elephant.service;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.Permission;
+import com.lab.elephant.model.PermissionType;
 import com.lab.elephant.model.User;
 import com.lab.elephant.repository.NoteRepository;
 import org.junit.Test;
@@ -12,10 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -123,5 +122,33 @@ public class NoteServiceTest {
 
     assertThat(noteService.getAllNotes().contains(note)).isFalse();
   }
-  //todo add test for noteService.findOwner();
+  
+  @Test
+  public void getOwner_WhenOwnerExists_ShouldReturnIt() {
+    final Note note = new Note();
+    final long id = 1;
+    final User user = new User();
+    final Permission p = new Permission(user, note, PermissionType.Owner);
+    final List<Permission> permissions = new ArrayList<>();
+    user.setUuid(id);
+    permissions.add(p);
+    note.setPermissions(permissions);
+    final Optional<User> owner = noteService.getOwner(note);
+    assertThat(owner.isPresent()).isTrue();
+    assertThat(owner.get().getUuid()).isEqualTo(id);
+  }
+  
+  @Test
+  public void getOwner_WhenOwnerDoesNotExist_ShouldReturnEmptyOptional() {
+    final Note note = new Note();
+    final long id = 1;
+    final User user = new User();
+    final Permission p = new Permission(user, note, PermissionType.Viewer);
+    final List<Permission> permissions = new ArrayList<>();
+    user.setUuid(id);
+    permissions.add(p);
+    note.setPermissions(permissions);
+    final Optional<User> owner = noteService.getOwner(note);
+    assertThat(owner.isPresent()).isFalse();
+  }
 }

@@ -27,7 +27,7 @@ public class NoteServiceImpl implements NoteService {
     note.setContent("");
     note.setCreated(new Timestamp(System.currentTimeMillis()));
     final Note savedNote = noteRepository.save(note);
-    permissionService.addRelationShip(user, note, PermissionType.Owner);
+    permissionService.addRelationship(user, note, PermissionType.Owner);
     return savedNote;
   }
 

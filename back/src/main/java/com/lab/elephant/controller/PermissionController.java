@@ -36,14 +36,14 @@ public class PermissionController {
     try {
       permission = PermissionType.valueOf(permissionType);
     } catch (IllegalArgumentException e) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permission Type Not Found");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Permission Type Not Found");
     }
     final Optional<User> oUser = userService.getByEmail(userEmail);
     if (!oUser.isPresent())
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Not Found");
     final Optional<Note> oNote = noteService.getNote(noteId);
     if (!oNote.isPresent())
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Note Not Found");
     
     final User user = oUser.get();
     final Note note = oNote.get();
@@ -55,6 +55,6 @@ public class PermissionController {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Note has no owner");
     if (requestUser.get().getUuid() != noteOwner.get().getUuid())
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User can't modify this note");
-    permissionService.addRelationShip(user, note, permission);
+    permissionService.addRelationship(user, note, permission);
   }
 }

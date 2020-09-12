@@ -52,7 +52,200 @@ public class PermissionControllerTest {
   
   @Test
   public void addPermission_WithEverythingOk_ShouldReturn_200() throws Exception {
-    //todo finish implementing
+    //creating user that made the note.
+    final User owner = new User();
+    final Note note = new Note("The way of kings");
+    final long noteId = 1;
+    note.setUuid(noteId);
+    final List<Permission> ownerPermissions = new ArrayList<>();
+    final List<Permission> notePermissions = new ArrayList<>();
+    final Permission p = new Permission(owner, note, PermissionType.Owner);
+    ownerPermissions.add(p);
+    notePermissions.add(p);
+    owner.setPermissions(ownerPermissions);
+    note.setPermissions(notePermissions);
+    //creating other objects for sharing
+    final User friend = new User();
+    owner.setUuid(1);
+    friend.setUuid(2);
+    final String email = "john@elephant.com";
+    friend.setEmail(email);
+    PermissionType permissionType = PermissionType.Viewer;
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail(email)).willReturn(Optional.of(friend));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void addPermission_WithInvalidPermissionType_ShouldReturn_400() throws Exception {
+    //creating user that made the note.
+    final User owner = new User();
+    final Note note = new Note("The way of kings");
+    final long noteId = 1;
+    note.setUuid(noteId);
+    final List<Permission> ownerPermissions = new ArrayList<>();
+    final List<Permission> notePermissions = new ArrayList<>();
+    final Permission p = new Permission(owner, note, PermissionType.Owner);
+    ownerPermissions.add(p);
+    notePermissions.add(p);
+    owner.setPermissions(ownerPermissions);
+    note.setPermissions(notePermissions);
+    //creating other objects for sharing
+    final User friend = new User();
+    owner.setUuid(1);
+    friend.setUuid(2);
+    final String email = "john@elephant.com";
+    friend.setEmail(email);
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail(email)).willReturn(Optional.of(friend));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+  
+    ObjectMapper o = new ObjectMapper();
+    final String invalidPermissionType = "invalidPermissionType";
+    String json = o.writeValueAsString(new ShareNoteDTO(email, invalidPermissionType));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason("Permission Type Not Found"));
+  }
+  
+  @Test
+  public void addPermission_WithInvalidUserEmail_ShouldReturn_400() throws Exception {
+    //creating user that made the note.
+    final User owner = new User();
+    final Note note = new Note("The way of kings");
+    final long noteId = 1;
+    note.setUuid(noteId);
+    final List<Permission> ownerPermissions = new ArrayList<>();
+    final List<Permission> notePermissions = new ArrayList<>();
+    final Permission p = new Permission(owner, note, PermissionType.Owner);
+    ownerPermissions.add(p);
+    notePermissions.add(p);
+    owner.setPermissions(ownerPermissions);
+    note.setPermissions(notePermissions);
+    //creating other objects for sharing
+    final String email = "john@elephant.com";
+    PermissionType permissionType = PermissionType.Viewer;
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+  
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason("User Not Found"));
+  }
+  
+  @Test
+  public void addPermission_WithInvalidNoteId_ShouldReturn_400() throws Exception {
+    //creating user that made the note.
+    final User owner = new User();
+    final Note note = new Note("The way of kings");
+    final long noteId = 1;
+    final List<Permission> ownerPermissions = new ArrayList<>();
+    final List<Permission> notePermissions = new ArrayList<>();
+    final Permission p = new Permission(owner, note, PermissionType.Owner);
+    ownerPermissions.add(p);
+    notePermissions.add(p);
+    owner.setPermissions(ownerPermissions);
+    note.setPermissions(notePermissions);
+    //creating other objects for sharing
+    final User friend = new User();
+    owner.setUuid(1);
+    friend.setUuid(2);
+    final String email = "john@elephant.com";
+    friend.setEmail(email);
+    PermissionType permissionType = PermissionType.Viewer;
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail(email)).willReturn(Optional.of(friend));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+  
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason("Note Not Found"));
+  }
+  
+  @Test
+  public void addPermission_WithNoteWithoutOwner_ShouldReturn_500() throws Exception {
+    //creating user that made the note.
+    final User owner = new User();
+    final Note note = new Note("The way of kings");
+    final long noteId = 1;
+    note.setUuid(noteId);
+    //creating other objects for sharing
+    final User friend = new User();
+    owner.setUuid(1);
+    friend.setUuid(2);
+    final String email = "john@elephant.com";
+    friend.setEmail(email);
+    PermissionType permissionType = PermissionType.Viewer;
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail(email)).willReturn(Optional.of(friend));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+  
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isInternalServerError())
+            .andExpect(status().reason("Note has no owner"));
+  }
+  
+  @Test
+  public void addPermission_WithAuthenticatedUserThatIsNotTheNoteOwner_ShouldReturn_401() throws Exception {
     //creating user that made the note.
     final User owner = new User();
     final Note note = new Note("The way of kings");
@@ -68,26 +261,28 @@ public class PermissionControllerTest {
     //creating other objects for sharing
     final User friend = new User();
     final String email = "john@elephant.com";
+    owner.setUuid(1);
+    friend.setUuid(2);
     friend.setEmail(email);
     PermissionType permissionType = PermissionType.Viewer;
     //this is to mock the logged in user
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("notOwner");
     SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail("notOwner")).willReturn(Optional.of(friend));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
-    //le tengo que pasar la info de
-    //userEmail, noteId, permissionType
+  
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
     mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User can't modify this note"));
   }
 }

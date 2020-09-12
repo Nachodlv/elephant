@@ -19,8 +19,7 @@ public class PermissionServiceImpl implements PermissionService {
   }
   
   @Override
-  public void addRelationShip(User user, Note note, PermissionType type) {
-    //todo que pasa si ya hay una relationship???
+  public void addRelationship(User user, Note note, PermissionType type) {
     Permission p = new Permission(user, note, type);
     List<Permission> userPermissions = user.getPermissions();
     List<Permission> notePermissions = note.getPermissions();

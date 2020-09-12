@@ -8,5 +8,5 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PermissionService {
   
-  void addRelationShip(User user, Note note, PermissionType type);
+  void addRelationship(User user, Note note, PermissionType type);
 }
