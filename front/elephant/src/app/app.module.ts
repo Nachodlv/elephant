@@ -28,6 +28,7 @@ import { SeeProfileComponent } from './components/see-profile/see-profile.compon
     NoteCreatorComponent,
     NavbarComponent,
     RegisterComponent,
+    EqualValidator,
     LoginComponent,
     EqualValidator,
     SeeNoteComponent,
@@ -46,7 +47,8 @@ import { SeeProfileComponent } from './components/see-profile/see-profile.compon
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [],
 })
 export class AppModule {
 }
