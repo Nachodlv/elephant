@@ -55,7 +55,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
   openDialog(): void {
     this.dialog.open(ShareNoteDialogComponent, {
       width: '30vw',
-      position: {top: '10%'}
+      position: {top: '10%'},
+      data: {noteId: this.id}
     });
   }
 
