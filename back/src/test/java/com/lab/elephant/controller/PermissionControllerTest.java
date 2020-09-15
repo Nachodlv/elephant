@@ -94,7 +94,7 @@ public class PermissionControllerTest {
   }
   
   @Test
-  public void addPermission_WithInvalidPermissionType_ShouldReturn_400() throws Exception {
+  public void addPermission_WithInvalidPermissionType_ShouldReturn_404() throws Exception {
     //creating user that made the note.
     final User owner = new User();
     final Note note = new Note("The way of kings");
@@ -131,12 +131,12 @@ public class PermissionControllerTest {
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andExpect(status().reason("Permission Type Not Found"));
   }
   
   @Test
-  public void addPermission_WithInvalidUserEmail_ShouldReturn_400() throws Exception {
+  public void addPermission_WithInvalidUserEmail_ShouldReturn_404() throws Exception {
     //creating user that made the note.
     final User owner = new User();
     final Note note = new Note("The way of kings");
@@ -168,12 +168,12 @@ public class PermissionControllerTest {
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andExpect(status().reason("User Not Found"));
   }
   
   @Test
-  public void addPermission_WithInvalidNoteId_ShouldReturn_400() throws Exception {
+  public void addPermission_WithInvalidNoteId_ShouldReturn_404() throws Exception {
     //creating user that made the note.
     final User owner = new User();
     final Note note = new Note("The way of kings");
@@ -208,7 +208,7 @@ public class PermissionControllerTest {
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isBadRequest())
+            .andExpect(status().isNotFound())
             .andExpect(status().reason("Note Not Found"));
   }
   

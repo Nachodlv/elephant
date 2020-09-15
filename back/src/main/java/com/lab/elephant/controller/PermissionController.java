@@ -36,14 +36,14 @@ public class PermissionController {
     try {
       permission = PermissionType.valueOf(permissionType);
     } catch (IllegalArgumentException e) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Permission Type Not Found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permission Type Not Found");
     }
     final Optional<User> oUser = userService.getByEmail(userEmail);
     if (!oUser.isPresent())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User Not Found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
     final Optional<Note> oNote = noteService.getNote(noteId);
     if (!oNote.isPresent())
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Note Not Found");
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
     
     final User user = oUser.get();
     final Note note = oNote.get();

@@ -25,7 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
@@ -96,11 +98,20 @@ public class NoteControllerTest {
   }
 
   @Test
-  public void getANote_WhenNoteAdded_ShouldReturnTheNote() throws Exception {
+  public void getANote_WhenNoteAddedAndUserCanView_ShouldReturnTheNote() throws Exception {
     Note note1 = new Note("Nueva nota 1");
     User user = new User();
     noteService.addNote(note1, user);
-
+    List<User> userList = new ArrayList<>();
+    userList.add(user);
+    
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    given(noteService.getUsersWithPermissions(note1)).willReturn(userList);
     given(noteService.getNote(1L)).willReturn(Optional.of(note1));
     final String noteJson = objectMapper.writeValueAsString(note1);
 
@@ -111,19 +122,58 @@ public class NoteControllerTest {
   }
 
   @Test
+  public void getANote_WhenUserCantView_ShouldReturn401() throws Exception {
+    Note note1 = new Note("Nueva nota 1");
+    User user = new User();
+    noteService.addNote(note1, user);
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    given(noteService.getNote(1L)).willReturn(Optional.of(note1));
+    final String noteJson = objectMapper.writeValueAsString(note1);
+  
+    mvc.perform(get("/note/1").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot view this note"));
+  }
+  
+  @Test
   public void getNote_WhenIdDoesNotExists_ShouldReturnNotFound() throws Exception {
     given(noteService.getNote(1L)).willReturn(Optional.empty());
-
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+    
     mvc.perform(get("/note/1")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
   }
 
   @Test
-  public void deleteNote_WhenNoteExists_ShouldDeleteIt() throws Exception {
+  public void deleteNote_WhenNoteExistsAndUserIsOwner_ShouldDeleteIt() throws Exception {
     Note note = new Note("This is the new note");
-    noteService.addNote(note, new User());
-
+    User user = new User();
+    user.setUuid(1);
+    noteService.addNote(note, user);
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    given(noteService.getOwner(note)).willReturn(Optional.of(user));
     given(noteService.getNote(1L)).willReturn(Optional.of(note));
     final String noteJson = objectMapper.writeValueAsString(note);
 
@@ -132,11 +182,67 @@ public class NoteControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
   }
-
+  
+  @Test
+  public void deleteNote_WhenNoteHasNoOwner_ShouldReturn500() throws Exception {
+    Note note = new Note("This is the new note");
+    noteService.addNote(note, new User());
+    
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+    
+    given(noteService.getNote(1L)).willReturn(Optional.of(note));
+    final String noteJson = objectMapper.writeValueAsString(note);
+    
+    mvc.perform(delete("/note/delete/1").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isInternalServerError())
+            .andExpect(status().reason("Note has no owner"));
+  }
+  
+  @Test
+  public void deleteNote_WhenNoteExistsAndUserIsNotOwner_ShouldReturn401() throws Exception {
+    Note note = new Note("This is the new note");
+    User user = new User();
+    User owner = new User();
+    user.setUuid(1);
+    owner.setUuid(2);
+    noteService.addNote(note, user);
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+  
+    given(noteService.getOwner(note)).willReturn(Optional.of(user));
+    given(noteService.getNote(1L)).willReturn(Optional.of(note));
+    final String noteJson = objectMapper.writeValueAsString(note);
+  
+    mvc.perform(delete("/note/delete/1").content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User can't delete this note"));
+  }
+  
   @Test
   public void deleteNote_WhenNoteNotExists_ShouldReturnNotFound() throws Exception {
     given(noteService.getNote(1L)).willReturn(Optional.empty());
-
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+    
     mvc.perform(delete("/note/delete/1")
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())

@@ -19,4 +19,6 @@ public interface NoteService {
   void deleteNote(long id);
   
   Optional<User> getOwner(Note note);
+  
+  List<User> getUsersWithPermissions(Note note);
 }

@@ -151,4 +151,27 @@ public class NoteServiceTest {
     final Optional<User> owner = noteService.getOwner(note);
     assertThat(owner.isPresent()).isFalse();
   }
+  
+  @Test
+  public void getUsersWithPermissions_WhenNoteHasPermissions_ShouldReturnThem() {
+    final Note note = new Note();
+    final User user1 = new User();
+    final User user2 = new User();
+    final List<Permission> permissions = new ArrayList<>();
+    final List<User> userList = new ArrayList<>();
+    userList.add(user1);
+    userList.add(user2);
+    permissions.add(new Permission(user1, note, PermissionType.Owner));
+    permissions.add(new Permission(user2, note, PermissionType.Editor));
+    note.setPermissions(permissions);
+    final List<User> usersWithPermissions = noteService.getUsersWithPermissions(note);
+    assertThat(usersWithPermissions.size()).isEqualTo(2);
+    assertThat(usersWithPermissions).isEqualTo(userList);
+  }
+  
+  @Test
+  public void getUsersWithPermissions_WhenNoteHasNoPermissions_ShouldReturnEmptyList() {
+    final List<User> usersWithPermissions = noteService.getUsersWithPermissions(new Note());
+    assertThat(usersWithPermissions.size()).isEqualTo(0);
+  }
 }
