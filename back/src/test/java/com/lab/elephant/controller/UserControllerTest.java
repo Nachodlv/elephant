@@ -1,11 +1,13 @@
 package com.lab.elephant.controller;
 
 import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.TokenServiceImpl;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +44,8 @@ public class UserControllerTest {
   @MockBean
   private TokenServiceImpl tokenService;
 
+  private final ObjectMapper o = new ObjectMapper().configure(MapperFeature.USE_ANNOTATIONS,false);
+
   @TestConfiguration
   static class TokenServiceImplTestContextConfiguration {
     @Bean
@@ -50,13 +54,15 @@ public class UserControllerTest {
     }
   }
 
-  // Both UserDetailsServiceImpl and BCryptPasswordEncoder
+  // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
   private BCryptPasswordEncoder passwordEncoder;
-
+  @MockBean
+  private BlackListedTokenServiceImpl blackListedTokenService;
+  
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {
     User user = new User();
@@ -65,7 +71,6 @@ public class UserControllerTest {
     user.setPassword("foGMeyUAX34D13s2");
     user.setEmail("john@elephant.com");
 
-    ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
     mvc.perform(post("/user/create").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -75,7 +80,6 @@ public class UserControllerTest {
 
   @Test
   public void addUser_whenEmailDoesExist_ShouldReturn409() throws Exception {
-
     String email = "john@elephant.com";
     User user = new User();
     user.setFirstName("John");
@@ -84,7 +88,6 @@ public class UserControllerTest {
     user.setEmail(email);
     Optional<User> oUser = Optional.of(user);
     given(userService.getByEmail(email)).willReturn(oUser);
-    ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
     mvc.perform(post("/user/create").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -95,7 +98,6 @@ public class UserControllerTest {
   @Test
   public void addUser_whenUserIsNull_ShouldReturnBadRequest() throws Exception {
     User user = null;
-    ObjectMapper o = new ObjectMapper();
     final String json = o.writeValueAsString(user);
     mvc.perform(post("/user/create").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -109,7 +111,6 @@ public class UserControllerTest {
 
     userService.addUser(user);
 
-    ObjectMapper o = new ObjectMapper();
     final String noteJson = o.writeValueAsString(user);
 
     given(userService.getUser(1L)).willReturn(Optional.of(user));
@@ -134,7 +135,6 @@ public class UserControllerTest {
 
     userService.addUser(user);
 
-    ObjectMapper o = new ObjectMapper();
     final String noteJson = o.writeValueAsString(user);
     given(userService.getUser(1L)).willReturn(Optional.of(user));
 
@@ -152,7 +152,6 @@ public class UserControllerTest {
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
             .sign(HMAC512(SECRET.getBytes()));
 
-    ObjectMapper o = new ObjectMapper();
     final String noteJson = o.writeValueAsString(user);
     given(userService.getUser(1L)).willReturn(Optional.of(user));
 
@@ -162,5 +161,4 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
-
 }

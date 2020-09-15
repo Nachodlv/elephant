@@ -17,7 +17,7 @@ import {EqualValidator} from './directives/equal-validator.directive';
 import { MatDialogModule} from '@angular/material/dialog';
 import {LoginComponent} from './components/login/login.component';
 import { SeeNoteComponent } from './components/see-note/see-note.component';
-import { SeeProfileComponent } from './components/see-profile/see-profile.component';
+import { ShareNoteDialogComponent } from './components/share-note-dialog/share-note-dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,11 +28,10 @@ import { SeeProfileComponent } from './components/see-profile/see-profile.compon
     NoteCreatorComponent,
     NavbarComponent,
     RegisterComponent,
-    EqualValidator,
     LoginComponent,
     EqualValidator,
     SeeNoteComponent,
-    SeeProfileComponent
+    ShareNoteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -47,8 +46,7 @@ import { SeeProfileComponent } from './components/see-profile/see-profile.compon
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
   ],
-  bootstrap: [AppComponent],
-  entryComponents: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }
