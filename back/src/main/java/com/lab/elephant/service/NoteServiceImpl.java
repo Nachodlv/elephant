@@ -8,6 +8,7 @@ import com.lab.elephant.repository.NoteRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,5 +53,13 @@ public class NoteServiceImpl implements NoteService {
       if (p.getType().equals(PermissionType.Owner)) return Optional.of(p.getUser());
     }
     return Optional.empty();
+  }
+  
+  @Override
+  public List<User> getUsersWithPermissions(Note note) {
+    List<User> users = new ArrayList<>();
+    for (Permission p : note.getPermissions())
+      users.add(p.getUser());
+    return users;
   }
 }
