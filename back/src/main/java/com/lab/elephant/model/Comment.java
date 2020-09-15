@@ -1,6 +1,7 @@
 package com.lab.elephant.model;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "comment")
@@ -20,10 +21,13 @@ public class Comment {
   @JoinColumn(name = "note_id")
   private Note note;
 
-  public Comment(String content, User owner, Note note) {
+  private Timestamp created;
+
+  public Comment(String content, User owner, Note note, Timestamp created) {
     this.content = content;
     this.owner = owner;
     this.note = note;
+    this.created = created;
   }
 
   public Comment(String content) {
@@ -65,5 +69,13 @@ public class Comment {
   public void setNote(Note note) {
     note.addComment(this);
     this.note = note;
+  }
+
+  public Timestamp getCreated() {
+    return created;
+  }
+
+  public void setCreated(Timestamp created) {
+    this.created = created;
   }
 }

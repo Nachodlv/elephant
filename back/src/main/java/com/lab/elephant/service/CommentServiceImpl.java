@@ -6,6 +6,7 @@ import com.lab.elephant.model.User;
 import com.lab.elephant.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,7 @@ public class CommentServiceImpl implements CommentService {
   public Comment addComment(Note note, User user, Comment comment) {
     comment.setNote(note);
     comment.setOwner(user);
+    comment.setCreated(new Timestamp(System.currentTimeMillis()));
     return commentRepository.save(comment);
   }
 

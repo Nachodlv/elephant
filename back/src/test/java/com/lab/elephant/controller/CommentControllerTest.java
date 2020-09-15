@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Optional;
 
@@ -69,7 +70,8 @@ public class CommentControllerTest {
   public void addNewComment_WhenCommentCreated_ShouldReturnNewComment() throws Exception {
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
     Note note = new Note("Este es un titulo");
-    Comment comment = new Comment("This is the content of the comment", user, note);
+    Timestamp timestamp = new Timestamp(new Date().getTime());
+    Comment comment = new Comment("This is the content of the comment", user, note, timestamp);
 
     user.addComment(comment);
     note.addComment(comment);
@@ -106,7 +108,8 @@ public class CommentControllerTest {
   public void addNewComment_WhenNoteNotExists_ShouldReturnNotFound() throws Exception {
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
     Note note = new Note("Este es un titulo");
-    Comment comment = new Comment("This is the content of the comment", user, note);
+    Timestamp timestamp = new Timestamp(new Date().getTime());
+    Comment comment = new Comment("This is the content of the comment", user, note, timestamp);
 
     user.addComment(comment);
     note.addComment(comment);
@@ -144,7 +147,8 @@ public class CommentControllerTest {
 
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
     Note note = new Note("Este es un titulo");
-    Comment comment = new Comment(content, user, note);
+    Timestamp timestamp = new Timestamp(new Date().getTime());
+    Comment comment = new Comment(content, user, note, timestamp);
 
     user.addComment(comment);
     note.addComment(comment);

@@ -16,6 +16,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -49,7 +51,8 @@ public class CommentServiceTest {
 
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
     Note note = new Note("Este es un titulo");
-    Comment comment = new Comment("This is the content of the comment", user, note);
+    Timestamp timestamp = new Timestamp(new Date().getTime());
+    Comment comment = new Comment("This is the content of the comment", user, note, timestamp);
 
     Optional<User> optionalUser = Optional.of(user);
     Optional<Note> optionalNote = Optional.of(note);
@@ -82,7 +85,8 @@ public class CommentServiceTest {
 
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
     Note note = new Note("Este es un titulo");
-    Comment comment = new Comment("This is the content of the comment", user, note);
+    Timestamp timestamp = new Timestamp(new Date().getTime());
+    Comment comment = new Comment("This is the content of the comment", user, note, timestamp);
 
     Mockito.when(commentRepository.save(comment)).thenReturn(comment);
     Mockito.when(commentRepository.findById(comment.getUuid())).thenReturn(Optional.of(comment));
