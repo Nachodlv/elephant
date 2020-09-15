@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lab.elephant.model.UpdatePasswordDto;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.TokenService;
@@ -11,6 +12,7 @@ import com.lab.elephant.service.BlackListedTokenServiceImpl;
 import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,7 +20,11 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -29,8 +35,7 @@ import java.util.Optional;
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static com.lab.elephant.security.SecurityConstants.*;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -52,13 +57,18 @@ public class UserControllerTest {
     public TokenService tokenService() {
       return new TokenServiceImpl();
     }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+    }
   }
 
   // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
-  @MockBean
+  @Autowired
   private BCryptPasswordEncoder passwordEncoder;
   @MockBean
   private BlackListedTokenServiceImpl blackListedTokenService;
@@ -160,5 +170,51 @@ public class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
+  }
+  
+  @Test
+  public void updatePassword_WithCorrectPassword_ShouldReturn200() throws Exception {
+    final User user = new User();
+    final String oldPassword = "oldPassword";
+    final String newPassword = "newPassword";
+    final UpdatePasswordDto dto = new UpdatePasswordDto(oldPassword, newPassword);
+    final String json = new ObjectMapper().writeValueAsString(dto);
+    
+    user.setPassword(passwordEncoder.encode(oldPassword));
+    
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    mvc.perform(put("/user/updatePassword").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void updatePassword_WithIncorrectPassword_ShouldReturn401() throws Exception {
+    final User user = new User();
+    final String userPassword = "userPassword";
+    final String incorrectPassword = "incorrectPassword";
+    final String newPassword = "newPassword";
+    final UpdatePasswordDto dto = new UpdatePasswordDto(incorrectPassword, newPassword);
+    final String json = new ObjectMapper().writeValueAsString(dto);
+  
+    user.setPassword(passwordEncoder.encode(userPassword));
+  
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+  
+    mvc.perform(put("/user/updatePassword").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("Incorrect Password"));
   }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -29,11 +30,16 @@ public class UserServiceTest {
     public UserService userService() {
       return new UserServiceImpl(userRepository, passwordEncoder);
     }
+    
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+    }
   }
   
   @Autowired
   private UserService userService;
-  @MockBean
+  @Autowired
   private PasswordEncoder passwordEncoder;
   @MockBean
   private UserRepository userRepository;
@@ -55,7 +61,7 @@ public class UserServiceTest {
     final Optional<User> optionalUser = userService.getByEmail(email);
     assertThat(optionalUser.isPresent()).isTrue();
     assertThat(optionalUser.get().getPassword()).isNotEqualTo(password);
-    assertThat(optionalUser.get().getPassword()).isEqualTo(passwordEncoder.encode(password));
+    assertThat(passwordEncoder.matches(password, optionalUser.get().getPassword())).isTrue();
   }
   
   
@@ -111,5 +117,30 @@ public class UserServiceTest {
   
     final Optional<User> user = userService.getByEmail("hi@gmail.com");
     assertThat(user.isPresent()).isFalse();
+  }
+  
+  @Test
+  public void updatePassword_WhenUserExists_ShouldUpdatePasswordAndBeEncrypted() {
+    final User user = new User();
+    final String newPassword = "new password";
+    final String oldPassword = "old password";
+    user.setUuid(1);
+    user.setPassword(passwordEncoder.encode(oldPassword));
+    Mockito.when(userRepository.save(user)).thenReturn(user);
+    Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+    final Optional<User> optionalUser = userService.updatePassword(user, newPassword);
+    
+    assertThat(optionalUser.isPresent()).isTrue();
+    assertThat(passwordEncoder.matches(newPassword, optionalUser.get().getPassword())).isTrue();
+    assertThat(passwordEncoder.matches(oldPassword, optionalUser.get().getPassword())).isFalse();
+  }
+  
+  @Test
+  public void updatePassword_WhenUserDoesNotExist_ShouldReturnEmptyOptional() {
+    final User user = new User();
+    final String newPassword = "new password";
+    final Optional<User> optionalUser = userService.updatePassword(user, newPassword);
+    
+    assertThat(optionalUser.isPresent()).isFalse();
   }
 }
