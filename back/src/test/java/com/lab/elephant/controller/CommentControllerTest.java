@@ -85,7 +85,7 @@ public class CommentControllerTest {
     given(userService.addUser(user)).willReturn(user);
 
     given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
-    given(noteService.addNote(note)).willReturn(note);
+    given(noteService.addNote(note, new User())).willReturn(note);
 
     given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
     given(commentService.addComment(note, user, comment)).willReturn(comment);
@@ -162,7 +162,7 @@ public class CommentControllerTest {
     given(userService.addUser(user)).willReturn(user);
 
     given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
-    given(noteService.addNote(note)).willReturn(note);
+    given(noteService.addNote(note, new User())).willReturn(note);
 
     given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
     given(commentService.addComment(note, user, comment)).willReturn(comment);

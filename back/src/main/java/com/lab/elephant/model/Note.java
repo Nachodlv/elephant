@@ -25,6 +25,10 @@ public class Note {
   @OneToMany(cascade = CascadeType.ALL)
   private List<Comment> comments = new ArrayList<>();
 
+  @JsonIgnore
+  @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
+  private List<Permission> permissions = new ArrayList<>();
+  
   public Note(String title, String content, Timestamp created) {
     this.title = title;
     this.content = content;
@@ -80,5 +84,13 @@ public class Note {
 
   public void addComment(Comment comment) {
     comments.add(comment);
+  }
+  
+  public List<Permission> getPermissions() {
+    return permissions;
+  }
+  
+  public void setPermissions(List<Permission> permissions) {
+    this.permissions = permissions;
   }
 }
