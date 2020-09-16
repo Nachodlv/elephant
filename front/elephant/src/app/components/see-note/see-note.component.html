@@ -9,7 +9,16 @@
   <div>
     <mat-divider [vertical]="true" class="divider"></mat-divider>
   </div>
-  <div class="btn-container">
+  <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
+    <div class="all-comments-container">
+      <div class="comment-container" *ngFor="let comment of comments">
+        <div class="comment-title">
+          <h1 class="comment-title-font">{{comment.owner}}</h1>
+          <h1 class="comment-title-font">Hace {{comment.created}}</h1>
+        </div>
+        <p>{{comment.content}}</p>
+      </div>
+    </div>
   </div>
 </div>
