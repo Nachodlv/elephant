@@ -1,0 +1,48 @@
+<div class="div-container">
+
+  <div class="span-container">
+    <span class="profile-span">Perfil</span>
+  </div>
+
+  <form class="form-container" (ngSubmit)="saveProfile()">
+    <mat-grid-list cols="1" rowHeight="5rem">
+
+      <mat-grid-tile>
+        <mat-form-field appearance="none">
+          <label>Nombre y Apellido</label>
+          <input class="profile-name-lastname" type="text" disabled matInput
+                 [value]="user.lastName">
+          <!-- como user first name aun no funciona, no se lo puede aplicar al html  -->
+        </mat-form-field>
+      </mat-grid-tile>
+
+      <mat-grid-tile>
+        <mat-form-field appearance="none">
+          <label for="profile-email" class="profile-email-label">Email</label>
+          <input id="profile-email" class="profile-email" type="text" matInput [value]="user.email" readonly>
+        </mat-form-field>
+      </mat-grid-tile>
+
+    </mat-grid-list>
+
+    <button class="edit-button"
+            type="submit"
+            mat-raised-button>
+      Editar
+    </button>
+  </form>
+
+  <mat-divider class="margin-top-1"></mat-divider>
+
+  <div class="flex-container">
+
+    <button class="change-password"
+            mat-raised-button>
+      Cambiar Contraseña
+    </button>
+    <button class="delete-user"
+            mat-stroked-button>
+      Eliminar usuario
+    </button>
+  </div>
+</div>
