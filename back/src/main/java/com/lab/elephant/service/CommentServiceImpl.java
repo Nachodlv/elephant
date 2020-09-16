@@ -7,6 +7,7 @@ import com.lab.elephant.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,5 +32,9 @@ public class CommentServiceImpl implements CommentService {
     return commentRepository.findById(id);
   }
 
+  @Override
+  public List<Comment> getAllCommentsByNote(Note note) {
+    return commentRepository.findAllByNoteOrderByCreatedDesc(note);
+  }
 
 }

@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
@@ -64,4 +65,13 @@ public class CommentController {
     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token Not Found");
   }
 
+  @GetMapping(path = "/all/{idNote}")
+  public List<Comment> getCommentsByNoteInOrderByDateCreated(@PathVariable("idNote") long idNote) {
+    Optional<Note> optionalNote = noteService.getNote(idNote);
+    if (optionalNote.isPresent()) {
+      Note note = optionalNote.get();
+      return commentService.getAllCommentsByNote(note);
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+  }
 }

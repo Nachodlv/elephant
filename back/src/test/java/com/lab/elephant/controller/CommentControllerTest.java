@@ -22,12 +22,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 import static com.lab.elephant.security.SecurityConstants.*;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -179,6 +179,67 @@ public class CommentControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isBadRequest());
+  }
+
+  @Test
+  public void getAllCommentsInOrderByNote_WhenCommentsAreCreated_ShouldReturnCommentsInOrder() throws Exception {
+    Timestamp time1 = new Timestamp(new Date(2020, Calendar.FEBRUARY, 1).getTime());
+    Timestamp time2 = new Timestamp(new Date(2020, Calendar.DECEMBER, 10).getTime());
+    Timestamp time3 = new Timestamp(new Date(2021, Calendar.JULY, 25).getTime());
+
+    Note note = new Note("title1");
+    User owner = new User("a", "b", "a@b", "p");
+
+    Comment comment1 = new Comment("content1", owner, note, time1);
+    Comment comment2 = new Comment("content2", owner, note, time3);
+    Comment comment3 = new Comment("content2", owner, note, time2);
+
+    userService.addUser(owner);
+
+    noteService.addNote(note);
+
+    commentService.addComment(note, owner, comment3);
+    commentService.addComment(note, owner, comment1);
+    commentService.addComment(note, owner, comment2);
+
+    List<Comment> comments = Arrays.asList(comment2, comment3, comment1);
+
+    given(commentService.getAllCommentsByNote(note)).willReturn(comments);
+    given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+
+    mvc.perform(get("/comment/all/" + note.getUuid())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+  }
+
+  @Test
+  public void getAllCommentsInOrderByNote_WhenNoteIsNotCreated_ShouldReturnNoteNotFound() throws Exception {
+    Timestamp time1 = new Timestamp(new Date(2020, Calendar.FEBRUARY, 1).getTime());
+    Timestamp time2 = new Timestamp(new Date(2020, Calendar.DECEMBER, 10).getTime());
+    Timestamp time3 = new Timestamp(new Date(2021, Calendar.JULY, 25).getTime());
+
+    Note note = new Note("title1");
+    User owner = new User("a", "b", "a@b", "p");
+
+    Comment comment1 = new Comment("content1", owner, note, time1);
+    Comment comment2 = new Comment("content2", owner, note, time3);
+    Comment comment3 = new Comment("content2", owner, note, time2);
+
+    userService.addUser(owner);
+
+    commentService.addComment(note, owner, comment3);
+    commentService.addComment(note, owner, comment1);
+    commentService.addComment(note, owner, comment2);
+
+    List<Comment> comments = Arrays.asList(comment2, comment3, comment1);
+
+    given(commentService.getAllCommentsByNote(note)).willReturn(comments);
+
+    mvc.perform(get("/comment/all/" + note.getUuid())
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound());
   }
 
 }
