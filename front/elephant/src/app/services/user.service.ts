@@ -32,4 +32,12 @@ export class UserService {
     const password = user.password;
     return new User(firstName, lastName, email, password);
   }
+
+  getUser(): Observable<User> {
+    return this.httpService.get('/user').pipe(tap((_ => {
+      }), err => console.log(err)
+    ), map(res => {
+      return User.fromJson(res.body);
+    }));
+  }
 }
