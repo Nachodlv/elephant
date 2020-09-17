@@ -203,11 +203,11 @@ public class CommentControllerTest {
     Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
 
     Note note = new Note("title1");
-    User owner = new User("a", "b", "a@b", "p");
+    User user = new User("a", "b", "a@b", "p");
 
-    Comment comment1 = new Comment("content1", owner, note, time1);
-    Comment comment2 = new Comment("content2", owner, note, time3);
-    Comment comment3 = new Comment("content2", owner, note, time2);
+    Comment comment1 = new Comment("content1", user, note, time1);
+    Comment comment2 = new Comment("content2", user, note, time3);
+    Comment comment3 = new Comment("content2", user, note, time2);
 
     CommentDTO commentDTO1 = new CommentDTO(comment1.getUuid(), comment1.getContent(), comment1.getCreated(),
             comment1.getOwner().getFirstName() + " " + comment1.getOwner().getLastName());
@@ -216,20 +216,35 @@ public class CommentControllerTest {
     CommentDTO commentDTO3 = new CommentDTO(comment3.getUuid(), comment3.getContent(), comment3.getCreated(),
             comment3.getOwner().getFirstName() + " " + comment3.getOwner().getLastName());
 
-    userService.addUser(owner);
+    userService.addUser(user);
 
-    noteService.addNote(note, owner);
+    noteService.addNote(note, user);
 
-    commentService.addComment(note, owner, comment3);
-    commentService.addComment(note, owner, comment1);
-    commentService.addComment(note, owner, comment2);
+    commentService.addComment(note, user, comment3);
+    commentService.addComment(note, user, comment1);
+    commentService.addComment(note, user, comment2);
 
+    Optional<User> optionalUser = Optional.of(user);
     List<CommentDTO> commentDTOS = Arrays.asList(commentDTO1, commentDTO2, commentDTO3);
+
+    List<User> users = Collections.singletonList(user);
+
+    given(userService.getUser(user.getUuid())).willReturn(optionalUser);
+    given(userService.getByEmail(user.getEmail())).willReturn(optionalUser);
+    given(userService.addUser(user)).willReturn(user);
 
     given(commentService.getAllCommentsByNote(note)).willReturn(commentDTOS);
     given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+    given(noteService.getUsersWithPermissions(note)).willReturn(users);
+
+    String token = JWT.create().withSubject(user.getEmail())
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+
+    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
 
     MvcResult result = mvc.perform(get("/comment/all/" + note.getUuid())
+            .header("Authorization", TOKEN_PREFIX + token)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk()).andReturn();
@@ -246,7 +261,6 @@ public class CommentControllerTest {
     assertThat(commentResult.get(1).getUuid()).isEqualTo(commentDTOS.get(1).getUuid());
     assertThat(commentResult.get(2).getUuid()).isEqualTo(commentDTOS.get(2).getUuid());
 
-
   }
 
   @Test
@@ -256,11 +270,11 @@ public class CommentControllerTest {
     Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
 
     Note note = new Note("title1");
-    User owner = new User("a", "b", "a@b", "p");
+    User user = new User("a", "b", "a@b", "p");
 
-    Comment comment1 = new Comment("content1", owner, note, time1);
-    Comment comment2 = new Comment("content2", owner, note, time3);
-    Comment comment3 = new Comment("content2", owner, note, time2);
+    Comment comment1 = new Comment("content1", user, note, time1);
+    Comment comment2 = new Comment("content2", user, note, time3);
+    Comment comment3 = new Comment("content2", user, note, time2);
 
     CommentDTO commentDTO1 = new CommentDTO(comment1.getUuid(), comment1.getContent(), comment1.getCreated(),
             comment1.getOwner().getFirstName() + " " + comment1.getOwner().getLastName());
@@ -269,20 +283,79 @@ public class CommentControllerTest {
     CommentDTO commentDTO3 = new CommentDTO(comment3.getUuid(), comment3.getContent(), comment3.getCreated(),
             comment3.getOwner().getFirstName() + " " + comment3.getOwner().getLastName());
 
-    userService.addUser(owner);
+    userService.addUser(user);
 
-    commentService.addComment(note, owner, comment3);
-    commentService.addComment(note, owner, comment1);
-    commentService.addComment(note, owner, comment2);
+    commentService.addComment(note, user, comment3);
+    commentService.addComment(note, user, comment1);
+    commentService.addComment(note, user, comment2);
 
     List<CommentDTO> commentDTOS = Arrays.asList(commentDTO1, commentDTO2, commentDTO3);
 
     given(commentService.getAllCommentsByNote(note)).willReturn(commentDTOS);
 
+    String token = JWT.create().withSubject(user.getEmail())
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+
+    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
+
     mvc.perform(get("/comment/all/" + note.getUuid())
+            .header("Authorization", TOKEN_PREFIX + token)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
+  }
+
+  @Test
+  public void getAllCommentsInOrderByNote_WhenUserHasNoPermission_ShouldReturnUnauthorized() throws Exception {
+    Timestamp time1 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.FEBRUARY, 1)).getTime());
+    Timestamp time2 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.DECEMBER, 10)).getTime());
+    Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
+
+    Note note = new Note("title1");
+    User user = new User("a", "b", "a@b", "p");
+    User user2 = new User("a", "b", "a@b", "p");
+
+    Comment comment1 = new Comment("content1", user, note, time1);
+    Comment comment2 = new Comment("content2", user, note, time3);
+    Comment comment3 = new Comment("content2", user, note, time2);
+
+    CommentDTO commentDTO1 = new CommentDTO(comment1.getUuid(), comment1.getContent(), comment1.getCreated(),
+            comment1.getOwner().getFirstName() + " " + comment1.getOwner().getLastName());
+    CommentDTO commentDTO2 = new CommentDTO(comment2.getUuid(), comment2.getContent(), comment2.getCreated(),
+            comment2.getOwner().getFirstName() + " " + comment2.getOwner().getLastName());
+    CommentDTO commentDTO3 = new CommentDTO(comment3.getUuid(), comment3.getContent(), comment3.getCreated(),
+            comment3.getOwner().getFirstName() + " " + comment3.getOwner().getLastName());
+
+    userService.addUser(user);
+
+    noteService.addNote(note, user2);
+
+    commentService.addComment(note, user, comment3);
+    commentService.addComment(note, user, comment1);
+    commentService.addComment(note, user, comment2);
+
+    Optional<User> optionalUser = Optional.of(user);
+    List<CommentDTO> commentDTOS = Arrays.asList(commentDTO1, commentDTO2, commentDTO3);
+
+    given(userService.getUser(user.getUuid())).willReturn(optionalUser);
+    given(userService.getByEmail(user.getEmail())).willReturn(optionalUser);
+    given(userService.addUser(user)).willReturn(user);
+
+    given(commentService.getAllCommentsByNote(note)).willReturn(commentDTOS);
+    given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+
+    String token = JWT.create().withSubject(user.getEmail())
+            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+            .sign(HMAC512(SECRET.getBytes()));
+
+    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
+
+    mvc.perform(get("/comment/all/" + note.getUuid())
+            .header("Authorization", TOKEN_PREFIX + token)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized());
   }
 
 }

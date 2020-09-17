@@ -1,9 +1,6 @@
 package com.lab.elephant.controller;
 
-import com.lab.elephant.model.Comment;
-import com.lab.elephant.model.CommentDTO;
-import com.lab.elephant.model.Note;
-import com.lab.elephant.model.User;
+import com.lab.elephant.model.*;
 import com.lab.elephant.service.CommentService;
 import com.lab.elephant.service.NoteService;
 import com.lab.elephant.service.TokenService;
@@ -67,12 +64,28 @@ public class CommentController {
   }
 
   @GetMapping(path = "/all/{idNote}")
-  public List<CommentDTO> getCommentsByNoteInOrderByDateCreated(@PathVariable("idNote") long idNote) {
-    Optional<Note> optionalNote = noteService.getNote(idNote);
-    if (optionalNote.isPresent()) {
-      Note note = optionalNote.get();
-      return commentService.getAllCommentsByNote(note);
+  public List<CommentDTO> getCommentsByNoteInOrderByDateCreated(@PathVariable("idNote") long idNote, HttpServletRequest request) {
+    String token = request.getHeader(HEADER_STRING);
+    if (token != null) {
+      Optional<Note> optionalNote = noteService.getNote(idNote);
+
+      if (optionalNote.isPresent()) {
+        Note note = optionalNote.get();
+        String email = tokenService.getEmailByToken(token);
+        Optional<User> optionalUser = userService.getByEmail(email);
+
+        if (optionalUser.isPresent()) {
+          User user = optionalUser.get();
+          List<User> usersWithPermissions = noteService.getUsersWithPermissions(note);
+          if (usersWithPermissions.contains(user)) {
+            return commentService.getAllCommentsByNote(note);
+          }
+          throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Permission Not Found");
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+      }
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
     }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token Not Found");
   }
 }
