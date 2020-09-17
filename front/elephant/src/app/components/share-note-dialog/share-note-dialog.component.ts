@@ -41,7 +41,13 @@ export class ShareNoteDialogComponent implements OnInit, OnDestroy {
       this.snackBar.openSnackbar('¡Se ha compartido con exito!', 0);
       this.dialogRef.close();
     }, error => {
-      this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
+      if (error.status === 404) {
+        this.snackBar.openSnackbar('No existe un usuario con ese email', 0);
+      } else if (error.status === 403) {
+        this.snackBar.openSnackbar('El usuario ya tiene un permiso sobre esta nota', 0);
+      } else {
+        this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
+      }
     });
   }
 }
