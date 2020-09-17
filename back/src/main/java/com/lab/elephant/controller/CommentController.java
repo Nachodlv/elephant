@@ -1,6 +1,7 @@
 package com.lab.elephant.controller;
 
 import com.lab.elephant.model.Comment;
+import com.lab.elephant.model.CommentDTO;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.CommentService;
@@ -36,7 +37,7 @@ public class CommentController {
   }
 
   @PostMapping(path = "/add/{idNote}")
-  public Comment addComment(@PathVariable("idNote") long idNote, @RequestBody @Valid Comment comment, HttpServletRequest request) {
+  public CommentDTO addComment(@PathVariable("idNote") long idNote, @RequestBody @Valid Comment comment, HttpServletRequest request) {
 
     String token = request.getHeader(HEADER_STRING);
 
@@ -66,7 +67,7 @@ public class CommentController {
   }
 
   @GetMapping(path = "/all/{idNote}")
-  public List<Comment> getCommentsByNoteInOrderByDateCreated(@PathVariable("idNote") long idNote) {
+  public List<CommentDTO> getCommentsByNoteInOrderByDateCreated(@PathVariable("idNote") long idNote) {
     Optional<Note> optionalNote = noteService.getNote(idNote);
     if (optionalNote.isPresent()) {
       Note note = optionalNote.get();

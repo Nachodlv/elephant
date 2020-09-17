@@ -2,6 +2,7 @@ package com.lab.elephant.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.lab.elephant.model.Comment;
+import com.lab.elephant.model.CommentDTO;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.User;
 import com.lab.elephant.repository.CommentRepository;
@@ -17,6 +18,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,14 +70,13 @@ public class CommentServiceTest {
     noteRepository.save(note);
     userRepository.save(user);
 
-    final Comment commentTest = commentService.addComment(note, user, comment);
+    final CommentDTO commentTest = commentService.addComment(note, user, comment);
 
     assertThat(commentTest.getContent()).isEqualTo(comment.getContent());
     assertThat(commentTest.getUuid()).isEqualTo(comment.getUuid());
-    assertThat(commentTest.getNote()).isEqualTo(note);
-    assertThat(commentTest.getOwner()).isEqualTo(user);
-    assertThat(note.getComments().contains(commentTest)).isTrue();
-    assertThat(user.getComments().contains(commentTest)).isTrue();
+    assertThat(commentTest.getOwnerName()).isEqualTo(user.getFirstName() + " " + user.getLastName());
+    assertThat(note.getComments().contains(comment)).isTrue();
+    assertThat(user.getComments().contains(comment)).isTrue();
   }
 
   @Test
@@ -106,9 +107,9 @@ public class CommentServiceTest {
 
   @Test
   public void findAllByNoteOrderByCreatedDesc_WhenAllCreatedNotInOrder_ShouldGetItInOrder() {
-    Timestamp time1 = new Timestamp(new Date(2020, Calendar.FEBRUARY, 1).getTime());
-    Timestamp time2 = new Timestamp(new Date(2020, Calendar.DECEMBER, 10).getTime());
-    Timestamp time3 = new Timestamp(new Date(2021, Calendar.JULY, 25).getTime());
+    Timestamp time1 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.FEBRUARY, 1)).getTime());
+    Timestamp time2 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.DECEMBER, 10)).getTime());
+    Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
 
     Note note = new Note("title1");
     User owner = new User("a", "b", "a@b", "p");
@@ -135,7 +136,7 @@ public class CommentServiceTest {
 
     Mockito.when(commentRepository.findAllByNoteOrderByCreatedDesc(note)).thenReturn(commentsAsList);
 
-    List<Comment> comments = commentService.getAllCommentsByNote(note);
+    List<CommentDTO> comments = commentService.getAllCommentsByNote(note);
 
 //    Compare it as those are in Asc Order when were saved in different order and different Date created
     assertThat(comments.size()).isEqualTo(3);

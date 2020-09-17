@@ -1,12 +1,14 @@
 package com.lab.elephant.service;
 
 import com.lab.elephant.model.Comment;
+import com.lab.elephant.model.CommentDTO;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.User;
 import com.lab.elephant.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +22,11 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public Comment addComment(Note note, User user, Comment comment) {
+  public CommentDTO addComment(Note note, User user, Comment comment) {
     comment.setNote(note);
     comment.setOwner(user);
     comment.setCreated(new Timestamp(System.currentTimeMillis()));
-    return commentRepository.save(comment);
+    return convertCommentToCommentDTO(commentRepository.save(comment));
   }
 
   @Override
@@ -33,8 +35,21 @@ public class CommentServiceImpl implements CommentService {
   }
 
   @Override
-  public List<Comment> getAllCommentsByNote(Note note) {
-    return commentRepository.findAllByNoteOrderByCreatedDesc(note);
+  public List<CommentDTO> getAllCommentsByNote(Note note) {
+    List<Comment> comments = commentRepository.findAllByNoteOrderByCreatedDesc(note);
+    return convertListCommentToCommentDTO(comments);
+  }
+
+  public List<CommentDTO> convertListCommentToCommentDTO(List<Comment> comments) {
+    List<CommentDTO> commentDTOS = new ArrayList<>();
+    for (Comment comment : comments)
+      commentDTOS.add(convertCommentToCommentDTO(comment));
+    return commentDTOS;
+  }
+
+  public CommentDTO convertCommentToCommentDTO(Comment comment) {
+    return new CommentDTO(comment.getUuid(), comment.getContent(), comment.getCreated(),
+            comment.getOwner().getFirstName() + " " + comment.getOwner().getLastName());
   }
 
 }

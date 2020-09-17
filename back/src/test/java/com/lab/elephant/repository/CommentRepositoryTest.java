@@ -12,8 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,9 +37,9 @@ public class CommentRepositoryTest {
 
   @Test
   public void findAllByNoteOrderByCreatedDesc_WhenAllCreatedNotInOrder_ShouldGetItInOrder() {
-    Timestamp time1 = new Timestamp(new Date(2020, Calendar.FEBRUARY, 1).getTime());
-    Timestamp time2 = new Timestamp(new Date(2020, Calendar.DECEMBER, 10).getTime());
-    Timestamp time3 = new Timestamp(new Date(2021, Calendar.JULY, 25).getTime());
+    Timestamp time1 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.FEBRUARY, 1)).getTime());
+    Timestamp time2 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.DECEMBER, 10)).getTime());
+    Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
 
     Note note = new Note("title1");
     Note note2 = new Note("title2");

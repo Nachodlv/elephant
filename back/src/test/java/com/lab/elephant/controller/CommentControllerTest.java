@@ -1,8 +1,10 @@
 package com.lab.elephant.controller;
 
 import com.auth0.jwt.JWT;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Comment;
+import com.lab.elephant.model.CommentDTO;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
@@ -19,9 +21,11 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.*;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
@@ -30,6 +34,8 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CommentController.class)
@@ -88,7 +94,10 @@ public class CommentControllerTest {
     given(noteService.addNote(note, new User())).willReturn(note);
 
     given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
-    given(commentService.addComment(note, user, comment)).willReturn(comment);
+    CommentDTO commentDTO = new CommentDTO(comment.getUuid(), comment.getContent(), comment.getCreated(),
+            comment.getOwner().getFirstName() + " " + comment.getOwner().getLastName());
+
+    given(commentService.addComment(note, user, comment)).willReturn(commentDTO);
 
     String token = JWT.create().withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -117,11 +126,14 @@ public class CommentControllerTest {
     Optional<User> optionalUser = Optional.of(user);
     Optional<Comment> optionalComment = Optional.of(comment);
 
+    CommentDTO commentDTO = new CommentDTO(comment.getUuid(), comment.getContent(), comment.getCreated(),
+            comment.getOwner().getFirstName() + " " + comment.getOwner().getLastName());
+
     given(userService.getUser(user.getUuid())).willReturn(optionalUser);
     given(userService.getByEmail(user.getEmail())).willReturn(optionalUser);
     given(userService.addUser(user)).willReturn(user);
     given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
-    given(commentService.addComment(note, user, comment)).willReturn(comment);
+    given(commentService.addComment(note, user, comment)).willReturn(commentDTO);
 
     String token = JWT.create().withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -150,6 +162,9 @@ public class CommentControllerTest {
     Timestamp timestamp = new Timestamp(new Date().getTime());
     Comment comment = new Comment(content, user, note, timestamp);
 
+    CommentDTO commentDTO = new CommentDTO(comment.getUuid(), comment.getContent(), comment.getCreated(),
+            comment.getOwner().getFirstName() + " " + comment.getOwner().getLastName());
+
     user.addComment(comment);
     note.addComment(comment);
 
@@ -165,7 +180,7 @@ public class CommentControllerTest {
     given(noteService.addNote(note, new User())).willReturn(note);
 
     given(commentService.getComment(comment.getUuid())).willReturn(optionalComment);
-    given(commentService.addComment(note, user, comment)).willReturn(comment);
+    given(commentService.addComment(note, user, comment)).willReturn(commentDTO);
 
     String token = JWT.create().withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
@@ -183,9 +198,9 @@ public class CommentControllerTest {
 
   @Test
   public void getAllCommentsInOrderByNote_WhenCommentsAreCreated_ShouldReturnCommentsInOrder() throws Exception {
-    Timestamp time1 = new Timestamp(new Date(2020, Calendar.FEBRUARY, 1).getTime());
-    Timestamp time2 = new Timestamp(new Date(2020, Calendar.DECEMBER, 10).getTime());
-    Timestamp time3 = new Timestamp(new Date(2021, Calendar.JULY, 25).getTime());
+    Timestamp time1 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.FEBRUARY, 1)).getTime());
+    Timestamp time2 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.DECEMBER, 10)).getTime());
+    Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
 
     Note note = new Note("title1");
     User owner = new User("a", "b", "a@b", "p");
@@ -194,30 +209,51 @@ public class CommentControllerTest {
     Comment comment2 = new Comment("content2", owner, note, time3);
     Comment comment3 = new Comment("content2", owner, note, time2);
 
+    CommentDTO commentDTO1 = new CommentDTO(comment1.getUuid(), comment1.getContent(), comment1.getCreated(),
+            comment1.getOwner().getFirstName() + " " + comment1.getOwner().getLastName());
+    CommentDTO commentDTO2 = new CommentDTO(comment2.getUuid(), comment2.getContent(), comment2.getCreated(),
+            comment2.getOwner().getFirstName() + " " + comment2.getOwner().getLastName());
+    CommentDTO commentDTO3 = new CommentDTO(comment3.getUuid(), comment3.getContent(), comment3.getCreated(),
+            comment3.getOwner().getFirstName() + " " + comment3.getOwner().getLastName());
+
     userService.addUser(owner);
 
-    noteService.addNote(note);
+    noteService.addNote(note, owner);
 
     commentService.addComment(note, owner, comment3);
     commentService.addComment(note, owner, comment1);
     commentService.addComment(note, owner, comment2);
 
-    List<Comment> comments = Arrays.asList(comment2, comment3, comment1);
+    List<CommentDTO> commentDTOS = Arrays.asList(commentDTO1, commentDTO2, commentDTO3);
 
-    given(commentService.getAllCommentsByNote(note)).willReturn(comments);
+    given(commentService.getAllCommentsByNote(note)).willReturn(commentDTOS);
     given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
 
-    mvc.perform(get("/comment/all/" + note.getUuid())
+    MvcResult result = mvc.perform(get("/comment/all/" + note.getUuid())
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk()).andReturn();
+
+    // sort commentDTO list by date created
+    commentDTOS.sort(Comparator.comparing(CommentDTO::getCreated));
+
+    String json = result.getResponse().getContentAsString();
+    List<CommentDTO> commentResult = objectMapper.readValue(json, new TypeReference<List<CommentDTO>>() {
+    });
+
+    assertThat(commentResult.size()).isEqualTo(3);
+    assertThat(commentResult.get(0).getUuid()).isEqualTo(commentDTOS.get(0).getUuid());
+    assertThat(commentResult.get(1).getUuid()).isEqualTo(commentDTOS.get(1).getUuid());
+    assertThat(commentResult.get(2).getUuid()).isEqualTo(commentDTOS.get(2).getUuid());
+
+
   }
 
   @Test
   public void getAllCommentsInOrderByNote_WhenNoteIsNotCreated_ShouldReturnNoteNotFound() throws Exception {
-    Timestamp time1 = new Timestamp(new Date(2020, Calendar.FEBRUARY, 1).getTime());
-    Timestamp time2 = new Timestamp(new Date(2020, Calendar.DECEMBER, 10).getTime());
-    Timestamp time3 = new Timestamp(new Date(2021, Calendar.JULY, 25).getTime());
+    Timestamp time1 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.FEBRUARY, 1)).getTime());
+    Timestamp time2 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2020, Calendar.DECEMBER, 10)).getTime());
+    Timestamp time3 = new Timestamp(java.sql.Date.valueOf(LocalDate.of(2021, Calendar.JULY, 25)).getTime());
 
     Note note = new Note("title1");
     User owner = new User("a", "b", "a@b", "p");
@@ -226,15 +262,22 @@ public class CommentControllerTest {
     Comment comment2 = new Comment("content2", owner, note, time3);
     Comment comment3 = new Comment("content2", owner, note, time2);
 
+    CommentDTO commentDTO1 = new CommentDTO(comment1.getUuid(), comment1.getContent(), comment1.getCreated(),
+            comment1.getOwner().getFirstName() + " " + comment1.getOwner().getLastName());
+    CommentDTO commentDTO2 = new CommentDTO(comment2.getUuid(), comment2.getContent(), comment2.getCreated(),
+            comment2.getOwner().getFirstName() + " " + comment2.getOwner().getLastName());
+    CommentDTO commentDTO3 = new CommentDTO(comment3.getUuid(), comment3.getContent(), comment3.getCreated(),
+            comment3.getOwner().getFirstName() + " " + comment3.getOwner().getLastName());
+
     userService.addUser(owner);
 
     commentService.addComment(note, owner, comment3);
     commentService.addComment(note, owner, comment1);
     commentService.addComment(note, owner, comment2);
 
-    List<Comment> comments = Arrays.asList(comment2, comment3, comment1);
+    List<CommentDTO> commentDTOS = Arrays.asList(commentDTO1, commentDTO2, commentDTO3);
 
-    given(commentService.getAllCommentsByNote(note)).willReturn(comments);
+    given(commentService.getAllCommentsByNote(note)).willReturn(commentDTOS);
 
     mvc.perform(get("/comment/all/" + note.getUuid())
             .contentType(MediaType.APPLICATION_JSON))
