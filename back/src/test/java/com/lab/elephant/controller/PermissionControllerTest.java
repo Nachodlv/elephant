@@ -287,4 +287,50 @@ public class PermissionControllerTest {
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("User can't modify this note"));
   }
+  
+  @Test
+  public void addPermission_WithAuthenticatedUserThatAlreadyHasPermission_ShouldReturn_403() throws Exception {
+    //creating user that made the note.
+    final User owner = new User();
+    final Note note = new Note("The way of kings");
+    final long noteId = 1;
+    note.setUuid(noteId);
+    final List<Permission> ownerPermissions = new ArrayList<>();
+    final List<Permission> notePermissions = new ArrayList<>();
+    final Permission p = new Permission(owner, note, PermissionType.Owner);
+    ownerPermissions.add(p);
+    notePermissions.add(p);
+    owner.setPermissions(ownerPermissions);
+    note.setPermissions(notePermissions);
+    //creating other objects for sharing
+    final User friend = new User();
+    owner.setUuid(1);
+    friend.setUuid(2);
+    final String email = "john@elephant.com";
+    friend.setEmail(email);
+    PermissionType permissionType = PermissionType.Viewer;
+    
+    final List<User> permissionUsers = new ArrayList<>();
+    permissionUsers.add(friend);
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    given(userService.getByEmail(email)).willReturn(Optional.of(friend));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+    given(noteService.getUsersWithPermissions(note)).willReturn(permissionUsers);
+    
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
+    mvc.perform(put("/" + noteId + "/permission/add")
+            .contentType("application/json")
+            .content(json))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isForbidden())
+            .andExpect(status().reason("User already has a permission over this note"));
+  }
 }
