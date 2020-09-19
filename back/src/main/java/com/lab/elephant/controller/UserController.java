@@ -68,6 +68,6 @@ public class UserController {
     
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
-    userService.updatePassword(user, dto.getNewPassword());
+    userService.updatePassword(user.getEmail(), dto.getNewPassword());
   }
 }

@@ -40,9 +40,10 @@ public class UserServiceImpl implements UserService {
   }
   
   @Override
-  public Optional<User> updatePassword(User user, String newPassword) {
-    final Optional<User> optionalUser = getUser(user.getUuid());
+  public Optional<User> updatePassword(String email, String newPassword) {
+    final Optional<User> optionalUser = getByEmail(email);
     if (optionalUser.isPresent()) {
+      final User user = optionalUser.get();
       user.setPassword(passwordEncoder.encode(newPassword));
       return Optional.of(userRepository.save(user));
     }

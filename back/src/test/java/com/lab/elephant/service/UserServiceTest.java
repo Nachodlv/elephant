@@ -122,13 +122,14 @@ public class UserServiceTest {
   @Test
   public void updatePassword_WhenUserExists_ShouldUpdatePasswordAndBeEncrypted() {
     final User user = new User();
+    final String email = "john@elephant.com";
     final String newPassword = "new password";
     final String oldPassword = "old password";
-    user.setUuid(1);
+    user.setEmail(email);
     user.setPassword(passwordEncoder.encode(oldPassword));
     Mockito.when(userRepository.save(user)).thenReturn(user);
-    Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-    final Optional<User> optionalUser = userService.updatePassword(user, newPassword);
+    Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+    final Optional<User> optionalUser = userService.updatePassword(email, newPassword);
     
     assertThat(optionalUser.isPresent()).isTrue();
     assertThat(passwordEncoder.matches(newPassword, optionalUser.get().getPassword())).isTrue();
@@ -137,9 +138,9 @@ public class UserServiceTest {
   
   @Test
   public void updatePassword_WhenUserDoesNotExist_ShouldReturnEmptyOptional() {
-    final User user = new User();
+    final String nonexistentEmail = "john@elephant.com";
     final String newPassword = "new password";
-    final Optional<User> optionalUser = userService.updatePassword(user, newPassword);
+    final Optional<User> optionalUser = userService.updatePassword(nonexistentEmail, newPassword);
     
     assertThat(optionalUser.isPresent()).isFalse();
   }

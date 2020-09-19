@@ -16,5 +16,5 @@ public interface UserService {
   
   Optional<User> getByEmail(String email);
   
-  Optional<User> updatePassword(User user, String newPassword);
+  Optional<User> updatePassword(String email, String newPassword);
 }
