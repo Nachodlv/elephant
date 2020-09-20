@@ -18,6 +18,7 @@ import { MatDialogModule} from '@angular/material/dialog';
 import {LoginComponent} from './components/login/login.component';
 import { SeeNoteComponent } from './components/see-note/see-note.component';
 import { ShareNoteDialogComponent } from './components/share-note-dialog/share-note-dialog.component';
+import { CommentComponent } from './components/comment/comment.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { ShareNoteDialogComponent } from './components/share-note-dialog/share-n
     LoginComponent,
     EqualValidator,
     SeeNoteComponent,
-    ShareNoteDialogComponent
+    ShareNoteDialogComponent,
+    CommentComponent
   ],
   imports: [
     BrowserModule,

@@ -50,7 +50,7 @@
   width: 70%;
 }
 
-.comment-container{
+.comment-container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -58,7 +58,7 @@
   margin-left: 8%;
 }
 
-.comment-text-area{
+.comment-text-area {
   height: 2.8rem;
   width: 8.5rem;
   resize: none;
@@ -66,7 +66,7 @@
   margin-left: 2%;
 }
 
-.add-comment-btn{
+.add-comment-btn {
   background-color: $elephant-green;
   color: $elephant-white;
   width: 36%;
