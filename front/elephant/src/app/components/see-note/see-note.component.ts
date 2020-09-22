@@ -5,6 +5,7 @@ import {SnackbarService} from '../../services/snackbar.service';
 import {MatDialog} from '@angular/material/dialog';
 import {ShareNoteDialogComponent} from '../share-note-dialog/share-note-dialog.component';
 import {Subscription} from 'rxjs';
+import {CommentComponent} from '../comment/comment.component';
 
 @Component({
   selector: 'app-see-note',
@@ -25,7 +26,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: SnackbarService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private comment: CommentComponent,
   ) {
   }
 
@@ -63,5 +65,9 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
       data: {noteId: this.id}
     });
   }
+
+  onSubmitComment(): void {
+  this.comment.ngOnInit();
+}
 
 }
