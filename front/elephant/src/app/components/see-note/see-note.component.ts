@@ -22,7 +22,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   public content;
   public created;
 
-  loading = true;
+  noteLoading = true;
 
   comments: Comment[] = [];
 
@@ -51,7 +51,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    if (!this.loading) {
+    if (!this.noteLoading) {
       this.setContentHeight();
     }
   }
@@ -68,7 +68,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
       const timeStamp = res.created.split('T');
       this.created = timeStamp[0];
 
-      this.loading = false;
+      this.noteLoading = false;
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
       this.router.navigate(['/home']);

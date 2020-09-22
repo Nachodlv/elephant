@@ -55,7 +55,7 @@ export class NoteService {
         title: 'com title',
         content: `Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.`,
         owner: 'juan pepito',
-        created: '2020-09-10T20:03:48.436+0000'
+        created: '2020-09-22T18:03:48.436+0000'
       },
       {
         uuid: 4,
