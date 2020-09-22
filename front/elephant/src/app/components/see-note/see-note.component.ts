@@ -70,7 +70,11 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
       this.noteLoading = false;
     }, error => {
-      this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
+      if (error.status === 401) {
+        this.snackBar.openSnackbar('No tiene permisos para ver esta nota', 0);
+      } else {
+        this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
+      }
       this.router.navigate(['/home']);
     });
   }
@@ -78,7 +82,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   openDialog(): void {
     this.dialog.open(ShareNoteDialogComponent, {
       width: '30vw',
-      position: {top: '10%'}
+      position: {top: '10%'},
+      data: {noteId: this.id}
     });
   }
 

@@ -30,8 +30,8 @@ export class NoteService {
     }));
   }
 
-  shareNote(shareNoteData): Observable<any> {
-    return of({value: true});
+  shareNote(noteId, shareNoteData): Observable<any> {
+    return this.httpService.put(`/${noteId}/permission/add`, JSON.stringify(shareNoteData));
   }
 
   getComments(id): Observable<any> {

@@ -24,7 +24,11 @@ public class User {
   @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   @NotNull
   private String password;
-
+  
+  @JsonIgnore
+  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  private List<Permission> permissions = new ArrayList<>();
+  
   @JsonIgnore
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
   private List<Comment> comments = new ArrayList<>();
@@ -89,5 +93,13 @@ public class User {
 
   public void addComment(Comment comment) {
     comments.add(comment);
+  }
+  
+  public List<Permission> getPermissions() {
+    return permissions;
+  }
+  
+  public void setPermissions(List<Permission> permissions) {
+    this.permissions = permissions;
   }
 }

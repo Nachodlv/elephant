@@ -38,4 +38,15 @@ public class UserServiceImpl implements UserService {
   public Optional<User> getByEmail(String email) {
     return userRepository.findByEmail(email);
   }
+  
+  @Override
+  public Optional<User> updatePassword(String email, String newPassword) {
+    final Optional<User> optionalUser = getByEmail(email);
+    if (optionalUser.isPresent()) {
+      final User user = optionalUser.get();
+      user.setPassword(passwordEncoder.encode(newPassword));
+      return Optional.of(userRepository.save(user));
+    }
+    return Optional.empty();
+  }
 }
