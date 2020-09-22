@@ -2,6 +2,10 @@
   <div class="header-content">
     <div class="header">
       <h1 class="title">{{title}}</h1>
+      <app-tag-note
+        class="tag-note"
+        [noteId]="id"
+      ></app-tag-note>
       <h2 class="date">{{created}}</h2>
     </div>
     <p class="content">{{content}}</p>

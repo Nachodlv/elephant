@@ -19,6 +19,7 @@ import {LoginComponent} from './components/login/login.component';
 import { SeeNoteComponent } from './components/see-note/see-note.component';
 import { ShareNoteDialogComponent } from './components/share-note-dialog/share-note-dialog.component';
 import {SeeProfileComponent} from './components/see-profile/see-profile.component';
+import { TagNoteComponent } from './components/tag-note/tag-note.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import {SeeProfileComponent} from './components/see-profile/see-profile.componen
     SeeNoteComponent,
     ShareNoteDialogComponent,
     SeeProfileComponent,
+    TagNoteComponent,
   ],
   imports: [
     BrowserModule,

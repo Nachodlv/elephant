@@ -7,7 +7,6 @@ import {map, tap} from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
-
 export class NoteService {
 
   constructor(private httpService: HttpService) {
@@ -32,5 +31,9 @@ export class NoteService {
 
   shareNote(noteId, shareNoteData): Observable<any> {
     return this.httpService.put(`/${noteId}/permission/add`, JSON.stringify(shareNoteData));
+  }
+
+  getTagsByNote(noteId): Observable<any[]> {
+    return of([]);
   }
 }
