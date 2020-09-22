@@ -18,7 +18,6 @@ export class SeeProfileComponent implements OnInit {
   ngOnInit(): void {
     this.userService.getUser().subscribe(res => {
       this.user = res;
-      console.log(this.user);
     });
 
   }

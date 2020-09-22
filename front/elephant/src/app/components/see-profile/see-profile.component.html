@@ -11,7 +11,7 @@
         <mat-form-field appearance="none">
           <label>Nombre y Apellido</label>
           <input class="profile-name-lastname" type="text" disabled matInput
-                 [value]="user.lastName">
+                 [value]="user.firstName + '' + user.lastName">
           <!-- como user first name aun no funciona, no se lo puede aplicar al html  -->
         </mat-form-field>
       </mat-grid-tile>
