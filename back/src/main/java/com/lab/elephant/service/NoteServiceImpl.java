@@ -62,4 +62,20 @@ public class NoteServiceImpl implements NoteService {
       users.add(p.getUser());
     return users;
   }
+  
+  @Override
+  public List<User> getUsersWithEditOrOwner(Note note) {
+    List<User> users = new ArrayList<>();
+    for (Permission p : note.getPermissions())
+      if (p.getType() != PermissionType.Viewer)
+        users.add(p.getUser());
+    return users;
+  }
+  
+  @Override
+  public void addTags(Note note, List<String> tags) {
+    final List<String> tagList = note.getTags();
+    tagList.addAll(tags);
+    note.setTags(tagList);
+  }
 }

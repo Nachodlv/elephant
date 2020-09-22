@@ -29,6 +29,10 @@ public class Note {
   @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
   private List<Permission> permissions = new ArrayList<>();
   
+  @JsonIgnore
+  @ElementCollection
+  List<String> tags = new ArrayList<>();
+  
   public Note(String title, String content, Timestamp created) {
     this.title = title;
     this.content = content;
@@ -92,5 +96,13 @@ public class Note {
   
   public void setPermissions(List<Permission> permissions) {
     this.permissions = permissions;
+  }
+  
+  public List<String> getTags() {
+    return tags;
+  }
+  
+  public void setTags(List<String> tags) {
+    this.tags = tags;
   }
 }
