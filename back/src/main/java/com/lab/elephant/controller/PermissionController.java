@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin
@@ -55,6 +56,9 @@ public class PermissionController {
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Note has no owner");
     if (requestUser.get().getUuid() != noteOwner.get().getUuid())
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User can't modify this note");
+    final List<User> usersWithPermissions = noteService.getUsersWithPermissions(note);
+    if (usersWithPermissions.contains(user))
+      throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User already has a permission over this note");
     permissionService.addRelationship(user, note, permission);
   }
 }

@@ -8,11 +8,13 @@ import java.util.Optional;
 
 @Service
 public interface UserService {
-    List<User> getAllUsers();
+  List<User> getAllUsers();
 
-    User addUser(User user);
+  User addUser(User user);
 
-    Optional<User> getUser(long id);
-    
-    Optional<User> getByEmail(String email);
+  Optional<User> getUser(long id);
+  
+  Optional<User> getByEmail(String email);
+  
+  Optional<User> updatePassword(String email, String newPassword);
 }
