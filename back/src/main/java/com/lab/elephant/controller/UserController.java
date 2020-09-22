@@ -1,5 +1,6 @@
 package com.lab.elephant.controller;
 
+import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.UpdatePasswordDto;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.TokenService;
@@ -69,5 +70,13 @@ public class UserController {
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
     userService.updatePassword(user.getEmail(), dto.getNewPassword());
+  }
+  
+  @PutMapping("/editUser")
+  public void editUser(@Valid @RequestBody EditUserDTO dto) {
+    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(string).get();
+    
+    userService.editUser(user.getEmail(), dto);
   }
 }
