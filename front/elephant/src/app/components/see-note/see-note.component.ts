@@ -89,8 +89,9 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   loadComments(): void {
     this.commentsSubscription = this.noteService.getComments(this.id).subscribe(res => {
-      this.comments = this.resolveCommentsData(res);
-
+      if (res.length !== 0) {
+        this.comments = this.resolveCommentsData(res);
+      }
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar los comentarios!', 0);
     });
@@ -108,10 +109,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     const day = 1000 * 60 * 60 * 24;
 
     const dateNow = new Date().getTime();
-    const dateOffset = (new Date().getTimezoneOffset() * minutes);
-    const dateNowWithoutOffset = new Date(dateNow - dateOffset).getTime();
     const commentDate = new Date(date).getTime();
-    const dateDifference = (dateNowWithoutOffset - commentDate);
+    const dateDifference = (dateNow - commentDate);
 
     const minutesDifference = Math.floor(dateDifference / minutes);
     const hoursDifference = Math.floor(dateDifference / hours);

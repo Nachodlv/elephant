@@ -3,7 +3,7 @@ export class Comment {
     public uuid?: number,
     public title?: string,
     public content?: string,
-    public owner?: string,
+    public ownerName?: string,
     public created?: string,
   ) {
   }
