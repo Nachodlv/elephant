@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NoteService} from '../../services/note.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackbarService} from '../../services/snackbar.service';
@@ -12,15 +12,17 @@ import {Comment} from '../../models/comment-model';
   templateUrl: './see-note.component.html',
   styleUrls: ['./see-note.component.scss']
 })
-export class SeeNoteComponent implements OnInit, OnDestroy {
+export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
-  @ViewChild('target') elementView: ElementRef;
-  contentHeight: number;
+  @ViewChild('target') pTagView: ElementRef;
+  @ViewChild('commentsTarget') commentsView: ElementRef;
 
   public id;
   public title;
   public content;
   public created;
+
+  loading = true;
 
   comments: Comment[] = [];
 
@@ -48,9 +50,14 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
     this.commentsSubscription?.unsubscribe();
   }
 
+  ngAfterViewChecked(): void {
+    if (!this.loading) {
+      this.setContentHeight();
+    }
+  }
+
   setContentHeight(): void {
-    this.contentHeight = this.elementView.nativeElement.offsetHeight;
-    console.log(this.contentHeight);
+    this.commentsView.nativeElement.style.maxHeight = this.pTagView.nativeElement.offsetHeight;
   }
 
   loadNote(): void {
@@ -61,8 +68,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
       const timeStamp = res.created.split('T');
       this.created = timeStamp[0];
 
-
-      this.setContentHeight();
+      this.loading = false;
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
       this.router.navigate(['/home']);
