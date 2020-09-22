@@ -1,7 +1,6 @@
 @import "../../_vars.scss";
 
 .container {
-  height: 90%;
   display: flex;
   flex-direction: row;
   margin: 2vh 0 0 4%;
@@ -61,7 +60,6 @@
 
 .all-comments-container {
   overflow: auto;
-  max-height: 80%;
 }
 
 .comment-container {

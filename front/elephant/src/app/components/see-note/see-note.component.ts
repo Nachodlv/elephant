@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NoteService} from '../../services/note.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackbarService} from '../../services/snackbar.service';
@@ -13,6 +13,9 @@ import {Comment} from '../../models/comment-model';
   styleUrls: ['./see-note.component.scss']
 })
 export class SeeNoteComponent implements OnInit, OnDestroy {
+
+  @ViewChild('target') elementView: ElementRef;
+  contentHeight: number;
 
   public id;
   public title;
@@ -45,6 +48,11 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
     this.commentsSubscription?.unsubscribe();
   }
 
+  setContentHeight(): void {
+    this.contentHeight = this.elementView.nativeElement.offsetHeight;
+    console.log(this.contentHeight);
+  }
+
   loadNote(): void {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
@@ -52,6 +60,9 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
 
       const timeStamp = res.created.split('T');
       this.created = timeStamp[0];
+
+
+      this.setContentHeight();
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
       this.router.navigate(['/home']);
@@ -68,6 +79,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
   loadComments(): void {
     this.commentsSubscription = this.noteService.getComments(this.id).subscribe(res => {
       this.comments = this.resolveCommentsData(res);
+
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar los comentarios!', 0);
     });
@@ -96,7 +108,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy {
 
     if (hoursDifference >= 24) {
       return daysDifference + (daysDifference !== 1 ? ' dias' : ' dia');
-    } else if (minutesDifference >= 60){
+    } else if (minutesDifference >= 60) {
       return hoursDifference + (hoursDifference !== 1 ? ' horas' : ' hora');
     } else {
       return minutesDifference + (minutesDifference !== 1 ? ' minutos' : ' minuto');
