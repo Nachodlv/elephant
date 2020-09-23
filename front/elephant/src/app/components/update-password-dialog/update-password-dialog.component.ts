@@ -38,7 +38,7 @@ export class UpdatePasswordDialogComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.updatePasswordSubscription = this.userService.updatePassword(this.form.value).subscribe(res => {
-      this.snackBar.openSnackbar('¡Se ha modificado la contraseña con exito!', 0);
+      this.snackBar.openSnackbar('¡Se ha modificado la contraseña con éxito!', 0);
       this.dialogRef.close();
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);

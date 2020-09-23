@@ -35,7 +35,7 @@ export class SeeProfileComponent implements OnInit {
 
   openUpdatePasswordDialog(): void {
     this.dialog.open(UpdatePasswordDialogComponent, {
-      width: '30vw',
+      width: '26vw',
       position: {top: '10%'}
     });
   }
