@@ -29,7 +29,6 @@ public class Note {
   @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
   private List<Permission> permissions = new ArrayList<>();
   
-  @JsonIgnore
   @ElementCollection
   List<String> tags = new ArrayList<>();
   
