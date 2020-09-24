@@ -200,8 +200,9 @@ public class NoteServiceTest {
   }
   
   @Test
-  public void addTags_ShouldAddTheTagsToNoteAndKeepOldOnes() {
+  public void addTags_WhenNoteExists_ShouldReturnOptionalOfNoteWithOnlyTheNewTags() {
     final Note note = new Note();
+    final long id = 1;
     List<String> oldTags = new ArrayList<>();
     oldTags.add("food");
     note.setTags(new ArrayList<>(oldTags));
@@ -210,10 +211,20 @@ public class NoteServiceTest {
     newTags.add("inspirational");
     newTags.add("diy");
     
-    noteService.addTags(note, newTags);
+    Mockito.when(noteRepository.findById(id)).thenReturn(Optional.of(note));
+    Mockito.when(noteRepository.save(note)).thenReturn(note);
+    final Optional<Note> optionalNote = noteService.addTags(id, newTags);
     
-    List<String> allTags = new ArrayList<>(oldTags);
-    allTags.addAll(newTags);
-    assertThat(note.getTags()).isEqualTo(allTags);
+    assertThat(optionalNote.isPresent()).isTrue();
+    assertThat(optionalNote.get().getTags()).isEqualTo(newTags);
+    assertThat(optionalNote.get().getTags().containsAll(oldTags)).isFalse();
+  }
+  
+  @Test
+  public void addTags_WhenNoteDoesNotExist_ShouldReturnEmptyOptional() {
+    final long id = 1;
+    final List<String> tags = new ArrayList<>();
+    final Optional<Note> optionalNote = noteService.addTags(id, tags);
+    assertThat(optionalNote.isPresent()).isFalse();
   }
 }

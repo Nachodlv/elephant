@@ -73,9 +73,13 @@ public class NoteServiceImpl implements NoteService {
   }
   
   @Override
-  public void addTags(Note note, List<String> tags) {
-    final List<String> tagList = note.getTags();
-    tagList.addAll(tags);
-    note.setTags(tagList);
+  public Optional<Note> addTags(long id, List<String> tags) {
+    final Optional<Note> optionalNote = getNote(id);
+    if (optionalNote.isPresent()) {
+      Note note = optionalNote.get();
+      note.setTags(tags);
+      return Optional.of(noteRepository.save(note));
+    }
+    return Optional.empty();
   }
 }

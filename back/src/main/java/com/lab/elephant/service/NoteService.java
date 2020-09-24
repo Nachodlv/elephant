@@ -24,5 +24,5 @@ public interface NoteService {
   
   List<User> getUsersWithEditOrOwner(Note note);
   
-  void addTags(Note note, List<String> tags);
+  Optional<Note> addTags(long id, List<String> tags);
 }

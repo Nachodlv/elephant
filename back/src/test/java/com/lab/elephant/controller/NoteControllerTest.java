@@ -276,6 +276,14 @@ public class NoteControllerTest {
     mvc.perform(put("/note/addTags/" + id).content(json)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
+  
+//    given(noteService.getUsersWithPermissions(note)).willReturn(users);
+//
+//    final MvcResult mvcResult = mvc.perform(get("/note/" + id))
+//            .andExpect(status().isOk())
+//            .andReturn();
+//    final String contentAsString = mvcResult.getResponse().getContentAsString();
+//    System.out.println(contentAsString);
   }
   
   @Test

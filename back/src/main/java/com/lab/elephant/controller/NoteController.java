@@ -71,7 +71,7 @@ public class NoteController {
   }
   
   @PutMapping("/addTags/{id}")
-  public void addTags(@PathVariable("id") long id, @RequestBody List<String> tags) {
+  public void addTags(@PathVariable("id") long id, @RequestPart(value = "tags") List<String> tags) {
     Optional<Note> optionalNote = noteService.getNote(id);
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();
@@ -82,6 +82,6 @@ public class NoteController {
     final List<User> usersWithEditOrOwner = noteService.getUsersWithEditOrOwner(note);
     if (!usersWithEditOrOwner.contains(user))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot add Tags to this note");
-    noteService.addTags(note, tags);
+    noteService.addTags(note.getUuid(), tags);
   }
 }
