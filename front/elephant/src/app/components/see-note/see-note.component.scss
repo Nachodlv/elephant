@@ -1,7 +1,6 @@
 @import "../../_vars.scss";
 
 .container {
-  height: 90%;
   display: flex;
   flex-direction: row;
   margin: 2vh 0 0 4%;
@@ -47,12 +46,37 @@
 .share-note-btn {
   background-color: $elephant-green;
   color: $elephant-white;
-  width: 70%;
+  width: 60%;
+  align-self: center;
 }
 
-.btn-container {
+.right-container {
   display: flex;
   flex-direction: column;
-  width: 15%;
-  align-items: center;
+  width: 25%;
+}
+
+/* show comment style */
+
+.all-comments-container {
+  overflow: auto;
+  min-height: 83vh;
+  margin-top: 8%;
+}
+
+.comment-container {
+  border: 1px solid $elephant-light-black;
+  border-radius: 3%;
+  padding: 0.5vw;
+  margin: 5%;
+}
+
+.comment-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-title-font {
+  font-size: 0.8vw;
+  font-weight: 500;
 }
