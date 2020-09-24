@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SnackbarService} from '../../services/snackbar.service';
 import {NoteService} from '../../services/note.service';
-import {Note} from '../../models/Note';
 import {Router} from '@angular/router';
+import {Note} from '../../models/note-model';
 
 
 @Component({
