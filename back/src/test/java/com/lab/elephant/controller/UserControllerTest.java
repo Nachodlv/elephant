@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.UpdatePasswordDto;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
@@ -216,5 +217,45 @@ public class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("Incorrect Password"));
+  }
+  
+  @Test
+  public void editUser_WithEverythingOk_ShouldReturn200() throws Exception {
+    final User user = new User();
+    final String newFirstName = "John";
+    final String newLastName = "Elephant";
+    final EditUserDTO dto = new EditUserDTO(newFirstName, newLastName);
+    final ObjectMapper o = new ObjectMapper();
+    final String json = o.writeValueAsString(dto);
+    
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    mvc.perform(put("/user/editUser").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void editUser_WithInvalidDTO_ShouldReturn400() throws Exception {
+    final ObjectMapper o = new ObjectMapper();
+    final String json = o.writeValueAsString(new EditUserDTO());
+  
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+  
+    mvc.perform(put("/user/editUser").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
   }
 }
