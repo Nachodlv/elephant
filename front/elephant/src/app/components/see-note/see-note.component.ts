@@ -26,6 +26,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   comments: Comment[] = [];
 
+  hasComments = false;
+
   noteSubscription: Subscription;
   commentsSubscription: Subscription;
 
@@ -89,6 +91,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   loadComments(): void {
     this.commentsSubscription = this.noteService.getComments(this.id).subscribe(res => {
+      this.hasComments = res.length !== 0;
       if (res.length !== 0) {
         this.comments = this.resolveCommentsData(res);
       }
