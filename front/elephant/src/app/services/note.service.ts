@@ -73,7 +73,4 @@ export class NoteService {
     ]);
   }
 
-  getTagsByNote(noteId): Observable<any[]> {
-    return of([]);
-  }
 }

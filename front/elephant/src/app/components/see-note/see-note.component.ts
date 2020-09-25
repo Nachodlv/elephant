@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ShareNoteDialogComponent} from '../share-note-dialog/share-note-dialog.component';
 import {Subscription} from 'rxjs';
 import {Comment} from '../../models/comment-model';
+import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-see-note',
@@ -21,6 +22,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   public title;
   public content;
   public created;
+  public tags = [];
 
   noteLoading = true;
 
@@ -64,6 +66,9 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
+      if (isNotNullOrUndefined(res.tags)){
+        this.tags = res.tags;
+      }
 
       const timeStamp = res.created.split('T');
       this.created = timeStamp[0];

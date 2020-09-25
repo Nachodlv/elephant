@@ -15,8 +15,6 @@ export class SeeProfileComponent implements OnInit {
   user: User;
   loading = true;
 
-  loading = true;
-
   constructor(
     private userService: UserService,
     private dialog: MatDialog

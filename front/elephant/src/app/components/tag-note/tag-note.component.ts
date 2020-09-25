@@ -1,7 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
-import {NoteService} from '../../services/note.service';
 
 @Component({
   selector: 'app-tag-note',
@@ -14,21 +13,13 @@ export class TagNoteComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-  tags: string[] = [];
+  @Input() tags: string[] = [];
   @Input() noteId: number;
 
-  constructor(private noteService: NoteService
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {
-    this.loadTags();
-  }
-
-  loadTags(): void {
-    this.noteService.getTagsByNote(this.noteId).subscribe(res => {
-      this.tags = res;
-    });
   }
 
   add(event: MatChipInputEvent): void {
@@ -43,7 +34,6 @@ export class TagNoteComponent implements OnInit {
     if (input) {
       input.value = '';
     }
-    console.log(this.tags);
   }
 
   remove(tag): void {
@@ -52,6 +42,5 @@ export class TagNoteComponent implements OnInit {
     if (index >= 0) {
       this.tags.splice(index, 1);
     }
-    console.log(this.tags);
   }
 }
