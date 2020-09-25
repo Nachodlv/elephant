@@ -1,4 +1,4 @@
-<div class="div-container">
+<div class="div-container" *ngIf="!loading">
 
   <div class="span-container">
     <span class="profile-span">Perfil</span>
@@ -11,7 +11,7 @@
         <mat-form-field appearance="none">
           <label>Nombre y Apellido</label>
           <input class="profile-name-lastname" type="text" disabled matInput
-                 [value]="user.lastName">
+                 [value]="user.firstName + ' ' + user.lastName">
           <!-- como user first name aun no funciona, no se lo puede aplicar al html  -->
         </mat-form-field>
       </mat-grid-tile>
@@ -37,7 +37,7 @@
   <div class="flex-container">
 
     <button class="change-password"
-            mat-raised-button>
+            mat-raised-button (click)="openUpdatePasswordDialog()">
       Cambiar Contraseña
     </button>
     <button class="delete-user"

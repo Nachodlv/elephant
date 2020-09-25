@@ -40,4 +40,8 @@ export class UserService {
       return User.fromJson(res.body);
     }));
   }
+
+  updatePassword(passwordData): any {
+    return of({value: true});
+  }
 }
