@@ -1,6 +1,7 @@
 package com.lab.elephant.controller;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.NoteService;
 import com.lab.elephant.service.UserService;
@@ -71,7 +72,8 @@ public class NoteController {
   }
   
   @PutMapping("/addTags/{id}")
-  public void addTags(@PathVariable("id") long id, @RequestPart(value = "tags") List<String> tags) {
+  public void addTags(@PathVariable("id") long id, @RequestBody TagsDTO dto) {
+    final List<String> tags = dto.getTags();
     Optional<Note> optionalNote = noteService.getNote(id);
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();

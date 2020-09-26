@@ -2,6 +2,7 @@ package com.lab.elephant.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
@@ -272,18 +273,10 @@ public class NoteControllerTest {
     tags.add("frozen");
     
     ObjectMapper o = new ObjectMapper();
-    String json = o.writeValueAsString(tags);
+    String json = o.writeValueAsString(new TagsDTO(tags));
     mvc.perform(put("/note/addTags/" + id).content(json)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
-  
-//    given(noteService.getUsersWithPermissions(note)).willReturn(users);
-//
-//    final MvcResult mvcResult = mvc.perform(get("/note/" + id))
-//            .andExpect(status().isOk())
-//            .andReturn();
-//    final String contentAsString = mvcResult.getResponse().getContentAsString();
-//    System.out.println(contentAsString);
   }
   
   @Test
@@ -309,7 +302,7 @@ public class NoteControllerTest {
     tags.add("frozen");
     
     ObjectMapper o = new ObjectMapper();
-    String json = o.writeValueAsString(tags);
+    String json = o.writeValueAsString(new TagsDTO(tags));
     mvc.perform(put("/note/addTags/" + id).content(json)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
@@ -336,7 +329,7 @@ public class NoteControllerTest {
     tags.add("frozen");
   
     ObjectMapper o = new ObjectMapper();
-    String json = o.writeValueAsString(tags);
+    String json = o.writeValueAsString(new TagsDTO(tags));
     mvc.perform(put("/note/addTags/" + id).content(json)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized())
