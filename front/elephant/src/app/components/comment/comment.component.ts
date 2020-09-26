@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-comment',
@@ -6,10 +7,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./comment.component.scss']
 })
 export class CommentComponent implements OnInit {
+  comment: FormControl;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
+    this.comment = new FormControl('', []);
+  }
+
+  onSubmitComment(): void {
+    console.log('Comment value: ', this.comment.value);
   }
 
 }

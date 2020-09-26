@@ -50,34 +50,6 @@
   width: 70%;
 }
 
-.comment-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 13%;
-  margin-left: 8%;
-}
-
-.comment-text-area {
-  height: 2.8rem;
-  width: 8.5rem;
-  resize: none;
-  font-size: 12px;
-  margin-left: 2%;
-}
-
-.add-comment-btn {
-  background-color: $elephant-green;
-  color: $elephant-white;
-  width: 36%;
-  height: 3.1rem;
-  font-size: 11.5px;
-  align-self: flex-start;
-  white-space: normal;
-  line-height: 1.4;
-  margin-left: 2%;
-}
-
 .btn-container {
   display: flex;
   flex-direction: column;

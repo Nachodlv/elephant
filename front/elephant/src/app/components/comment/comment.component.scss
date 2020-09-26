@@ -1,0 +1,29 @@
+@import "../../_vars.scss";
+
+.comment-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 13%;
+  padding-left: 12%;
+  padding-right: 3%;
+}
+
+.comment-text-area {
+  height: 2.8rem;
+  width: 10rem;
+  resize: none;
+  font-size: 12px;
+}
+
+.add-comment-btn {
+  background-color: $elephant-green;
+  color: $elephant-white;
+  width: 43%;
+  height: 3.1rem;
+  font-size: 11.5px;
+  align-self: flex-start;
+  white-space: normal;
+  line-height: 1.4;
+  margin-left: 2%;
+}

@@ -11,10 +11,6 @@
   </div>
   <div class="btn-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
-    <form class="comment-container" (ngSubmit)="onSubmitComment()">
-      <textarea class="comment-text-area" placeholder="Nuevo comentario..." maxlength="300"
-                name="cardComment"></textarea>
-      <button type="submit" mat-raised-button class="add-comment-btn">Agregar comentario</button>
-    </form>
+   <app-comment></app-comment>
   </div>
 </div>
