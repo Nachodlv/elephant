@@ -1,5 +1,6 @@
 package com.lab.elephant.service;
 
+import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,5 +49,18 @@ public class UserServiceImpl implements UserService {
       return Optional.of(userRepository.save(user));
     }
     return Optional.empty();
+  }
+  
+  @Override
+  public Optional<User> editUser(String email, EditUserDTO dto) {
+    final Optional<User> optionalUser = getByEmail(email);
+    if (optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      user.setFirstName(dto.getFirstName());
+      user.setLastName(dto.getLastName());
+      return Optional.of(userRepository.save(user));
+    }
+    return optionalUser;
+    
   }
 }

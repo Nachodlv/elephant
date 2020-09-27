@@ -1,5 +1,6 @@
 package com.lab.elephant.service;
 
+import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.repository.UserRepository;
 import org.junit.Test;
@@ -141,6 +142,40 @@ public class UserServiceTest {
     final String nonexistentEmail = "john@elephant.com";
     final String newPassword = "new password";
     final Optional<User> optionalUser = userService.updatePassword(nonexistentEmail, newPassword);
+    
+    assertThat(optionalUser.isPresent()).isFalse();
+  }
+  
+  @Test
+  public void editUser_WhenUserExists_ShouldEditFirstNameAndLastName() {
+    final User user = new User();
+    user.setUuid(1);
+    final String email = "john@elephant.com";
+    final String oldFirstName = "jHON";
+    final String oldLastName = "eLEPHANT";
+    final String newFirstName = "John";
+    final String newLastName = "Elephant";
+    final EditUserDTO dto= new EditUserDTO(newFirstName, newLastName);
+    user.setFirstName(oldFirstName);
+    user.setLastName(oldLastName);
+    
+    Mockito.when(userRepository.save(user)).thenReturn(user);
+    Mockito.when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+    
+    final Optional<User> optionalUser = userService.editUser(email, dto);
+    
+    assertThat(optionalUser.isPresent()).isTrue();
+    final User returnedUser = optionalUser.get();
+    assertThat(optionalUser.get().getUuid()).isEqualTo(user.getUuid());
+    assertThat(returnedUser.getFirstName()).isEqualTo(newFirstName);
+    assertThat(returnedUser.getLastName()).isEqualTo(newLastName);
+  }
+  
+  @Test
+  public void editUser_WhenUserDoesNotExist_ShouldReturnEmptyOptional() {
+    final String nonexistentEmail = "john@elephant.com";
+    final EditUserDTO dto = new EditUserDTO("name", "surname");
+    final Optional<User> optionalUser = userService.editUser(nonexistentEmail, dto);
     
     assertThat(optionalUser.isPresent()).isFalse();
   }
