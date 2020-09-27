@@ -1,4 +1,4 @@
-<div class="div-container">
+<div class="div-container" *ngIf="!loading">
 
   <div class="span-container">
     <span class="profile-span">Perfil</span>
@@ -36,7 +36,7 @@
   <div class="flex-container">
 
     <button class="change-password"
-            mat-raised-button>
+            mat-raised-button (click)="openUpdatePasswordDialog()">
       Cambiar Contraseña
     </button>
     <button class="delete-user"
