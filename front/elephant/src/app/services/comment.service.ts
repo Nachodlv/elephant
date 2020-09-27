@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Note} from '../models/note-model';
-import {Observable} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
 import {HttpService} from './http.service';
+import {Comment} from '../models/comment-model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +11,7 @@ export class CommentService {
   constructor(private httpService: HttpService) {
   }
 
-  createComment(idNote, comment ): Observable<any> {
-    return this.httpService.post('/comment/add/' + idNote , JSON.stringify(comment)).pipe(tap((_ => {
-    }), err => {
-      console.log(err);
-    }), map(response => {
-      return Note.fromJson(response.body);
-    }));
+  createComment(idNote, comment: Comment): Observable<any> {
+    return of(comment);
   }
 }

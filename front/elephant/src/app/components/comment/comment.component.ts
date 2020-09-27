@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {FormControl} from '@angular/forms';
 import {CommentService} from '../../services/comment.service';
-import {Comment} from '../../models/comment';
+import {Comment} from '../../models/comment-model';
+import {SnackbarService} from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-comment',
@@ -10,8 +11,11 @@ import {Comment} from '../../models/comment';
 })
 export class CommentComponent implements OnInit {
   comment: FormControl;
+  @Input() noteId: number;
 
-  constructor(private commentService: CommentService) {
+  constructor(private commentService: CommentService,
+              private snackBar: SnackbarService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -21,7 +25,9 @@ export class CommentComponent implements OnInit {
   onSubmitComment(): void {
     if (this.comment.value.trim()) {
       const newComment: Comment = new Comment(this.comment.value.trim());
-      // this.commentService()
+      this.commentService.createComment(this.noteId, newComment).subscribe(res => {
+        this.snackBar.openSnackbar('¡Creación de Comentario Exitoso!', 0);
+      });
     }
     console.log('Comment value: ', this.comment.value);
   }

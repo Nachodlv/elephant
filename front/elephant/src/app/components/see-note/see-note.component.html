@@ -11,7 +11,9 @@
   </div>
   <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
-   <app-comment></app-comment>
+   <app-comment
+     [noteId]="id"
+   ></app-comment>
     <div class="all-comments-container" #commentsTarget>
       <div class="comment-container" *ngFor="let comment of comments">
         <div class="comment-title">
