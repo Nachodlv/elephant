@@ -20,6 +20,7 @@ import { SeeNoteComponent } from './components/see-note/see-note.component';
 import { ShareNoteDialogComponent } from './components/share-note-dialog/share-note-dialog.component';
 import { CommentComponent } from './components/comment/comment.component';
 import {SeeProfileComponent} from './components/see-profile/see-profile.component';
+import { UpdatePasswordDialogComponent } from './components/update-password-dialog/update-password-dialog.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import {SeeProfileComponent} from './components/see-profile/see-profile.componen
     ShareNoteDialogComponent,
     CommentComponent,
     SeeProfileComponent,
+    UpdatePasswordDialogComponent,
   ],
   imports: [
     BrowserModule,
