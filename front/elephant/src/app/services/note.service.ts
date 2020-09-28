@@ -8,7 +8,6 @@ import {Comment} from '../models/comment-model';
 @Injectable({
   providedIn: 'root'
 })
-
 export class NoteService {
 
   constructor(private httpService: HttpService) {
@@ -44,4 +43,5 @@ export class NoteService {
       return comments;
     }));
   }
+
 }

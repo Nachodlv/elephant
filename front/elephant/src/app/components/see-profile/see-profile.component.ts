@@ -13,7 +13,6 @@ import {MatDialog} from '@angular/material/dialog';
 export class SeeProfileComponent implements OnInit {
 
   user: User;
-
   loading = true;
 
   constructor(
