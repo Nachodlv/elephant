@@ -1,6 +1,7 @@
 package com.lab.elephant.controller;
 
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.NoteService;
 import com.lab.elephant.service.UserService;
@@ -68,5 +69,21 @@ public class NoteController {
       return true;
     }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+  }
+  
+  @PutMapping("/addTags/{id}")
+  public void addTags(@PathVariable("id") long id, @RequestBody TagsDTO dto) {
+    final List<String> tags = dto.getTags();
+    Optional<Note> optionalNote = noteService.getNote(id);
+    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(string).get();
+    
+    if (!optionalNote.isPresent())
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+    final Note note = optionalNote.get();
+    final List<User> usersWithEditOrOwner = noteService.getUsersWithEditOrOwner(note);
+    if (!usersWithEditOrOwner.contains(user))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot add Tags to this note");
+    noteService.addTags(note.getUuid(), tags);
   }
 }
