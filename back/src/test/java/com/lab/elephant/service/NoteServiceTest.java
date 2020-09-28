@@ -174,4 +174,57 @@ public class NoteServiceTest {
     final List<User> usersWithPermissions = noteService.getUsersWithPermissions(new Note());
     assertThat(usersWithPermissions.size()).isEqualTo(0);
   }
+  
+  @Test
+  public void getUsersWithEditOrOwner_WhenNoteHasPermissions_ShouldReturnThem() {
+    final Note note = new Note();
+    final User owner = new User();
+    final User editor = new User();
+    final User viewer = new User();
+    final List<Permission> permissions = new ArrayList<>();
+    permissions.add(new Permission(owner, note, PermissionType.Owner));
+    permissions.add(new Permission(editor, note, PermissionType.Editor));
+    permissions.add(new Permission(viewer, note, PermissionType.Viewer));
+    note.setPermissions(permissions);
+    final List<User> usersWithPermissions = noteService.getUsersWithEditOrOwner(note);
+    assertThat(usersWithPermissions.size()).isEqualTo(2);
+    assertThat(usersWithPermissions.contains(owner)).isEqualTo(true);
+    assertThat(usersWithPermissions.contains(editor)).isEqualTo(true);
+    assertThat(usersWithPermissions.contains(viewer)).isEqualTo(false);
+  }
+  
+  @Test
+  public void getUsersWithEditOrOwner_WhenNoteHasNoPermissions_ShouldReturnEmptyList() {
+    final List<User> users = noteService.getUsersWithEditOrOwner(new Note());
+    assertThat(users.size()).isEqualTo(0);
+  }
+  
+  @Test
+  public void addTags_WhenNoteExists_ShouldReturnOptionalOfNoteWithOnlyTheNewTags() {
+    final Note note = new Note();
+    final long id = 1;
+    List<String> oldTags = new ArrayList<>();
+    oldTags.add("food");
+    note.setTags(new ArrayList<>(oldTags));
+    List<String> newTags = new ArrayList<>();
+    newTags.add("fun");
+    newTags.add("inspirational");
+    newTags.add("diy");
+    
+    Mockito.when(noteRepository.findById(id)).thenReturn(Optional.of(note));
+    Mockito.when(noteRepository.save(note)).thenReturn(note);
+    final Optional<Note> optionalNote = noteService.addTags(id, newTags);
+    
+    assertThat(optionalNote.isPresent()).isTrue();
+    assertThat(optionalNote.get().getTags()).isEqualTo(newTags);
+    assertThat(optionalNote.get().getTags().containsAll(oldTags)).isFalse();
+  }
+  
+  @Test
+  public void addTags_WhenNoteDoesNotExist_ShouldReturnEmptyOptional() {
+    final long id = 1;
+    final List<String> tags = new ArrayList<>();
+    final Optional<Note> optionalNote = noteService.addTags(id, tags);
+    assertThat(optionalNote.isPresent()).isFalse();
+  }
 }
