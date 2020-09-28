@@ -11,10 +11,13 @@
   </div>
   <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
-    <div class="all-comments-container" #commentsTarget>
+    <div class="no-comments-container" *ngIf="!hasComments">
+      <h1 class="no-comments-text">Aun no hay comentarios</h1>
+    </div>
+    <div class="all-comments-container" *ngIf="hasComments" #commentsTarget>
       <div class="comment-container" *ngFor="let comment of comments">
         <div class="comment-title">
-          <h1 class="comment-title-font">{{comment.owner}}</h1>
+          <h1 class="comment-title-font">{{comment.ownerName}}</h1>
           <h1 class="comment-title-font">Hace {{comment.created}}</h1>
         </div>
         <p>{{comment.content}}</p>
