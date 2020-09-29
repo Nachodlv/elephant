@@ -21,6 +21,7 @@ import { ShareNoteDialogComponent } from './components/share-note-dialog/share-n
 import { CommentComponent } from './components/comment/comment.component';
 import {SeeProfileComponent} from './components/see-profile/see-profile.component';
 import { UpdatePasswordDialogComponent } from './components/update-password-dialog/update-password-dialog.component';
+import { TagNoteComponent } from './components/tag-note/tag-note.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { UpdatePasswordDialogComponent } from './components/update-password-dial
     CommentComponent,
     SeeProfileComponent,
     UpdatePasswordDialogComponent,
+    TagNoteComponent,
   ],
   imports: [
     BrowserModule,

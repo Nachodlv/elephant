@@ -1,9 +1,9 @@
 export class Comment {
   constructor(
-    public content?: string,
     public uuid?: number,
     public title?: string,
-    public owner?: string,
+    public content?: string,
+    public ownerName?: string,
     public created?: string,
   ) {
   }
