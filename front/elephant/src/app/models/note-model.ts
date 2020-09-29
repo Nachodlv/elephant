@@ -4,6 +4,7 @@ export class Note {
     public title?: string,
     public content?: string,
     public created?: string,
+    public tags?: string[],
   ) {
   }
 

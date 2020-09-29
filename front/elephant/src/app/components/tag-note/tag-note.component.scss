@@ -1,0 +1,22 @@
+@import "../../_vars.scss";
+
+.example-chip-list {
+  width: 100%;
+}
+
+::ng-deep {
+  .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: $elephant-green !important;
+  }
+
+  .mat-form-field-underline {
+    /*change color of underline*/
+    background-color: black !important;
+  }
+
+  .mat-form-field-ripple {
+    /*change color of underline when focused*/
+    background-color: $elephant-green !important;
+  }
+}

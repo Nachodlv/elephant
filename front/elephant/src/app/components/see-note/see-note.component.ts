@@ -6,6 +6,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {ShareNoteDialogComponent} from '../share-note-dialog/share-note-dialog.component';
 import {Subscription} from 'rxjs';
 import {Comment} from '../../models/comment-model';
+import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 
 @Component({
   selector: 'app-see-note',
@@ -21,10 +22,13 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   public title;
   public content;
   public created;
+  public tags = [];
 
   noteLoading = true;
 
   comments: Comment[] = [];
+
+  hasComments = false;
 
   noteSubscription: Subscription;
   commentsSubscription: Subscription;
@@ -64,6 +68,9 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
+      if (isNotNullOrUndefined(res.tags)){
+        this.tags = res.tags;
+      }
 
       const timeStamp = res.created.split('T');
       this.created = timeStamp[0];
@@ -89,8 +96,10 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   loadComments(): void {
     this.commentsSubscription = this.noteService.getComments(this.id).subscribe(res => {
-      this.comments = this.resolveCommentsData(res);
-
+      this.hasComments = res.length !== 0;
+      if (res.length !== 0) {
+        this.comments = this.resolveCommentsData(res);
+      }
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar los comentarios!', 0);
     });
@@ -108,10 +117,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     const day = 1000 * 60 * 60 * 24;
 
     const dateNow = new Date().getTime();
-    const dateOffset = (new Date().getTimezoneOffset() * minutes);
-    const dateNowWithoutOffset = new Date(dateNow - dateOffset).getTime();
     const commentDate = new Date(date).getTime();
-    const dateDifference = (dateNowWithoutOffset - commentDate);
+    const dateDifference = (dateNow - commentDate);
 
     const minutesDifference = Math.floor(dateDifference / minutes);
     const hoursDifference = Math.floor(dateDifference / hours);
