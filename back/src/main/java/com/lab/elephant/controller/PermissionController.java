@@ -61,4 +61,18 @@ public class PermissionController {
       throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User already has a permission over this note");
     permissionService.addRelationship(user, note, permission);
   }
+  
+  @GetMapping(path = "{noteId}/permission")
+  public String getPermission(@PathVariable long noteId) {
+    final Optional<Note> optionalNote = noteService.getNote(noteId);
+    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(string).get();
+    if (!optionalNote.isPresent())
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+    Note note = optionalNote.get();
+    final List<User> usersWithPermissions = noteService.getUsersWithPermissions(note);
+    if (!usersWithPermissions.contains(user))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User has no Permission");
+    return permissionService.getPermissionBetween(user, note).get().toString();
+  }
 }

@@ -20,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.ArrayList;
@@ -27,8 +28,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringRunner.class)
@@ -332,5 +334,77 @@ public class PermissionControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isForbidden())
             .andExpect(status().reason("User already has a permission over this note"));
+  }
+  
+  @Test
+  public void getPermission_WithEverythingOk_ShouldReturn200AndThePermissionType() throws Exception {
+    final long noteId = 1;
+    final Note note = new Note();
+    final User user = new User();
+    final List<User> users = new ArrayList<>();
+    final PermissionType permissionType = PermissionType.Viewer;
+    users.add(user);
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getUsersWithPermissions(note)).willReturn(users);
+    given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
+    
+    MvcResult result = mvc.perform(get("/" + noteId + "/permission"))
+            .andExpect(status().isOk()).andReturn();
+    String content = result.getResponse().getContentAsString();
+    assertThat(content).isEqualTo(permissionType.toString());
+  }
+  
+  @Test
+  public void getPermission_WithIdThatDoesNotExist_ShouldReturn404() throws Exception {
+    final long noteId = 1;
+    final Note note = new Note();
+    final User user = new User();
+    final List<User> users = new ArrayList<>();
+    final PermissionType permissionType = PermissionType.Viewer;
+    users.add(user);
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+  
+    given(noteService.getUsersWithPermissions(note)).willReturn(users);
+    given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
+
+    mvc.perform(get("/" + noteId + "/permission"))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
+  }
+  
+  @Test
+  public void getPermission_WhenUserDoesntHaveAPermission_ShouldReturn401() throws Exception {
+    final long noteId = 1;
+    final Note note = new Note();
+    final User user = new User();
+    final PermissionType permissionType = PermissionType.Viewer;
+    //this is to mock the logged in user
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+  
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
+  
+    mvc.perform(get("/" + noteId + "/permission"))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User has no Permission"));
   }
 }
