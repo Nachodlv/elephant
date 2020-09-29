@@ -10,7 +10,7 @@
       <mat-grid-tile>
         <mat-form-field appearance="none">
           <label>Nombre y Apellido</label>
-          <input class="profile-name-lastname" type="text" disabled matInput
+          <input class="profile-name-lastname" type="text" matInput [disabled]="!updating"
                  [value]="user.firstName + ' ' + user.lastName">
         </mat-form-field>
       </mat-grid-tile>
@@ -24,10 +24,20 @@
 
     </mat-grid-list>
 
-    <button class="edit-button"
-            type="submit"
-            mat-raised-button>
+    <button
+      class="edit-button"
+      *ngIf="updating == false"
+            mat-raised-button
+    (click)="updating = true">
       Editar
+    </button>
+    <button
+      class="edit-button"
+      *ngIf="updating == true"
+      type="submit"
+      mat-raised-button
+      (click)="updating = false">
+      Guardar
     </button>
   </form>
 
