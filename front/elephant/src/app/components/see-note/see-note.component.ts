@@ -55,7 +55,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   }
 
   ngAfterViewChecked(): void {
-    if (!this.noteLoading) {
+    if (!this.noteLoading && this.hasComments) {
       this.setContentHeight();
     }
   }
