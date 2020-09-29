@@ -13,8 +13,8 @@ import {MatDialog} from '@angular/material/dialog';
 export class SeeProfileComponent implements OnInit {
 
   user: User;
-
   loading = true;
+  updating = false;
 
   constructor(
     private userService: UserService,
@@ -27,10 +27,10 @@ export class SeeProfileComponent implements OnInit {
       this.user = res;
       this.loading = false;
     });
-
   }
 
   saveProfile(): void {
+    console.log(this.user.firstName);
   }
 
   openUpdatePasswordDialog(): void {
