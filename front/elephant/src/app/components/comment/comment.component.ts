@@ -30,6 +30,7 @@ export class CommentComponent implements OnInit {
       });
     }
     console.log('Comment value: ', this.comment.value);
+    this.comment.setValue('');
   }
 
 }
