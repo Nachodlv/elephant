@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
+import {SnackbarService} from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,7 +9,9 @@ import {Router} from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+              private snackbar: SnackbarService,
+  ) {
   }
 
   ngOnInit(): void {
@@ -18,7 +21,12 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
-  seeProfile(): void{
+  seeProfile(): void {
     this.router.navigate(['/profile']);
+  }
+
+  logout(): void {
+    this.router.navigate(['']);
+    this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!');
   }
 }
