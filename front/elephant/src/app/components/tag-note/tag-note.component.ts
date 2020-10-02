@@ -39,10 +39,8 @@ export class TagNoteComponent implements OnInit, OnDestroy {
 
     if ((value || '').trim()) {
       this.tags.push(value.trim());
-      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {
-
-      }, error => {
-        this.snackBar.openSnackbar('¡Credenciales inválidas!', 0);
+      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {}, error => {
+        this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
       });
     }
 
@@ -57,7 +55,9 @@ export class TagNoteComponent implements OnInit, OnDestroy {
 
     if (index >= 0) {
       this.tags.splice(index, 1);
-      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe();
+      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {}, error => {
+        this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
+      });
     }
   }
 }
