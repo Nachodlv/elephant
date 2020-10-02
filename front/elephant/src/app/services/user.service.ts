@@ -18,7 +18,7 @@ export class UserService {
 
     return this.httpService.post('/user/create', JSON.stringify(formUser))
       .pipe(tap((_ => {
-        }), err => console.log(err)
+        }), err => console.error(err)
       ), map(res => {
         return User.fromJson(res.body);
       }));
@@ -35,13 +35,16 @@ export class UserService {
 
   getUser(): Observable<User> {
     return this.httpService.get('/user').pipe(tap((_ => {
-      }), err => console.log(err)
+      }), err => console.error(err)
     ), map(res => {
       return User.fromJson(res.body);
     }));
   }
 
-  updatePassword(passwordData): any {
-    return of({value: true});
+  updatePassword(passwordData): Observable<any> {
+    return this.httpService.put('/user/updatePassword', JSON.stringify(passwordData))
+      .pipe(tap((_ => {
+        }), err => console.error(err)
+      ));
   }
 }
