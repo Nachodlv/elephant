@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Note} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
@@ -44,15 +44,19 @@ export class NoteService {
     }));
   }
 
-  startEdit(): any {
-
+  getPermissions(noteId): any {
+    return of('Editor');
   }
 
-  autoSave(): any {
-
+  startEdit(noteId): any {
+    return of({title: 'nota1', content: 'contenido de la nota'});
   }
 
-  finishedEdit(): any {
+  autoSave(noteId): any {
+    return of(true);
+  }
 
+  finishedEdit(noteId, editedNoteData): any {
+    return of(true);
   }
 }

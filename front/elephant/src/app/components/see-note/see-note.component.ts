@@ -27,11 +27,13 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   noteLoading = true;
 
   comments: Comment[] = [];
-
   hasComments = false;
+
+  hasEditPermission = false;
 
   noteSubscription: Subscription;
   commentsSubscription: Subscription;
+  setPermissionSubscription: Subscription;
 
   constructor(
     private noteService: NoteService,
@@ -47,11 +49,13 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     this.loadNote();
     this.loadComments();
+    this.setPermission();
   }
 
   ngOnDestroy(): void {
     this.noteSubscription?.unsubscribe();
     this.commentsSubscription?.unsubscribe();
+    this.setPermissionSubscription?.unsubscribe();
   }
 
   ngAfterViewChecked(): void {
@@ -68,7 +72,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
-      if (isNotNullOrUndefined(res.tags)){
+      if (isNotNullOrUndefined(res.tags)) {
         this.tags = res.tags;
       }
 
@@ -131,6 +135,14 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     } else {
       return minutesDifference + (minutesDifference !== 1 ? ' minutos' : ' minuto');
     }
+  }
+
+  setPermission(): void {
+    this.setPermissionSubscription = this.noteService.getPermissions(this.id).subscribe(res => {
+      this.hasEditPermission = res === 'Editor' || res === 'Owner';
+    }, error => {
+      console.error(error);
+    });
   }
 
 }
