@@ -1,8 +1,10 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {NoteService} from '../../services/note.service';
+import {SnackbarService} from '../../services/snackbar.service';
+import {Note} from '../../models/note-model';
 
 @Component({
   selector: 'app-edit-note',
@@ -12,18 +14,21 @@ import {NoteService} from '../../services/note.service';
 export class EditNoteComponent implements OnInit, OnDestroy {
 
   noteId: string;
+  noteData: Note;
 
-  noteData;
+  loading = true;
+  finishedAutoSave = true;
 
   editForm: FormGroup;
-  startEditSubscription: Subscription;
   autoSaveSubscription: Subscription;
   finishedEditSubscription: Subscription;
 
   constructor(
     private formBuilder: FormBuilder,
+    private router: Router,
     private route: ActivatedRoute,
-    private noteService: NoteService
+    private noteService: NoteService,
+    private snackBar: SnackbarService
   ) {
   }
 
@@ -35,7 +40,8 @@ export class EditNoteComponent implements OnInit, OnDestroy {
       content: ['', Validators.required],
     });
 
-    this.startEditing();
+    this.loadNote();
+    setInterval(() => this.autoSave(), 20 * 1000);
   }
 
   setFormValues(): void {
@@ -44,27 +50,42 @@ export class EditNoteComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.startEditSubscription?.unsubscribe();
     this.autoSaveSubscription?.unsubscribe();
     this.finishedEditSubscription?.unsubscribe();
   }
 
-  startEditing(): void {
-    this.startEditSubscription = this.noteService.startEdit(this.noteId).subscribe(res => {
-      console.log(res);
+  loadNote(): void {
+    this.noteService.getNote(this.noteId).subscribe(res => {
       this.noteData = res;
       this.setFormValues();
+      this.loading = false;
     }, error => {
       console.error(error);
+      this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar la nota!', 0);
+    });
+  }
+
+  autoSave(): void {
+    const editFormData = this.editForm.getRawValue();
+    this.finishedAutoSave = false;
+    this.autoSaveSubscription = this.noteService.autoSave(this.noteId, editFormData).subscribe(res => {
+      setTimeout(() => {
+        this.finishedAutoSave = true;
+      }, 5 * 1000); // el timeout esta para ver el cambio en el icono de autosave en el mockeo
+    }, error => {
+      console.error(error);
+      this.snackBar.openSnackbar('¡Ha ocurrido un error en el guardado automatico!', 0);
     });
   }
 
   onSubmit(): void {
     const editFormData = this.editForm.getRawValue();
     this.finishedEditSubscription = this.noteService.finishedEdit(this.noteId, editFormData).subscribe(res => {
-      console.log(res);
+      this.router.navigate(['/note/', this.noteId]);
+      this.snackBar.openSnackbar('Se ha editado con éxito la nota', 0);
     }, error => {
       console.error(error);
+      this.snackBar.openSnackbar('¡Ha ocurrido un error terminar la edición de la nota!', 0);
     });
   }
 

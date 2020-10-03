@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {Observable, of} from 'rxjs';
+import {of} from 'rxjs';
 import {Note} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class NoteService {
   createNote(note: Note): Observable<Note> {
     return this.httpService.post('/note/new', JSON.stringify(note)).pipe(tap((_ => {
     }), err => {
-      console.log(err);
+      console.error(err);
     }), map(response => {
       return Note.fromJson(response.body);
     }));
@@ -24,7 +25,7 @@ export class NoteService {
 
   getNote(id): Observable<Note> {
     return this.httpService.get(`/note/${id}`).pipe(tap((_ => {
-      }), err => console.log(err)
+      }), err => console.error(err)
     ), map(res => {
       return Note.fromJson(res.body);
     }));
@@ -36,7 +37,7 @@ export class NoteService {
 
   getComments(id): Observable<Comment[]> {
     return this.httpService.get(`/comment/all/${id}`).pipe(tap((_ => {
-      }), err => console.log(err)
+      }), err => console.error(err)
     ), map(res => {
       const comments = res.body;
       comments.forEach(comment => Comment.fromJson(comment));
@@ -44,19 +45,25 @@ export class NoteService {
     }));
   }
 
-  getPermissions(noteId): any {
-    return of('Editor');
+  getPermissions(noteId): Observable<any> {
+    return of({body: 'Editor'});
   }
 
-  startEdit(noteId): any {
-    return of({title: 'nota1', content: 'contenido de la nota'});
+  hasEditPermission(noteId): Observable<boolean> {
+    return this.getPermissions(noteId).pipe(map(res => {
+      return (res.body === 'Editor' || res.body === 'Owner');
+    }));
   }
 
-  autoSave(noteId): any {
+  startEdit(noteId): Observable<boolean> {
     return of(true);
   }
 
-  finishedEdit(noteId, editedNoteData): any {
-    return of(true);
+  autoSave(noteId, editedNoteData): Observable<any> {
+    return of(null);
+  }
+
+  finishedEdit(noteId, editedNoteData): Observable<any> {
+    return of(null);
   }
 }

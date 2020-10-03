@@ -9,6 +9,7 @@ import {NoteCreatorComponent} from './components/note-creator/note-creator.compo
 import {NoteComponent} from './components/note/note.component';
 import {SeeProfileComponent} from './components/see-profile/see-profile.component';
 import {EditNoteComponent} from './components/edit-note/edit-note.component';
+import {EditNoteGuard} from './guards/editNote.guard';
 
 
 const routes: Routes = [
@@ -19,7 +20,7 @@ const routes: Routes = [
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'note/:id', component: SeeNoteComponent, canActivate: [AuthGuard]},
   {path: 'profile', component: SeeProfileComponent, canActivate: [AuthGuard] },
-  {path: 'note/edit/:id', component: EditNoteComponent, canActivate: [AuthGuard] },
+  {path: 'note/edit/:id', component: EditNoteComponent, canActivate: [AuthGuard, EditNoteGuard]},
 ];
 
 @NgModule({
