@@ -2,8 +2,8 @@
 
 .create-button {
   margin: 20px;
-  width: 18rem;
-  height: 15rem;
+  width: 25rem;
+  height: 20rem;
   border: 1px solid;
   border-radius: 1rem;
   cursor: pointer;
@@ -11,11 +11,39 @@
 
 .plus-create {
   font-size: 180px;
-  margin-left: 18%;
+  margin-left: 25%;
+  margin-top: 4%;
 }
 
 .create-text {
-  margin-top: 5%;
-  margin-left: 10%;
-  font-size: 30px;
+  margin-top: 17%;
+  margin-left: 15%;
+  font-size: 35px;
+}
+
+.searchable-input {
+  margin-top: 1%;
+  display: flex;
+  justify-content: center;
+}
+
+.margin-top-112 {
+  top: 10%;
+}
+
+::ng-deep {
+  .mat-focused .mat-form-field-label {
+    /*change color of label*/
+    color: $elephant-green !important;
+  }
+
+  .mat-form-field-underline {
+    /*change color of underline*/
+    background-color: black !important;
+  }
+
+  .mat-form-field-ripple {
+    /*change color of underline when focused*/
+    background-color: $elephant-green !important;
+  }
 }

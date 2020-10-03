@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {Note} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
@@ -44,4 +44,21 @@ export class NoteService {
     }));
   }
 
+  getAllNotes(): Observable<Note[]> {
+    return of([
+      {
+        uuid: 1, title: 'Note First', content: 'justcontent', created: 'today', tags: ['lab2']
+      }, {
+        uuid: 2, title: 'Note Second', content: 'justcontent', created: 'today', tags: ['lab1', 'elephant']
+      }, {
+        uuid: 3, title: 'Note Third', content: 'justcontent', created: 'today', tags: ['lab2', 'elephant']
+      }, {
+        uuid: 4, title: 'Note Fourth', content: 'justcontent', created: 'today', tags: ['lab1']
+      }, {
+        uuid: 5, title: 'Note Fifth', content: 'justcontent', created: 'today', tags: ['lab1', 'lab2']
+      }, {
+        uuid: 6, title: 'Note Sixth', content: 'justcontent', created: 'today', tags: ['lab1', 'lab2', 'elephant']
+      },
+    ]);
+  }
 }
