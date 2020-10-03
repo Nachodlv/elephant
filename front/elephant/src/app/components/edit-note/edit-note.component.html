@@ -1,0 +1,19 @@
+<div class="div-container">
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Titulo</mat-label>
+          <input matInput formControlName="title">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contenido</mat-label>
+          <textarea matInput formControlName="content"></textarea>
+        </mat-form-field>
+
+    <button class="form-button"
+            type="submit"
+            mat-raised-button>
+      Terminar edición
+    </button>
+  </form>
+</div>

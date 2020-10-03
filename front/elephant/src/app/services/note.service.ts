@@ -44,4 +44,15 @@ export class NoteService {
     }));
   }
 
+  startEdit(): any {
+
+  }
+
+  autoSave(): any {
+
+  }
+
+  finishedEdit(): any {
+
+  }
 }
