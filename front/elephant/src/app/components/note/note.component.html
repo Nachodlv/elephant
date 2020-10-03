@@ -3,7 +3,7 @@
   <input matInput type="text" [(ngModel)]="filterString">
 </mat-form-field>
 
-<mat-grid-list cols="4" rowHeight="1:1" *ngIf="loaded" class="margin-top-112">
+<mat-grid-list cols="4" rowHeight="1:1" *ngIf="loaded">
 
   <mat-grid-tile *ngFor="let note of notes | filterNote:filterString">
     <mat-card class="card create-button" (click)="openNote(note)">
