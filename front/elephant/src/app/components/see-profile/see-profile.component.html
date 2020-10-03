@@ -32,11 +32,12 @@
       Editar
     </button>
     <button
+      type="submit"
       class="edit-button"
       *ngIf="updating == true"
-      type="submit"
       mat-raised-button
-      (click)="updating = false">
+      (click)="updating = false; saveProfile()"
+      >
       Guardar
     </button>
   </form>

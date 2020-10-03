@@ -3,6 +3,7 @@ import {UserService} from '../../services/user.service';
 import {User} from '../../models/user-model';
 import {UpdatePasswordDialogComponent} from '../update-password-dialog/update-password-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {SnackbarService} from '../../services/snackbar.service';
 
 
 @Component({
@@ -18,7 +19,8 @@ export class SeeProfileComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackbar: SnackbarService,
   ) {
   }
 
@@ -30,8 +32,12 @@ export class SeeProfileComponent implements OnInit {
   }
 
   saveProfile(): void {
-    console.log(this.user.firstName);
-  }
+
+      this.userService.updateUserName(this.user, 'aca deberia mandar el nombre nuevo').subscribe(res => {
+        this.snackbar.openSnackbar('¡Cambio de Nombre exitoso!', 0);
+      });
+    }
+
 
   openUpdatePasswordDialog(): void {
     this.dialog.open(UpdatePasswordDialogComponent, {
