@@ -89,12 +89,11 @@ public class NoteController {
     noteService.addTags(note.getUuid(), tags);
   }
   
-  @GetMapping(path = "/startEdit/{noteId}/")
+  @GetMapping(path = "/startEdit/{noteId}")
   public boolean startEdit(@PathVariable long noteId) {
     editChecks(noteId);
     Note note = noteService.getNote(noteId).get();
-    final long waitTime = 240000; // 4 minutes
-    //todo checkear este if.
+    final long waitTime = 240000;
     //if note was last locked before 4 minutes
     if (note.isLocked() && note.getLastLocked().after(new Timestamp(System.currentTimeMillis() - waitTime)))
       return false;
@@ -103,7 +102,7 @@ public class NoteController {
   }
   
   @PutMapping(path = "/autoSave/{noteId}")
-  public void editNote(@PathVariable long noteId, @RequestBody @Valid Note editedNote) {
+  public void autoSave(@PathVariable long noteId, @RequestBody @Valid Note editedNote) {
     editChecks(noteId);
     noteService.editNote(noteId, editedNote);
   }
