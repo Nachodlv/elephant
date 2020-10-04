@@ -2,6 +2,7 @@ package com.lab.elephant.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Note;
+import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
@@ -247,5 +248,91 @@ public class NoteControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
+  }
+  
+  @Test
+  public void addTags_WhenEverythingIsOk_ShouldReturn200() throws Exception {
+    final Note note = new Note();
+    final long id = 1;
+    final User user = new User();
+    final List<User> users = new ArrayList<>();
+    users.add(user);
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    given(noteService.getNote(id)).willReturn(Optional.of(note));
+    given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
+    List<String> tags = new ArrayList<>();
+    tags.add("fun");
+    tags.add("food");
+    tags.add("frozen");
+    
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new TagsDTO(tags));
+    mvc.perform(put("/note/addTags/" + id).content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void addTags_WhenNoteDoesNotExist_ShouldReturn404() throws Exception {
+    final Note note = new Note();
+    final long id = 1;
+    final User user = new User();
+    final List<User> users = new ArrayList<>();
+    users.add(user);
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    given(noteService.getNote(id)).willReturn(Optional.empty());
+    given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
+    List<String> tags = new ArrayList<>();
+    tags.add("fun");
+    tags.add("food");
+    tags.add("frozen");
+    
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new TagsDTO(tags));
+    mvc.perform(put("/note/addTags/" + id).content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
+  }
+  
+  @Test
+  public void addTags_WhenUserIsUnauthorized_ShouldReturn401() throws Exception {
+    final Note note = new Note();
+    final long id = 1;
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+    
+    given(noteService.getNote(id)).willReturn(Optional.of(note));
+    given(noteService.getUsersWithEditOrOwner(note)).willReturn(new ArrayList<>());
+    List<String> tags = new ArrayList<>();
+    tags.add("fun");
+    tags.add("food");
+    tags.add("frozen");
+  
+    ObjectMapper o = new ObjectMapper();
+    String json = o.writeValueAsString(new TagsDTO(tags));
+    mvc.perform(put("/note/addTags/" + id).content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot add Tags to this note"));
   }
 }
