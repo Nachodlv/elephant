@@ -5,8 +5,8 @@
   flex-direction: row;
   align-items: center;
   margin-top: 13%;
-  padding-left: 10%;
-  padding-right: 3%;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .comment-text-area {
@@ -14,6 +14,11 @@
   width: 15rem;
   resize: none;
   font-size: 12px;
+  border-radius: 0.4rem;
+  border-color: #333333;
+  border-style: outset;
+  padding-left: 2%;
+  padding-right: 2%;
 }
 
 .add-comment-btn {
