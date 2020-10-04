@@ -39,9 +39,11 @@ export class SeeProfileComponent implements OnInit {
       this.snackbar.openSnackbar('¡Cambio de Nombre exitoso!', 0);
     });
     this.updating = false;
-    } else{
-      this.snackbar.openSnackbar('¡No se puede dejar el nombre vacio!', 0);
     }
+  }
+
+  disabled(): boolean {
+    return this.fullName === '';
   }
 
 

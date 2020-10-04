@@ -36,6 +36,7 @@
       *ngIf="updating == true"
       mat-raised-button
       (click)="saveProfile()"
+      [disabled]="disabled()"
       >
       Guardar
     </button>
