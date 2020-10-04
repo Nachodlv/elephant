@@ -26,7 +26,6 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    this.router.navigate(['']);
-    this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!');
+    this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
   }
 }
