@@ -34,11 +34,14 @@ export class SeeProfileComponent implements OnInit {
   }
 
   saveProfile(): void {
-
+    if (this.fullName.trim()){
     this.userService.updateUserName(this.user, this.fullName).subscribe(res => {
       this.snackbar.openSnackbar('¡Cambio de Nombre exitoso!', 0);
     });
     this.updating = false;
+    } else{
+      this.snackbar.openSnackbar('¡No se puede dejar el nombre vacio!', 0);
+    }
   }
 
 
