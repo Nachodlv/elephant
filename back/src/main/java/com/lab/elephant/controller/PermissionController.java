@@ -29,7 +29,7 @@ public class PermissionController {
     this.permissionService = permissionService;
   }
   
-  @PutMapping(path = "/permission/add/{noteId}")
+  @PutMapping(path = "{noteId}/permission/add")
   public void add(@RequestBody ShareNoteDTO dto, @PathVariable long noteId) {
     final PermissionType permission;
     final String permissionType = dto.getPermissionType();
@@ -62,7 +62,7 @@ public class PermissionController {
     permissionService.addRelationship(user, note, permission);
   }
   
-  @GetMapping(path = "/permission/{noteId}")
+  @GetMapping(path = "{noteId}/permission")
   public String getPermission(@PathVariable long noteId) {
     final Optional<Note> optionalNote = noteService.getNote(noteId);
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

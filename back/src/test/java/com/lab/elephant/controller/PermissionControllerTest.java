@@ -88,7 +88,7 @@ public class PermissionControllerTest {
 
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -129,7 +129,7 @@ public class PermissionControllerTest {
     ObjectMapper o = new ObjectMapper();
     final String invalidPermissionType = "invalidPermissionType";
     String json = o.writeValueAsString(new ShareNoteDTO(email, invalidPermissionType));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -166,7 +166,7 @@ public class PermissionControllerTest {
   
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -206,7 +206,7 @@ public class PermissionControllerTest {
   
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -240,7 +240,7 @@ public class PermissionControllerTest {
   
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -282,7 +282,7 @@ public class PermissionControllerTest {
   
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -328,7 +328,7 @@ public class PermissionControllerTest {
     
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new ShareNoteDTO(email, permissionType.toString()));
-    mvc.perform(put("/permission/add/" + noteId)
+    mvc.perform(put("/" + noteId + "/permission/add")
             .contentType("application/json")
             .content(json))
             .andDo(MockMvcResultHandlers.print())
@@ -356,7 +356,7 @@ public class PermissionControllerTest {
     given(noteService.getUsersWithPermissions(note)).willReturn(users);
     given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
     
-    MvcResult result = mvc.perform(get("/permission/" + noteId))
+    MvcResult result = mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isOk()).andReturn();
     String content = result.getResponse().getContentAsString();
     assertThat(content).isEqualTo(permissionType.toString());
@@ -380,8 +380,8 @@ public class PermissionControllerTest {
   
     given(noteService.getUsersWithPermissions(note)).willReturn(users);
     given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
-
-    mvc.perform(get("/permission/" + noteId))
+  
+    mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isNotFound())
             .andExpect(status().reason("Note Not Found"));
   }
@@ -403,7 +403,7 @@ public class PermissionControllerTest {
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
   
-    mvc.perform(get("/permission/" + noteId))
+    mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("User has no Permission"));
   }
