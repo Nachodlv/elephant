@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
 import {Observable} from 'rxjs';
-import {Note} from '../models/note-model';
+import {Note, Tags} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
 
@@ -42,6 +42,10 @@ export class NoteService {
       comments.forEach(comment => Comment.fromJson(comment));
       return comments;
     }));
+  }
+
+  addTags(id, tags: Tags): Observable<any> {
+    return this.httpService.put(`/note/addTags/${id}`, JSON.stringify(tags));
   }
 
 }
