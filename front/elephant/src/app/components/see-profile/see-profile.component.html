@@ -4,14 +4,14 @@
     <span class="profile-span">Perfil</span>
   </div>
 
-  <form class="form-container" (ngSubmit)="saveProfile()">
+  <div class="form-container">
     <mat-grid-list cols="1" rowHeight="5rem">
 
       <mat-grid-tile>
         <mat-form-field appearance="none">
           <label>Nombre y Apellido</label>
           <input class="profile-name-lastname" type="text" matInput [disabled]="!updating"
-                 [value]="user.firstName + ' ' + user.lastName">
+                 [(ngModel)] = "fullName">
         </mat-form-field>
       </mat-grid-tile>
 
@@ -34,12 +34,13 @@
     <button
       class="edit-button"
       *ngIf="updating == true"
-      type="submit"
       mat-raised-button
-      (click)="updating = false">
+      (click)="saveProfile()"
+      [disabled]="disabled()"
+      >
       Guardar
     </button>
-  </form>
+  </div>
 
   <mat-divider class="margin-top-1"></mat-divider>
 
