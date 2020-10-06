@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
 import {Observable, of} from 'rxjs';
-import {Note} from '../models/note-model';
+import {Note, Tags} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
 
@@ -16,7 +16,7 @@ export class NoteService {
   createNote(note: Note): Observable<Note> {
     return this.httpService.post('/note/new', JSON.stringify(note)).pipe(tap((_ => {
     }), err => {
-      console.log(err);
+      console.error(err);
     }), map(response => {
       return Note.fromJson(response.body);
     }));
@@ -24,7 +24,7 @@ export class NoteService {
 
   getNote(id): Observable<Note> {
     return this.httpService.get(`/note/${id}`).pipe(tap((_ => {
-      }), err => console.log(err)
+      }), err => console.error(err)
     ), map(res => {
       return Note.fromJson(res.body);
     }));
@@ -36,7 +36,7 @@ export class NoteService {
 
   getComments(id): Observable<Comment[]> {
     return this.httpService.get(`/comment/all/${id}`).pipe(tap((_ => {
-      }), err => console.log(err)
+      }), err => console.error(err)
     ), map(res => {
       const comments = res.body;
       comments.forEach(comment => Comment.fromJson(comment));
@@ -61,4 +61,8 @@ export class NoteService {
       },
     ]);
   }
+  addTags(id, tags: Tags): Observable<any> {
+    return this.httpService.put(`/note/addTags/${id}`, JSON.stringify(tags));
+  }
+
 }
