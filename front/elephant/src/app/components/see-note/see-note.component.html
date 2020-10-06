@@ -2,6 +2,11 @@
   <div class="header-content" >
     <div class="header">
       <h1 class="title">{{title}}</h1>
+      <app-tag-note
+        class="tag-note"
+        [noteId]="id"
+        [tags]="tags"
+      ></app-tag-note>
       <h2 class="date">{{created}}</h2>
     </div>
     <p class="content" #target>{{content}}</p>
@@ -11,13 +16,16 @@
   </div>
   <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
-   <app-comment
-     [noteId]="id"
-   ></app-comment>
-    <div class="all-comments-container" #commentsTarget>
+    <app-comment
+      [noteId]="id"
+    ></app-comment>
+    <div class="no-comments-container" *ngIf="!hasComments">
+      <h1 class="no-comments-text">Aun no hay comentarios</h1>
+    </div>
+    <div class="all-comments-container" *ngIf="hasComments" #commentsTarget>
       <div class="comment-container" *ngFor="let comment of comments">
         <div class="comment-title">
-          <h1 class="comment-title-font">{{comment.owner}}</h1>
+          <h1 class="comment-title-font">{{comment.ownerName}}</h1>
           <h1 class="comment-title-font">Hace {{comment.created}}</h1>
         </div>
         <p>{{comment.content}}</p>
