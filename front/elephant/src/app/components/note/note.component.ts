@@ -5,6 +5,7 @@ import {Note} from '../../models/note-model';
 import {NoteService} from '../../services/note.service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
+import {SnackbarService} from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-note',
@@ -19,9 +20,11 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   notesSubscription: Subscription;
 
-  constructor(private dialog: MatDialog,
-              private noteService: NoteService,
-              private router: Router
+  constructor(
+    private dialog: MatDialog,
+    private noteService: NoteService,
+    private router: Router,
+    private snackBar: SnackbarService
   ) {
   }
 
@@ -37,6 +40,9 @@ export class NoteComponent implements OnInit, OnDestroy {
     this.notesSubscription = this.noteService.getAllNotes().subscribe(res => {
       this.notes = this.resolveNotesData(res);
       this.loaded = true;
+    }, error => {
+      console.error(error);
+      this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar las notas!', 0);
     });
   }
 

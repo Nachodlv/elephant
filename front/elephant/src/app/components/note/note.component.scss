@@ -1,14 +1,5 @@
 @import "../../_vars.scss";
 
-.create-button {
-  margin: 20px;
-  width: 25rem;
-  height: 20rem;
-  border: 1px solid;
-  border-radius: 1rem;
-  cursor: pointer;
-}
-
 .plus-create {
   font-size: 180px;
   margin-left: 25%;
@@ -26,6 +17,10 @@
   left: 43%;
   width: 250px;
   text-align: center;
+}
+
+.single-chip {
+  background-color: $elephant-white;
 }
 
 .see-card-text {

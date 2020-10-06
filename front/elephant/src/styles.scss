@@ -4,15 +4,15 @@ html {
   height: 100%;
 }
 
-li{
+li {
   display: block;
 }
 
-.clickable{
+.clickable {
   cursor: pointer;
 }
 
-.overflow-auto{
+.overflow-auto {
   overflow: auto;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -25,22 +25,40 @@ body {
 
 h1, h2, h3, h4 {
   font-family: Calibri, arial, serif;
-  text-shadow: 0 3px 3px rgba(255,255,255,0.5);
+  text-shadow: 0 3px 3px rgba(255, 255, 255, 0.5);
   color: $elephant-light-black;
 }
+
 h1 {
   font-size: 36px;
   letter-spacing: 5px;
 }
+
 p {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
   color: $elephant-light-black;
 }
+
 span {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 // Form Validation
-input.ng-dirty.ng-invalid{
+input.ng-dirty.ng-invalid {
   border: 1px solid $elephant-dark-red;
 }
+
+// Angular Material Cards Styling
+
+.mat-card {
+  background-color: $elephant-light-grey;
+  -webkit-box-shadow: -1px 7px 14px -2px rgba(0, 0, 0, 0.41) !important;
+  box-shadow: -1px 7px 14px -2px rgba(0, 0, 0, 0.41) !important;
+  margin: 20px;
+  width: 25rem;
+  height: 20rem;
+  border-radius: 1rem !important;
+  cursor: pointer;
+}
+
+

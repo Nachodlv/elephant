@@ -5,7 +5,7 @@
 
 <mat-grid-list cols="4" rowHeight="1:1" *ngIf="loaded">
   <mat-grid-tile>
-    <mat-card class="card create-button" (click)="openDialog()">
+    <mat-card (click)="openDialog()">
       <mat-card-title>
         <mat-icon class="plus-create">add</mat-icon>
       </mat-card-title>
@@ -14,14 +14,14 @@
   </mat-grid-tile>
 
   <mat-grid-tile *ngFor="let note of notes | filterNote:filterString">
-    <mat-card class="card create-button" (click)="openNote(note)">
+    <mat-card (click)="openNote(note)">
       <mat-card-title> {{note.title}} </mat-card-title>
       <mat-card-content class="flex-col card-content">
         <div class="see-card-text">
           {{note.content}}
         </div>
         <mat-chip-list>
-          <mat-chip *ngFor="let tag of note.tags">
+          <mat-chip class="single-chip" *ngFor="let tag of note.tags">
             {{tag}}
           </mat-chip>
         </mat-chip-list>
