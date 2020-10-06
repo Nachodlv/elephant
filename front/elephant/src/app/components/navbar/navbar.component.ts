@@ -8,6 +8,7 @@ import {SnackbarService} from '../../services/snackbar.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
+  logged: boolean;
 
   constructor(private router: Router,
               private snackbar: SnackbarService,
@@ -18,7 +19,9 @@ export class NavbarComponent implements OnInit {
   }
 
   registerUser(): void {
+    if (this.logged === true){
     this.router.navigate(['/register']);
+    }
   }
 
   seeProfile(): void {
@@ -27,5 +30,6 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
+    this.logged = false;
   }
 }

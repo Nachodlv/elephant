@@ -8,6 +8,6 @@
   <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="registerUser()">Registrarse</button>
     <button mat-menu-item (click)="seeProfile()">Ver Perfil</button>
-    <button mat-menu-item (click)="logout()">Cerrar sesión</button>
+    <button *ngIf="logged" mat-menu-item (click)="logout()">Cerrar sesión</button>
   </mat-menu>
 </mat-toolbar>
