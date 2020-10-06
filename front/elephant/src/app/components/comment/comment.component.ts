@@ -28,12 +28,15 @@ export class CommentComponent implements OnInit {
       this.commentService.createComment(this.noteId, newComment).subscribe(res => {
         this.snackBar.openSnackbar('¡Creación de Comentario Exitoso!', 0);
       });
-    }
-    else{
+    } else {
       this.snackBar.openSnackbar('No se puede crear un comentario vacio. Intentelo nuevamente!', 0);
     }
     console.log('Comment value: ', this.comment.value);
     this.comment.setValue('');
+  }
+
+  refresh(): void {
+    window.location.reload();
   }
 
 }

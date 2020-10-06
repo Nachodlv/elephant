@@ -1,5 +1,5 @@
 <form class="comment-container" (ngSubmit)="onSubmitComment()">
       <textarea matInput [formControl]="comment" class="comment-text-area" placeholder="Nuevo comentario..." maxlength="300"
                 name="cardComment"></textarea>
-  <button type="submit" mat-raised-button class="add-comment-btn" >Agregar comentario</button>
+  <button type="submit" mat-raised-button class="add-comment-btn" (click)="refresh()" >Agregar comentario</button>
 </form>
