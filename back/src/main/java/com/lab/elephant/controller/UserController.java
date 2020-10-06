@@ -3,6 +3,7 @@ package com.lab.elephant.controller;
 import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.UpdatePasswordDto;
 import com.lab.elephant.model.User;
+import com.lab.elephant.service.EmailService;
 import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -24,11 +25,12 @@ public class UserController {
   private final UserService userService;
   private final TokenService tokenService;
   private final BCryptPasswordEncoder passwordEncoder;
-  
-  public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder) {
+  private final EmailService emailService;
+  public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
     this.userService = userService;
     this.tokenService = tokenService;
     this.passwordEncoder = passwordEncoder;
+    this.emailService = emailService;
   }
 
   @PostMapping(path = "/create")
@@ -39,6 +41,7 @@ public class UserController {
               HttpStatus.CONFLICT, "Email already in use");
 
     userService.addUser(user);
+    emailService.sendSimpleEmail(user);
   }
 
   @GetMapping()
