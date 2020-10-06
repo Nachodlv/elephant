@@ -16,6 +16,9 @@
   </div>
   <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
+    <app-comment
+      [noteId]="id"
+    ></app-comment>
     <div class="no-comments-container" *ngIf="!hasComments">
       <h1 class="no-comments-text">Aun no hay comentarios</h1>
     </div>
