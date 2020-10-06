@@ -13,7 +13,7 @@ export class CommentService {
   constructor(private httpService: HttpService) {
   }
 
-  createComment(idNote, comment: Comment): Observable<any> {
+  createComment(idNote, comment: Comment): Observable<Note> {
     return this.httpService.post('/comment/add/' + idNote, JSON.stringify(comment)).pipe(tap((_ => {
     }), err => {
       console.log(err);
