@@ -28,6 +28,7 @@ export class AuthService {
       if (res.body === true){
         return true;
       } else {
+        localStorage.setItem('user', undefined);
         this.router.navigate(['/']);
         return false;
       }
@@ -38,5 +39,14 @@ export class AuthService {
     const email = user.email;
     const password = user.password;
     return new User('', '', email, password);
+  }
+
+  isLoggedIn(): boolean{
+    if (localStorage.getItem('user') === undefined){
+      return false;
+    }
+    else{
+      return true;
+    }
   }
 }
