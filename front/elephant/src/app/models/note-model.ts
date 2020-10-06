@@ -12,3 +12,10 @@ export class Note {
     return Object.assign(new Note(), data);
   }
 }
+
+export class Tags {
+  constructor(
+    public tags: string[],
+  ) {
+  }
+}

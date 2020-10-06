@@ -10,4 +10,8 @@ export class User {
   static fromJson(data: any): User {
     return Object.assign(new User(), data);
   }
+  updateName(newFirstName: string, newLastName: string): void{
+  this.firstName = newFirstName;
+  this.lastName = newLastName;
+  }
 }
