@@ -1,10 +1,9 @@
 @import "../../_vars.scss";
 
 .container {
-  height: 90%;
   display: flex;
   flex-direction: row;
-  margin: 2vh 4% 0;
+  margin: 2vh 0 0 4%;
 }
 
 .header {
@@ -42,4 +41,57 @@
   min-height: 90vh;
   height: 98%;
   border-color: $elephant-light-black;
+}
+
+.share-note-btn {
+  background-color: $elephant-green;
+  color: $elephant-white;
+  width: 60%;
+  align-self: center;
+}
+
+.right-container {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+}
+
+/* show comment style */
+
+.all-comments-container {
+  overflow: auto;
+  min-height: 83vh;
+  margin-top: 8%;
+}
+
+.comment-container {
+  border: 1px solid $elephant-light-black;
+  border-radius: 3%;
+  padding: 0.5vw;
+  margin: 5%;
+}
+
+.comment-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.comment-title-font {
+  font-size: 0.8vw;
+  font-weight: 500;
+}
+
+.no-comments-container {
+  text-align: center;
+  margin-top: 8%;
+}
+
+.no-comments-text {
+  font-size: 1vw;
+}
+
+.tag-note {
+  flex: auto;
+  margin-right: 200px;
+  margin-left: 30px;
 }

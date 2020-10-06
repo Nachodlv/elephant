@@ -1,11 +1,9 @@
 package com.lab.elephant.repository;
 
-
+import com.lab.elephant.model.Permission;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import com.lab.elephant.model.Cube;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CubeRepository extends JpaRepository<Cube, Long> {
+public interface PermissionRepository extends JpaRepository<Permission, Long> {
 }
