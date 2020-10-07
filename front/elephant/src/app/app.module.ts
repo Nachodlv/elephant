@@ -18,9 +18,11 @@ import { MatDialogModule} from '@angular/material/dialog';
 import {LoginComponent} from './components/login/login.component';
 import { SeeNoteComponent } from './components/see-note/see-note.component';
 import { ShareNoteDialogComponent } from './components/share-note-dialog/share-note-dialog.component';
+import { CommentComponent } from './components/comment/comment.component';
 import {SeeProfileComponent} from './components/see-profile/see-profile.component';
 import { UpdatePasswordDialogComponent } from './components/update-password-dialog/update-password-dialog.component';
 import { TagNoteComponent } from './components/tag-note/tag-note.component';
+import { FilterNotePipe } from './pipes/filter-note.pipe';
 
 @NgModule({
   declarations: [
@@ -35,9 +37,11 @@ import { TagNoteComponent } from './components/tag-note/tag-note.component';
     EqualValidator,
     SeeNoteComponent,
     ShareNoteDialogComponent,
+    CommentComponent,
     SeeProfileComponent,
     UpdatePasswordDialogComponent,
     TagNoteComponent,
+    FilterNotePipe,
   ],
   imports: [
     BrowserModule,
