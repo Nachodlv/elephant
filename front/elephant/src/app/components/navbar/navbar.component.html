@@ -7,7 +7,7 @@
   </button>
   <mat-menu #menu="matMenu">
     <button mat-menu-item (click)="seeProfile()">Ver Perfil</button>
-    <button *ngIf="logged" mat-menu-item (click)="logout()">Cerrar sesión</button>
-    <button *ngIf="!logged" mat-menu-item (click)="registerUser()">Registrarse</button>
+    <button *ngIf="isLoggedIn()" mat-menu-item (click)="logout()">Cerrar sesión</button>
+    <button *ngIf="!isLoggedIn()" mat-menu-item (click)="registerUser()">Registrarse</button>
   </mat-menu>
 </mat-toolbar>

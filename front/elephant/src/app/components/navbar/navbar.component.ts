@@ -18,12 +18,12 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.logged = this.authService.isLoggedIn();
+    this.authService.isLoggedIn();
   }
 
   registerUser(): void {
-    if (this.logged === true){
-    this.router.navigate(['/register']);
+    if (this.logged === true) {
+      this.router.navigate(['/register']);
     }
   }
 
@@ -32,7 +32,11 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
+    localStorage.removeItem('user');
     this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
-    this.logged = false;
+  }
+
+  isLoggedIn(): boolean {
+    return localStorage.getItem('user') !== null;
   }
 }
