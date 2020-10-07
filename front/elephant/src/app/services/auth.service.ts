@@ -40,8 +40,4 @@ export class AuthService {
     const password = user.password;
     return new User('', '', email, password);
   }
-
-  isLoggedIn(): boolean {
-    return localStorage.getItem('user') !== undefined;
-  }
 }
