@@ -8,7 +8,6 @@ import {SnackbarService} from '../../services/snackbar.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  logged: boolean;
 
   constructor(private router: Router,
               private snackbar: SnackbarService,
@@ -19,12 +18,10 @@ export class NavbarComponent implements OnInit {
   }
 
   registerUser(): void {
-    if (this.logged === true) {
-      this.router.navigate(['/register']);
-    }
+    this.router.navigate(['/register']);
   }
 
-  seeProfile(): void {
+  seeProfile(): void{
     this.router.navigate(['/profile']);
   }
 
