@@ -21,7 +21,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/register']);
   }
 
-  seeProfile(): void{
+  seeProfile(): void {
     this.router.navigate(['/profile']);
   }
 
