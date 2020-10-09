@@ -83,6 +83,7 @@ export class NoteService {
       },
     ]);
   }
+
   addTags(id, tags: Tags): Observable<any> {
     return this.httpService.put(`/note/addTags/${id}`, JSON.stringify(tags));
   }
