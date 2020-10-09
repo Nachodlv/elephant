@@ -41,7 +41,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: SnackbarService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
   ) {
   }
 
