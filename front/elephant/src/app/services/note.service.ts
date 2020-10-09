@@ -44,6 +44,28 @@ export class NoteService {
     }));
   }
 
+  getPermissions(noteId): Observable<any> {
+    return of({body: 'Editor'});
+  }
+
+  hasEditPermission(noteId): Observable<boolean> {
+    return this.getPermissions(noteId).pipe(map(res => {
+      return (res.body === 'Editor' || res.body === 'Owner');
+    }));
+  }
+
+  startEdit(noteId): Observable<boolean> {
+    return of(true);
+  }
+
+  autoSave(noteId, editedNoteData): Observable<any> {
+    return of(null);
+  }
+
+  finishedEdit(noteId, editedNoteData): Observable<any> {
+    return of(null);
+  }
+
   getAllNotes(): Observable<Note[]> {
     return of([
       {
@@ -61,6 +83,7 @@ export class NoteService {
       },
     ]);
   }
+
   addTags(id, tags: Tags): Observable<any> {
     return this.httpService.put(`/note/addTags/${id}`, JSON.stringify(tags));
   }
