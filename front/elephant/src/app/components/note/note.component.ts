@@ -6,6 +6,7 @@ import {NoteService} from '../../services/note.service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {SnackbarService} from '../../services/snackbar.service';
+import {DeleteNoteDialogComponent} from '../delete-note-dialog/delete-note-dialog.component';
 
 @Component({
   selector: 'app-note',
@@ -66,5 +67,17 @@ export class NoteComponent implements OnInit, OnDestroy {
   openNote(note): void {
     console.log(note);
     this.router.navigate(['/note/', note.uuid]);
+  }
+
+  deleteNote(note: Note): void {
+    this.dialog.open(DeleteNoteDialogComponent, {
+      width: '400px',
+      height: '230px',
+      data: note,
+    });
+
+    this.dialog.afterAllClosed.subscribe(res => {
+      console.log(res);
+    });
   }
 }

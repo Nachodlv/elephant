@@ -1,0 +1,8 @@
+<h2 class="dialog-title" mat-dialog-title>
+  ¿Está seguro que quiere eliminar la nota
+  <b>'{{note.title}}'</b>? Esta acción es irreversible.
+</h2>
+<div class="buttons_confirm">
+    <button mat-raised-button class="cancel_button" (click)="cancel()">Cancelar</button>
+    <button mat-raised-button class="confirm_button" (click)="deleteNote()">Confirmar</button>
+</div>

@@ -14,9 +14,23 @@
   </mat-grid-tile>
 
   <mat-grid-tile *ngFor="let note of notes | filterNote:filterString">
-    <mat-card (click)="openNote(note)">
-      <mat-card-title> {{note.title}} </mat-card-title>
-      <mat-card-content class="flex-col card-content">
+    <mat-card>
+      <mat-card-title>
+        {{note.title}}
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="optionsButton">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <span>Imprimir</span>
+          </button>
+          <button mat-menu-item (click)="deleteNote(note)">
+            <span>Eliminar</span>
+          </button>
+        </mat-menu>
+
+      </mat-card-title>
+      <mat-card-content class="flex-col card-content" (click)="openNote(note)">
         <div class="see-card-text">
           {{note.content}}
         </div>
