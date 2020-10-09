@@ -1,0 +1,23 @@
+<div class="div-container" *ngIf="!loading">
+  <div class="auto-save">
+    <mat-icon aria-hidden="false" aria-label="Start auto save" *ngIf="!finishedAutoSave">cloud_upload</mat-icon>
+    <mat-icon aria-hidden="false" aria-label="Finished auto save" *ngIf="finishedAutoSave">cloud_done</mat-icon>
+  </div>
+  <form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline">
+          <mat-label>Titulo</mat-label>
+          <input matInput formControlName="title">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contenido</mat-label>
+          <textarea matInput formControlName="content" rows="35"></textarea>
+        </mat-form-field>
+
+    <button class="form-button"
+            type="submit"
+            mat-raised-button>
+      Terminar edición
+    </button>
+  </form>
+</div>
