@@ -7,10 +7,7 @@ import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.UpdatePasswordDto;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
-import com.lab.elephant.service.TokenService;
-import com.lab.elephant.service.TokenServiceImpl;
-import com.lab.elephant.service.BlackListedTokenServiceImpl;
-import com.lab.elephant.service.UserServiceImpl;
+import com.lab.elephant.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -64,15 +61,17 @@ public class UserControllerTest {
       return new BCryptPasswordEncoder();
     }
   }
-
-  // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
+  
+  // All the MockBeans bellow are not used but necessary for the test to run
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
-  @Autowired
-  private BCryptPasswordEncoder passwordEncoder;
   @MockBean
   private BlackListedTokenServiceImpl blackListedTokenService;
+  @MockBean
+  private EmailService emailService;
   
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {

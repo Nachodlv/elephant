@@ -45,7 +45,6 @@ public class EmailServiceImpl implements EmailService {
     message.setTo(to);
     message.setSubject(subject);
     message.setText(text);
-    //currently disabled for testing reasons
-    //emailSender.send(message);
+    emailSender.send(message);
   }
 }
