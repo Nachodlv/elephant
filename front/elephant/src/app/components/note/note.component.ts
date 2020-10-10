@@ -53,7 +53,7 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   truncateContent(content): string {
-    return content.substring(0, 300).concat('...');
+    return content.length > 300 ? content.substring(0, 300).concat('...') : content;
   }
 
   openDialog(): void {
