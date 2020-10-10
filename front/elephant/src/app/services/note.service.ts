@@ -45,25 +45,34 @@ export class NoteService {
   }
 
   getPermissions(noteId): Observable<any> {
-    return of({body: 'Editor'});
+    return this.httpService.getText(`/${noteId}/permission`).pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      console.log(res.body)
+      return res.body;
+    }));
   }
 
   hasEditPermission(noteId): Observable<boolean> {
     return this.getPermissions(noteId).pipe(map(res => {
-      return (res.body === 'Editor' || res.body === 'Owner');
+      return (res === 'Editor' || res === 'Owner');
     }));
   }
 
   startEdit(noteId): Observable<boolean> {
-    return of(true);
+    return this.httpService.get(`/note/startEdit/${noteId}`).pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      return res.body;
+    }));
   }
 
   autoSave(noteId, editedNoteData): Observable<any> {
-    return of(null);
+    return this.httpService.put(`/note/autoSave/${noteId}`, JSON.stringify(editedNoteData));
   }
 
-  finishedEdit(noteId, editedNoteData): Observable<any> {
-    return of(null);
+  endEdit(noteId, editedNoteData): Observable<any> {
+    return this.httpService.put(`/note/endEdit/${noteId}`, JSON.stringify(editedNoteData));
   }
 
   getAllNotes(): Observable<Note[]> {
