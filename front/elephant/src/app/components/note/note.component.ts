@@ -70,14 +70,21 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   deleteNote(note: Note): void {
-    this.dialog.open(DeleteNoteDialogComponent, {
+    const dialogRef = this.dialog.open(DeleteNoteDialogComponent, {
       width: '400px',
       height: '230px',
       data: note,
     });
 
-    this.dialog.afterAllClosed.subscribe(res => {
-      console.log(res);
+    dialogRef.afterClosed().subscribe(resNote => {
+      if (resNote) {
+        this.notes.splice(this.notes.indexOf(resNote), 1);
+        this.noteService.deleteNote(resNote).subscribe( resObs => {
+          this.snackBar.openSnackbar('La nota se ha eliminado correctamente!', 0);
+        }, error => {
+          this.snackBar.openSnackbar('Ha ocurrido un error y la nota no se pudo eliminar!', 0);
+        });
+      }
     });
   }
 }

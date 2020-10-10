@@ -3,6 +3,6 @@
   <b>'{{note.title}}'</b>? Esta acción es irreversible.
 </h2>
 <div class="buttons_confirm">
-    <button mat-raised-button class="cancel_button" (click)="cancel()">Cancelar</button>
-    <button mat-raised-button class="confirm_button" (click)="deleteNote()">Confirmar</button>
+    <button mat-raised-button class="cancel_button" mat-dialog-close>Cancelar</button>
+    <button mat-raised-button class="confirm_button" [matDialogClose]="note">Confirmar</button>
 </div>
