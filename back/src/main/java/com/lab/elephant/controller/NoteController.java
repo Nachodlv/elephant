@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,5 +87,42 @@ public class NoteController {
     if (!usersWithEditOrOwner.contains(user))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot add Tags to this note");
     noteService.addTags(note.getUuid(), tags);
+  }
+  
+  @GetMapping(path = "/startEdit/{noteId}")
+  public boolean startEdit(@PathVariable long noteId) {
+    editChecks(noteId);
+    Note note = noteService.getNote(noteId).get();
+    final long waitTime = 240000;
+    //if note was last locked before 4 minutes
+    if (note.isLocked() && note.getLastLocked().after(new Timestamp(System.currentTimeMillis() - waitTime)))
+      return false;
+    noteService.setLocked(note);
+    return true;
+  }
+  
+  @PutMapping(path = "/autoSave/{noteId}")
+  public void autoSave(@PathVariable long noteId, @RequestBody @Valid Note editedNote) {
+    editChecks(noteId);
+    noteService.editNote(noteId, editedNote);
+  }
+  
+  @PutMapping(path = "/endEdit/{noteId}")
+  public void endEdit(@PathVariable long noteId, @RequestBody @Valid Note editedNote) {
+    editChecks(noteId);
+    noteService.editNote(noteId, editedNote);
+    noteService.unlockNote(noteService.getNote(noteId).get());
+  }
+  
+  private void editChecks(long noteId) {
+    final Optional<Note> optionalNote = noteService.getNote(noteId);
+    if (!optionalNote.isPresent())
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+    Note note = optionalNote.get();
+  
+    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(string).get();
+    if (!noteService.getUsersWithEditOrOwner(note).contains(user))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot edit this note");
   }
 }

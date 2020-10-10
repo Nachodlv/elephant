@@ -25,4 +25,10 @@ public interface NoteService {
   List<User> getUsersWithEditOrOwner(Note note);
   
   Optional<Note> addTags(long id, List<String> tags);
+  
+  Optional<Note> editNote(long oldNoteId, Note note);
+  
+  Optional<Note> setLocked(Note note);
+  
+  Optional<Note> unlockNote(Note note);
 }
