@@ -96,4 +96,7 @@ export class NoteService {
     return this.httpService.put(`/note/addTags/${id}`, JSON.stringify(tags));
   }
 
+  deleteNote(note): Observable<any> {
+    return of(note);
+  }
 }
