@@ -6,6 +6,7 @@ import {NoteService} from '../../services/note.service';
 import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {SnackbarService} from '../../services/snackbar.service';
+import {DeleteNoteDialogComponent} from '../delete-note-dialog/delete-note-dialog.component';
 
 @Component({
   selector: 'app-note',
@@ -66,5 +67,24 @@ export class NoteComponent implements OnInit, OnDestroy {
   openNote(note): void {
     console.log(note);
     this.router.navigate(['/note/', note.uuid]);
+  }
+
+  deleteNote(note: Note): void {
+    const dialogRef = this.dialog.open(DeleteNoteDialogComponent, {
+      width: '400px',
+      height: '230px',
+      data: note,
+    });
+
+    dialogRef.afterClosed().subscribe(resNote => {
+      if (resNote) {
+        this.notes.splice(this.notes.indexOf(resNote), 1);
+        this.noteService.deleteNote(resNote).subscribe( resObs => {
+          this.snackBar.openSnackbar('La nota se ha eliminado correctamente!', 0);
+        }, error => {
+          this.snackBar.openSnackbar('Ha ocurrido un error y la nota no se pudo eliminar!', 0);
+        });
+      }
+    });
   }
 }

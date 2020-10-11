@@ -23,6 +23,7 @@ import {SeeProfileComponent} from './components/see-profile/see-profile.componen
 import { UpdatePasswordDialogComponent } from './components/update-password-dialog/update-password-dialog.component';
 import { TagNoteComponent } from './components/tag-note/tag-note.component';
 import { FilterNotePipe } from './pipes/filter-note.pipe';
+import { DeleteNoteDialogComponent } from './components/delete-note-dialog/delete-note-dialog.component';
 import { EditNoteComponent } from './components/edit-note/edit-note.component';
 
 @NgModule({
@@ -44,6 +45,7 @@ import { EditNoteComponent } from './components/edit-note/edit-note.component';
     TagNoteComponent,
     EditNoteComponent,
     FilterNotePipe,
+    DeleteNoteDialogComponent,
   ],
   imports: [
     BrowserModule,
