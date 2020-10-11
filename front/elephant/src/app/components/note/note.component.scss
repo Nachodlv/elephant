@@ -38,6 +38,11 @@
   justify-content: space-between;
 }
 
+.optionsButton {
+  float: right;
+  bottom: 10px;
+}
+
 ::ng-deep {
   .mat-focused .mat-form-field-label {
     /*change color of label*/
