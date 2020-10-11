@@ -76,9 +76,6 @@ public class NoteControllerTest {
     Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
     SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
-  
-  
-  
     
     mvc.perform(post("/note/new").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
