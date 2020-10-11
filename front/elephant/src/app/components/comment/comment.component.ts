@@ -26,7 +26,8 @@ export class CommentComponent implements OnInit {
     if (this.comment.value.trim()) {
       const newComment: Comment = new Comment(this.comment.value.trim());
       this.commentService.createComment(this.noteId, newComment).subscribe(res => {
-        this.snackBar.openSnackbar('¡Creación de Comentario Exitoso!', 0);
+        this.refresh();
+        /// this.snackBar.openSnackbar('¡Creación de Comentario Exitoso!', 0);
       });
     } else {
       this.snackBar.openSnackbar('No se puede crear un comentario vacio. Intentelo nuevamente!', 0);
@@ -35,7 +36,7 @@ export class CommentComponent implements OnInit {
     this.comment.setValue('');
   }
 
-  refresh(): void {
+  public refresh(): void {
     window.location.reload();
   }
 
