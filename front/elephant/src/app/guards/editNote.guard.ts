@@ -22,7 +22,15 @@ export class EditNoteGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
     const noteId = next.paramMap.get('id');
 
-    return forkJoin([this.noteService.startEdit(noteId), this.noteService.hasEditPermission(noteId)]).pipe(map((res) => {
+    return this.noteService.hasEditPermission(noteId).pipe(map(hasEditPermission => {
+      if (hasEditPermission) {
+        return true;
+      } else {
+        return false;
+      }
+    }));
+
+    /*return forkJoin([this.noteService.startEdit(noteId), this.noteService.hasEditPermission(noteId)]).pipe(map((res) => {
       const isNotLocked = res[0];
       const hasEditPermission = res[1];
       if (isNotLocked && hasEditPermission) {
@@ -31,7 +39,7 @@ export class EditNoteGuard implements CanActivate {
       this.snackBar.openSnackbar('No es posible editar la nota en este momento');
       this.router.navigate(['/note/', noteId]);
       return false;
-    }));
+    }));*/
   }
 
 }

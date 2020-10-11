@@ -43,6 +43,7 @@ export class EditNoteComponent implements OnInit, OnDestroy {
       content: [''],
     });
 
+    this.startEdit(this.noteId);
     this.loadNote();
     this.autoSaveInterval = setInterval(() => this.autoSave(), this.autoSaveTimeSeconds * 1000);
   }
@@ -91,4 +92,12 @@ export class EditNoteComponent implements OnInit, OnDestroy {
     });
   }
 
+  startEdit(noteId): void {
+    this.noteService.startEdit(noteId).subscribe(startEdit => {
+      if (!startEdit) {
+        this.router.navigate(['/note/', this.noteId]);
+        this.snackBar.openSnackbar('¡No es posible editar la nota en este momento!', 0);
+      }
+    });
+  }
 }
