@@ -8,6 +8,7 @@ import com.lab.elephant.repository.PermissionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
@@ -28,5 +29,15 @@ public class PermissionServiceImpl implements PermissionService {
     user.setPermissions(userPermissions);
     note.setPermissions(notePermissions);
     permissionRepository.save(p);
+  }
+  
+  @Override
+  public Optional<PermissionType> getPermissionBetween(User user, Note note) {
+    final List<Permission> permissions = note.getPermissions();
+    for (Permission p : permissions) {
+      if (user.getUuid() == p.getUser().getUuid())
+        return Optional.of(p.getType());
+    }
+    return Optional.empty();
   }
 }
