@@ -1,0 +1,22 @@
+@import "../../_vars.scss";
+
+
+.div-container {
+  margin-top: 1%;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.form-button {
+  margin-top: 1%;
+  background-color: $elephant-green;
+  color: $elephant-white;
+}
+
+.auto-save {
+  float: right;
+}
