@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {SnackbarService} from '../../services/snackbar.service';
+import {UserService} from '../../services/user.service';
 
 @Component({
   selector: 'app-navbar',
@@ -11,6 +12,7 @@ export class NavbarComponent implements OnInit {
 
   constructor(private router: Router,
               private snackbar: SnackbarService,
+              private userService: UserService,
   ) {
   }
 
@@ -26,8 +28,14 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('user');
-    this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
+    this.userService.logout().subscribe(res => {
+      if (res === 'Success') {
+        localStorage.removeItem('user');
+        this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
+      } else {
+        this.snackbar.openSnackbar('No se pudo cerrar sesion!');
+      }
+    });
   }
 
   isLoggedIn(): boolean {
