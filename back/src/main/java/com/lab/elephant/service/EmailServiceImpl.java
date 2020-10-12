@@ -2,10 +2,12 @@ package com.lab.elephant.service;
 
 import com.lab.elephant.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -40,11 +42,16 @@ public class EmailServiceImpl implements EmailService {
   }
   
   private void sendEmail(String to, String subject, String text) {
-    SimpleMailMessage message = new SimpleMailMessage();
-    message.setFrom("johnfromelephant@gmail.com");
-    message.setTo(to);
-    message.setSubject(subject);
-    message.setText(text);
-    emailSender.send(message);
+    final MimeMessage message = emailSender.createMimeMessage();
+    final MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
+    try {
+      helper.setFrom("johnfromelephant@gmail.com");
+      helper.setTo(to);
+      helper.setSubject(subject);
+      helper.setText(text, true);
+      emailSender.send(message);
+    } catch (MessagingException e) {
+      e.printStackTrace();
+    }
   }
 }
