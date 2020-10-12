@@ -14,6 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -226,5 +227,54 @@ public class NoteServiceTest {
     final List<String> tags = new ArrayList<>();
     final Optional<Note> optionalNote = noteService.addTags(id, tags);
     assertThat(optionalNote.isPresent()).isFalse();
+  }
+  
+  @Test
+  public void unlockNote_ShouldLockNote() {
+    final Note note = new Note();
+    note.setLocked(true);
+    
+    Mockito.when(noteRepository.save(note)).thenReturn(note);
+    final Optional<Note> optionalNote = noteService.unlockNote(note);
+    
+    assertThat(optionalNote.isPresent()).isTrue();
+    assertThat(optionalNote.get().isLocked()).isFalse();
+  }
+  
+  @Test
+  public void setLocked_ShouldLockNoteAndSetLastLockedToActualTime() {
+    final Note note = new Note();
+
+    Mockito.when(noteRepository.save(note)).thenReturn(note);
+    
+    final long actualTime = System.currentTimeMillis();
+    final Optional<Note> optionalNote = noteService.setLocked(note);
+    
+    assertThat(optionalNote.isPresent()).isTrue();
+    assertThat(optionalNote.get().isLocked()).isTrue();
+    assertThat(optionalNote.get().getLastLocked()).isEqualTo(new Timestamp(actualTime));
+  }
+  
+  @Test
+  public void editNote_WhenEverythingIsOk_ShouldReturnOptionalOfEditedNote() {
+    //this test does not test if the Note gets locked when edited because that is already tested on another test.
+    final Note oldNote = new Note();
+    final Note newNote = new Note();
+    final long oldNoteId = 1;
+    final String title = "Something";
+    final String content = "new";
+    oldNote.setUuid(oldNoteId);
+    newNote.setTitle(title);
+    newNote.setContent(content);
+    Mockito.when(noteRepository.findById(oldNoteId)).thenReturn(Optional.of(oldNote));
+
+    Mockito.when(noteRepository.save(oldNote)).thenReturn(oldNote);
+    final Optional<Note> optionalNote = noteService.editNote(oldNoteId, newNote);
+
+    assertThat(optionalNote.isPresent()).isTrue();
+    final Note note = optionalNote.get();
+    assertThat(note.getTitle()).isEqualTo(title);
+    assertThat(note.getContent()).isEqualTo(content);
+    assertThat(note.getUuid()).isEqualTo(oldNoteId);
   }
 }

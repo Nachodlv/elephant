@@ -82,4 +82,27 @@ public class NoteServiceImpl implements NoteService {
     }
     return Optional.empty();
   }
+  
+  @Override
+  public Optional<Note> editNote(long oldNoteId, Note newNote) {
+    final Optional<Note> optionalNote = getNote(oldNoteId);
+    if (!optionalNote.isPresent()) return Optional.empty();
+    final Note note = optionalNote.get();
+    note.setTitle(newNote.getTitle());
+    note.setContent(newNote.getContent());
+    return setLocked(note);
+  }
+  
+  @Override
+  public Optional<Note> setLocked(Note note) {
+    note.setLocked(true);
+    note.setLastLocked(new Timestamp(System.currentTimeMillis()));
+    return Optional.of(noteRepository.save(note));
+  }
+  
+  @Override
+  public Optional<Note> unlockNote(Note note) {
+    note.setLocked(false);
+    return Optional.of(noteRepository.save(note));
+  }
 }
