@@ -9,26 +9,28 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import javax.mail.Authenticator;
-import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import java.util.Properties;
 
 @Configuration
-@PropertySource("classpath:/email.properties")
+@PropertySource(value = "classpath:/email.properties", ignoreResourceNotFound = true)
 public class EmailConfig {
   
-  @Value("${spring.mail.host}")
+  @Value("${spring.mail.host:emptyHost}")
   private String host;
-  @Value("${spring.mail.port}")
+  @Value("${spring.mail.port:-1}")
   private int port;
-  @Value("${spring.mail.username}")
+  @Value("${spring.mail.username:emptyUsername}")
   private String userName;
-  @Value("${spring.mail.password}")
+  @Value("${spring.mail.password:emptyPassword}")
   private String passwd;
   
   @Bean
   public JavaMailSender getJavaMailSender() {
+    //if file is not found, or one of the values is not found. We return an emptyEmailSender.
+    if (host.equals("emptyHost") || port == -1 || userName.equals("emptyUsername") || passwd.equals("emptyPassword"))
+      return new EmptyJavaMailSender();
     JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
     mailSender.setHost(host);
     mailSender.setPort(port);
@@ -47,13 +49,6 @@ public class EmailConfig {
     };
     Session session = Session.getInstance(props, auth);
     mailSender.setSession(session);
-  
-    try {
-      mailSender.testConnection();
-    } catch (MessagingException e) {
-      //if mailSender can't connect we return an Empty Email Sender.
-      return new EmptyJavaMailSender();
-    }
     return mailSender;
   }
 }
