@@ -1,6 +1,7 @@
 package com.lab.elephant.service;
 
 import com.lab.elephant.model.EditUserDTO;
+import com.lab.elephant.model.Note;
 import com.lab.elephant.model.User;
 import org.springframework.stereotype.Service;
 
@@ -20,4 +21,6 @@ public interface UserService {
   Optional<User> updatePassword(String email, String newPassword);
   
   Optional<User> editUser(String email, EditUserDTO dto);
+
+  List<Note> getAllNotesByUser(User user);
 }

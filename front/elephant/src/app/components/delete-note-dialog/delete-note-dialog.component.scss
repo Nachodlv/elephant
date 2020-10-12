@@ -1,0 +1,24 @@
+@import "../../_vars.scss";
+
+.dialog-title {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 13%;
+}
+
+.buttons_confirm {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
+.cancel_button {
+  float: left;
+  background-color: #f44336;
+  color: white;
+}
+
+.confirm_button {
+  float: right;
+  background-color: $elephant-green;
+  color: white;
+}

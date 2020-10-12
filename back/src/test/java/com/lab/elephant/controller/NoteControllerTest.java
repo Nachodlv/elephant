@@ -76,9 +76,6 @@ public class NoteControllerTest {
     Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
     SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
-  
-  
-  
     
     mvc.perform(post("/note/new").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
@@ -547,7 +544,7 @@ public class NoteControllerTest {
   
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
-    mvc.perform(put("/note/autoSave/" + noteId).content(noteJson)
+    mvc.perform(put("/note/endEdit/" + noteId).content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
   }
@@ -562,7 +559,7 @@ public class NoteControllerTest {
     
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
-    mvc.perform(put("/note/autoSave/" + noteId).content(noteJson)
+    mvc.perform(put("/note/endEdit/" + noteId).content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound())
             .andExpect(status().reason("Note Not Found"));
@@ -588,7 +585,7 @@ public class NoteControllerTest {
     
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
-    mvc.perform(put("/note/autoSave/" + noteId).content(noteJson)
+    mvc.perform(put("/note/endEdit/" + noteId).content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("User cannot edit this note"));

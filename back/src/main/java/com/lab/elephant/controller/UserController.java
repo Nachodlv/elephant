@@ -1,6 +1,7 @@
 package com.lab.elephant.controller;
 
 import com.lab.elephant.model.EditUserDTO;
+import com.lab.elephant.model.Note;
 import com.lab.elephant.model.UpdatePasswordDto;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.TokenService;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
@@ -24,7 +26,7 @@ public class UserController {
   private final UserService userService;
   private final TokenService tokenService;
   private final BCryptPasswordEncoder passwordEncoder;
-  
+
   public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder) {
     this.userService = userService;
     this.tokenService = tokenService;
@@ -66,17 +68,27 @@ public class UserController {
   public void updatePassword(@Valid @RequestBody UpdatePasswordDto dto) {
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();
-    
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
     userService.updatePassword(user.getEmail(), dto.getNewPassword());
   }
-  
+
   @PutMapping("/editUser")
   public void editUser(@Valid @RequestBody EditUserDTO dto) {
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();
-    
     userService.editUser(user.getEmail(), dto);
   }
+
+  @GetMapping("/notes")
+  public List<Note> getAllNotesByUser() {
+    final String mail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Optional<User> optionalUser = userService.getByEmail(mail);
+    if (optionalUser.isPresent()) {
+      final User user = optionalUser.get();
+      return userService.getAllNotesByUser(user);
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+  }
+
 }
