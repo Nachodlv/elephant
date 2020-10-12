@@ -72,6 +72,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
+      this.setNoteToEditData();
       if (isNotNullOrUndefined(res.tags)) {
         this.tags = res.tags;
       }
@@ -88,6 +89,10 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       this.router.navigate(['/home']);
     });
+  }
+
+  private setNoteToEditData(): void {
+    this.noteService.saveNoteToEdit({title: this.title, content: this.content});
   }
 
   openDialog(): void {

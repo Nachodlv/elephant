@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NoteService} from '../../services/note.service';
 import {SnackbarService} from '../../services/snackbar.service';
-import {Note} from '../../models/note-model';
 
 @Component({
   selector: 'app-edit-note',
@@ -14,7 +13,7 @@ import {Note} from '../../models/note-model';
 export class EditNoteComponent implements OnInit, OnDestroy {
 
   noteId: string;
-  noteData: Note;
+  noteData: any;
 
   loading = true;
   finishedAutoSave = true;
@@ -60,8 +59,8 @@ export class EditNoteComponent implements OnInit, OnDestroy {
   }
 
   loadNote(): void {
-    this.noteService.getNote(this.noteId).subscribe(res => {
-      this.noteData = res;
+    this.noteService.noteData.subscribe(data => {
+      this.noteData = data;
       this.setFormValues();
       this.loading = false;
     }, error => {

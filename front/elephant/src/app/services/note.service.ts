@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Note, Tags} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
@@ -9,6 +9,9 @@ import {Comment} from '../models/comment-model';
   providedIn: 'root'
 })
 export class NoteService {
+
+  private noteToEdit = new BehaviorSubject([]);
+  noteData = this.noteToEdit.asObservable();
 
   constructor(private httpService: HttpService) {
   }
@@ -48,7 +51,7 @@ export class NoteService {
     return this.httpService.getText(`/${noteId}/permission`).pipe(tap((_ => {
       }), err => console.error(err)
     ), map(res => {
-      console.log(res.body)
+      console.log(res.body);
       return res.body;
     }));
   }
@@ -95,6 +98,10 @@ export class NoteService {
 
   addTags(id, tags: Tags): Observable<any> {
     return this.httpService.put(`/note/addTags/${id}`, JSON.stringify(tags));
+  }
+
+  saveNoteToEdit(noteData): void {
+    this.noteToEdit.next(noteData);
   }
 
 }
