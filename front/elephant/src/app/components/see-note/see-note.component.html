@@ -16,7 +16,7 @@
   </div>
   <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
-    <button mat-raised-button class="edit-note-btn" (click)="startEditing()" *ngIf="hasEditPermission">Editar nota</button>
+    <button mat-raised-button class="edit-note-btn" (click)="startEdit()" *ngIf="hasEditPermission">Editar nota</button>
     <app-comment
       [noteId]="id"
     ></app-comment>
