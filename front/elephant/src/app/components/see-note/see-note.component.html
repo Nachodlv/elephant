@@ -1,11 +1,12 @@
 <div class="container">
-  <div class="header-content" >
+  <div class="header-content">
     <div class="header">
       <h1 class="title">{{title}}</h1>
       <app-tag-note
         class="tag-note"
         [noteId]="id"
         [tags]="tags"
+        [disableAddTag]="!hasEditPermission"
       ></app-tag-note>
       <h2 class="date">{{created}}</h2>
     </div>
