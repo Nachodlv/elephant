@@ -43,6 +43,7 @@ public class EmailServiceImpl implements EmailService {
   
   private void sendEmail(String to, String subject, String text) {
     final MimeMessage message = emailSender.createMimeMessage();
+    if (message == null) return;
     final MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
     try {
       helper.setFrom("johnfromelephant@gmail.com");
