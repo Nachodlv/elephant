@@ -69,8 +69,7 @@ public class UserController {
 
   @PutMapping("/updatePassword")
   public void updatePassword(@Valid @RequestBody UpdatePasswordDto dto) {
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
+    final User user = getAuthenticatedUser();
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
     userService.updatePassword(user.getEmail(), dto.getNewPassword());
@@ -78,8 +77,7 @@ public class UserController {
 
   @PutMapping("/editUser")
   public void editUser(@Valid @RequestBody EditUserDTO dto) {
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
+    final User user = getAuthenticatedUser();
     userService.editUser(user.getEmail(), dto);
   }
 
@@ -94,4 +92,22 @@ public class UserController {
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
   }
 
+  @DeleteMapping()
+  public void deleteUser(@RequestBody String password) {
+    final User user = getAuthenticatedUser();
+    if (!passwordEncoder.matches(password, user.getPassword()))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
+    userService.delete(user.getUuid());
+    //todo password string arrives with double "
+    //also have to check if every relation user has is also safely deleted
+    //tests
+    //check JTW token bug (old tokens work)
+  }
+  
+  private User getAuthenticatedUser() {
+    final String mail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Optional<User> optionalUser = userService.getByEmail(mail);
+    //this .get() is not checked because we know by the JWTFilter that the user exists.
+    return optionalUser.get();
+  }
 }

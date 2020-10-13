@@ -77,4 +77,9 @@ public class UserServiceImpl implements UserService {
     permissions.forEach(permission -> notes.add(permission.getNote()));
     return notes;
   }
+  
+  @Override
+  public void delete(long id) {
+    userRepository.deleteById(id);
+  }
 }

@@ -23,4 +23,6 @@ public interface UserService {
   Optional<User> editUser(String email, EditUserDTO dto);
 
   List<Note> getAllNotesByUser(User user);
+  
+  void delete(long uuid);
 }
