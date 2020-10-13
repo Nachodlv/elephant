@@ -19,6 +19,8 @@ export class NoteComponent implements OnInit, OnDestroy {
   loaded = false;
   filterString = '';
 
+  noteToPrint: Note;
+
   notesSubscription: Subscription;
 
   constructor(
@@ -79,12 +81,16 @@ export class NoteComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(resNote => {
       if (resNote) {
         this.notes.splice(this.notes.indexOf(resNote), 1);
-        this.noteService.deleteNote(resNote).subscribe( resObs => {
+        this.noteService.deleteNote(resNote).subscribe(resObs => {
           this.snackBar.openSnackbar('La nota se ha eliminado correctamente!', 0);
         }, error => {
           this.snackBar.openSnackbar('Ha ocurrido un error y la nota no se pudo eliminar!', 0);
         });
       }
     });
+  }
+
+  printNote(note): void {
+    this.noteToPrint = note;
   }
 }

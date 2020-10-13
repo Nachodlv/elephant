@@ -25,6 +25,7 @@ import { TagNoteComponent } from './components/tag-note/tag-note.component';
 import { FilterNotePipe } from './pipes/filter-note.pipe';
 import { DeleteNoteDialogComponent } from './components/delete-note-dialog/delete-note-dialog.component';
 import { EditNoteComponent } from './components/edit-note/edit-note.component';
+import { PrintNoteComponent } from './components/print-note/print-note.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { EditNoteComponent } from './components/edit-note/edit-note.component';
     EditNoteComponent,
     FilterNotePipe,
     DeleteNoteDialogComponent,
+    PrintNoteComponent,
   ],
   imports: [
     BrowserModule,

@@ -21,7 +21,7 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>
+          <button mat-menu-item (click)="printNote(note)">
             <span>Imprimir</span>
           </button>
           <button mat-menu-item (click)="deleteNote(note)">
@@ -43,3 +43,5 @@
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
+
+<app-print-note [noteToPrint]="noteToPrint" *ngIf="noteToPrint"></app-print-note>

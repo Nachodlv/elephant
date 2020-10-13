@@ -1,0 +1,17 @@
+<div id="printable" class="hidden">
+  <div class="print-container">
+    <div class="print-header-content">
+      <div class="print-header">
+        <h1 class="print-title">{{noteToPrint.title}}</h1>
+        <app-tag-note
+          class="print-tag-note"
+          [noteId]="noteToPrint.uuid"
+          [tags]="noteToPrint.tags"
+        ></app-tag-note>
+        <h2 class="print-date">{{noteToPrint.created}}</h2>
+      </div>
+      <p class="print-content">{{noteToPrint.content}}</p>
+    </div>
+  </div>
+</div>
+
