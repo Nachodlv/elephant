@@ -37,6 +37,10 @@ export class HttpService {
     return this.http.get((ignoreBaseUrl ? '' : this.baseUrl) + url, {headers: this.requestOptions(options), observe: 'response'});
   }
 
+  public getText(url: string, options?: any, ignoreBaseUrl?: boolean): Observable<HttpResponse<any>> {
+    return this.http.get((ignoreBaseUrl ? '' : this.baseUrl) + url, {headers: this.requestOptions(options), observe: 'response', responseType: 'text'});
+  }
+
   public getImage(url: string, options?: any, ignoreBaseUrl?: boolean): Observable<any> {
     return this.http.get((ignoreBaseUrl ? '' : this.baseUrl) + url,
       {

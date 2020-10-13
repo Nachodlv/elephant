@@ -1,10 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NoteService} from '../../services/note.service';
 import {SnackbarService} from '../../services/snackbar.service';
-import {Note} from '../../models/note-model';
 
 @Component({
   selector: 'app-edit-note',
@@ -14,7 +13,7 @@ import {Note} from '../../models/note-model';
 export class EditNoteComponent implements OnInit, OnDestroy {
 
   noteId: string;
-  noteData: Note;
+  noteData: any;
 
   loading = true;
   finishedAutoSave = true;
@@ -22,6 +21,9 @@ export class EditNoteComponent implements OnInit, OnDestroy {
   editForm: FormGroup;
   autoSaveSubscription: Subscription;
   finishedEditSubscription: Subscription;
+
+  autoSaveInterval;
+  autoSaveTimeSeconds = 20;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,12 +38,19 @@ export class EditNoteComponent implements OnInit, OnDestroy {
     this.noteId = this.route.snapshot.paramMap.get('id');
 
     this.editForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      content: ['', Validators.required],
+      title: [''],
+      content: [''],
     });
 
+    this.startEdit(this.noteId);
     this.loadNote();
-    setInterval(() => this.autoSave(), 20 * 1000);
+    this.autoSaveInterval = setInterval(() => this.autoSave(), this.autoSaveTimeSeconds * 1000);
+  }
+
+  ngOnDestroy(): void {
+    this.autoSaveSubscription?.unsubscribe();
+    this.finishedEditSubscription?.unsubscribe();
+    clearInterval(this.autoSaveInterval);
   }
 
   setFormValues(): void {
@@ -49,14 +58,9 @@ export class EditNoteComponent implements OnInit, OnDestroy {
     this.editForm.controls.content.setValue(this.noteData.content);
   }
 
-  ngOnDestroy(): void {
-    this.autoSaveSubscription?.unsubscribe();
-    this.finishedEditSubscription?.unsubscribe();
-  }
-
   loadNote(): void {
-    this.noteService.getNote(this.noteId).subscribe(res => {
-      this.noteData = res;
+    this.noteService.noteData.subscribe(data => {
+      this.noteData = data;
       this.setFormValues();
       this.loading = false;
     }, error => {
@@ -69,9 +73,7 @@ export class EditNoteComponent implements OnInit, OnDestroy {
     const editFormData = this.editForm.getRawValue();
     this.finishedAutoSave = false;
     this.autoSaveSubscription = this.noteService.autoSave(this.noteId, editFormData).subscribe(res => {
-      setTimeout(() => {
-        this.finishedAutoSave = true;
-      }, 5 * 1000); // el timeout esta para ver el cambio en el icono de autosave en el mockeo
+      this.finishedAutoSave = true;
     }, error => {
       console.error(error);
       this.snackBar.openSnackbar('¡Ha ocurrido un error en el guardado automatico!', 0);
@@ -80,7 +82,7 @@ export class EditNoteComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     const editFormData = this.editForm.getRawValue();
-    this.finishedEditSubscription = this.noteService.finishedEdit(this.noteId, editFormData).subscribe(res => {
+    this.finishedEditSubscription = this.noteService.endEdit(this.noteId, editFormData).subscribe(res => {
       this.router.navigate(['/note/', this.noteId]);
       this.snackBar.openSnackbar('Se ha editado con éxito la nota', 0);
     }, error => {
@@ -89,4 +91,12 @@ export class EditNoteComponent implements OnInit, OnDestroy {
     });
   }
 
+  startEdit(noteId): void {
+    this.noteService.startEdit(noteId).subscribe(startEdit => {
+      if (!startEdit) {
+        this.router.navigate(['/note/', this.noteId]);
+        this.snackBar.openSnackbar('¡No es posible editar la nota en este momento!', 0);
+      }
+    });
+  }
 }

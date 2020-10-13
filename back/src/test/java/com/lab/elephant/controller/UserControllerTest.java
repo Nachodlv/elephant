@@ -66,16 +66,18 @@ public class UserControllerTest {
       return new BCryptPasswordEncoder();
     }
   }
-
-  // UserDetailsServiceImpl, BCryptPasswordEncoder and BlackListedTokenServiceImpl
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
+  
+  // All the MockBeans bellow are not used but necessary for the test to run
   // are not used but are necessary for the tests to run.
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
-  @Autowired
-  private BCryptPasswordEncoder passwordEncoder;
   @MockBean
   private BlackListedTokenServiceImpl blackListedTokenService;
-
+  @MockBean
+  private EmailService emailService;
+  
   @Test
   public void addUser_whenEmailDoesNotExist_ShouldReturnOk() throws Exception {
     User user = new User();
