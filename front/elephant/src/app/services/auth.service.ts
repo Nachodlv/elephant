@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {JwtClientService} from './jwt-client.service';
 import {Observable} from 'rxjs';
 import {User} from '../models/user-model';
@@ -9,8 +9,8 @@ import {Router} from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-
-  constructor(public jwtClientService: JwtClientService, public router: Router) { }
+  constructor(public jwtClientService: JwtClientService, public router: Router) {
+  }
 
 
   login(user): Observable<User> {
@@ -25,9 +25,10 @@ export class AuthService {
 
   authenticate(): Observable<boolean> {
     return this.jwtClientService.authenticate().pipe(map(res => {
-      if (res.body === true){
+      if (res.body === true) {
         return true;
       } else {
+        localStorage.setItem('user', undefined);
         this.router.navigate(['/']);
         return false;
       }

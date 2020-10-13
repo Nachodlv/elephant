@@ -34,7 +34,6 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   noteSubscription: Subscription;
   commentsSubscription: Subscription;
   setPermissionSubscription: Subscription;
-  startEditSubscription: Subscription;
 
   constructor(
     private noteService: NoteService,
@@ -57,7 +56,6 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription?.unsubscribe();
     this.commentsSubscription?.unsubscribe();
     this.setPermissionSubscription?.unsubscribe();
-    this.startEditSubscription?.unsubscribe();
   }
 
   ngAfterViewChecked(): void {
@@ -74,6 +72,7 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
+      this.setNoteToEditData();
       if (isNotNullOrUndefined(res.tags)) {
         this.tags = res.tags;
       }
@@ -90,6 +89,10 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       this.router.navigate(['/home']);
     });
+  }
+
+  private setNoteToEditData(): void {
+    this.noteService.saveNoteToEdit({title: this.title, content: this.content});
   }
 
   openDialog(): void {
@@ -147,16 +150,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-  startEditing(): void {
-    this.startEditSubscription = this.noteService.startEdit(this.id).subscribe(res => {
-      if (!res) {
-        this.snackBar.openSnackbar('No es posible editar la nota en este momento');
-      } else {
-        this.router.navigate(['/note/edit', this.id]);
-      }
-    }, error => {
-      console.error(error);
-    });
+  startEdit(): void {
+    this.router.navigate(['/note/edit/', this.id]);
   }
 
 }

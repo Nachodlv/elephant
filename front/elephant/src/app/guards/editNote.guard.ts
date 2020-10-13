@@ -3,6 +3,7 @@ import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Route
 import {forkJoin, Observable} from 'rxjs';
 import {NoteService} from '../services/note.service';
 import {map} from 'rxjs/operators';
+import {SnackbarService} from '../services/snackbar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,25 +12,34 @@ export class EditNoteGuard implements CanActivate {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
-    private noteService: NoteService
+    private noteService: NoteService,
+    private snackBar: SnackbarService
   ) {
   }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const noteId = this.route.snapshot.paramMap.get('id');
+    const noteId = next.paramMap.get('id');
 
-    return forkJoin([this.noteService.startEdit(noteId), this.noteService.hasEditPermission(noteId)]).pipe(map((res) => {
+    return this.noteService.hasEditPermission(noteId).pipe(map(hasEditPermission => {
+      if (hasEditPermission) {
+        return true;
+      } else {
+        return false;
+      }
+    }));
+
+    /*return forkJoin([this.noteService.startEdit(noteId), this.noteService.hasEditPermission(noteId)]).pipe(map((res) => {
       const isNotLocked = res[0];
       const hasEditPermission = res[1];
       if (isNotLocked && hasEditPermission) {
         return true;
       }
-      this.router.navigate(['/home']);
+      this.snackBar.openSnackbar('No es posible editar la nota en este momento');
+      this.router.navigate(['/note/', noteId]);
       return false;
-    }));
+    }));*/
   }
 
 }

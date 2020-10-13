@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Note, Tags} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
@@ -9,6 +9,9 @@ import {Comment} from '../models/comment-model';
   providedIn: 'root'
 })
 export class NoteService {
+
+  private noteToEdit = new BehaviorSubject([]);
+  noteData = this.noteToEdit.asObservable();
 
   constructor(private httpService: HttpService) {
   }
@@ -45,25 +48,33 @@ export class NoteService {
   }
 
   getPermissions(noteId): Observable<any> {
-    return of({body: 'Editor'});
+    return this.httpService.getText(`/${noteId}/permission`).pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      return res.body;
+    }));
   }
 
   hasEditPermission(noteId): Observable<boolean> {
     return this.getPermissions(noteId).pipe(map(res => {
-      return (res.body === 'Editor' || res.body === 'Owner');
+      return (res === 'Editor' || res === 'Owner');
     }));
   }
 
   startEdit(noteId): Observable<boolean> {
-    return of(true);
+    return this.httpService.get(`/note/startEdit/${noteId}`).pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      return res.body;
+    }));
   }
 
   autoSave(noteId, editedNoteData): Observable<any> {
-    return of(null);
+    return this.httpService.put(`/note/autoSave/${noteId}`, JSON.stringify(editedNoteData));
   }
 
-  finishedEdit(noteId, editedNoteData): Observable<any> {
-    return of(null);
+  endEdit(noteId, editedNoteData): Observable<any> {
+    return this.httpService.put(`/note/endEdit/${noteId}`, JSON.stringify(editedNoteData));
   }
 
   getAllNotes(): Observable<Note[]> {
@@ -99,4 +110,9 @@ export class NoteService {
   deleteNote(note): Observable<any> {
     return of(note);
   }
+
+  saveNoteToEdit(noteData): void {
+    this.noteToEdit.next(noteData);
+  }
+
 }
