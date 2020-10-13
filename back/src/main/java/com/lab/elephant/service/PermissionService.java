@@ -5,8 +5,12 @@ import com.lab.elephant.model.PermissionType;
 import com.lab.elephant.model.User;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public interface PermissionService {
   
   void addRelationship(User user, Note note, PermissionType type);
+  
+  Optional<PermissionType> getPermissionBetween(User user, Note note);
 }

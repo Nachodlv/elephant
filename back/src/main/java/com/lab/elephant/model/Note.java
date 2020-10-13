@@ -3,6 +3,7 @@ package com.lab.elephant.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,8 @@ public class Note {
   @Id
   @GeneratedValue
   private long uuid;
-
+  
+  @NotNull
   private String title;
 
   private String content;
@@ -31,6 +33,10 @@ public class Note {
   
   @ElementCollection
   List<String> tags = new ArrayList<>();
+  
+  private boolean isLocked = false;
+  
+  private Timestamp lastLocked;
   
   public Note(String title, String content, Timestamp created) {
     this.title = title;
@@ -103,5 +109,21 @@ public class Note {
   
   public void setTags(List<String> tags) {
     this.tags = tags;
+  }
+  
+  public boolean isLocked() {
+    return isLocked;
+  }
+  
+  public void setLocked(boolean locked) {
+    isLocked = locked;
+  }
+  
+  public Timestamp getLastLocked() {
+    return lastLocked;
+  }
+  
+  public void setLastLocked(Timestamp lastLocked) {
+    this.lastLocked = lastLocked;
   }
 }
