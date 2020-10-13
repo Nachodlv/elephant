@@ -32,7 +32,11 @@ export class CommentComponent implements OnInit {
        }else{
          this.snackBar.openSnackbar('No se ha podido crear el comentario. Intentelo nuevamente!', 2500);
        }
-      });
+      }, error => {
+          this.snackBar.openSnackbar('No se ha podido crear el comentario. Intentelo nuevamente!', 0);
+          console.error(error);
+        }
+      );
     } else {
       this.snackBar.openSnackbar('No se puede crear un comentario vacio. Intentelo nuevamente!', 2500);
     }
