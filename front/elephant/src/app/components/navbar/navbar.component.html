@@ -6,7 +6,8 @@
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menu="matMenu">
-    <button mat-menu-item (click)="registerUser()">Registrarse</button>
     <button mat-menu-item (click)="seeProfile()">Ver Perfil</button>
+    <button *ngIf="isLoggedIn()" mat-menu-item (click)="logout()">Cerrar sesión</button>
+    <button *ngIf="!isLoggedIn()" mat-menu-item (click)="registerUser()">Registrarse</button>
   </mat-menu>
 </mat-toolbar>

@@ -55,4 +55,12 @@ export class UserService {
     return this.httpService.put('/user/editUser', {firstName, lastName} );
     }
   }
+
+  logout(): Observable<string> {
+    return this.httpService.post('/logout', '').pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      return 'Success';
+    }));
+  }
 }
