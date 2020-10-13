@@ -35,7 +35,11 @@ export class NavbarComponent implements OnInit {
       } else {
         this.snackbar.openSnackbar('No se pudo cerrar sesion!');
       }
-    });
+    }, error => {
+        this.snackbar.openSnackbar('No se pudo cerrar sesion!', 0);
+        console.error(error);
+      }
+    );
   }
 
   isLoggedIn(): boolean {
