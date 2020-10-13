@@ -43,3 +43,5 @@
     </mat-card>
   </mat-grid-tile>
 </mat-grid-list>
+
+<h2 *ngIf="(notes | filterNote:filterString).length === 0" class="empty-notes">No hay notas disponibles</h2>
