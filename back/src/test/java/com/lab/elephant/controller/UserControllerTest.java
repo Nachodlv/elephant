@@ -185,11 +185,7 @@ public class UserControllerTest {
 
     user.setPassword(passwordEncoder.encode(oldPassword));
 
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
+    mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
 
     mvc.perform(put("/user/updatePassword").content(json)
@@ -208,11 +204,7 @@ public class UserControllerTest {
 
     user.setPassword(passwordEncoder.encode(userPassword));
 
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
+    mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
 
     mvc.perform(put("/user/updatePassword").content(json)
@@ -231,11 +223,7 @@ public class UserControllerTest {
     final String json = o.writeValueAsString(dto);
 
     //this is mocking the user Authentication
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
+    mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
 
     mvc.perform(put("/user/editUser").content(json)
@@ -249,11 +237,7 @@ public class UserControllerTest {
     final String json = o.writeValueAsString(new EditUserDTO());
 
     //this is mocking the user Authentication
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
+    mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
 
     mvc.perform(put("/user/editUser").content(json)
@@ -272,8 +256,10 @@ public class UserControllerTest {
     noteService.addNote(note1, user);
     noteService.addNote(note2, user);
     noteService.addNote(note3, user);
+    mockUserAuthentication();
 
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
+
     given(userService.getAllNotesByUser(user)).willReturn(Arrays.asList(note1, note2, note3));
     given(userService.getUser(1L)).willReturn(Optional.of(user));
     given(userService.addUser(user)).willReturn(user);
@@ -312,6 +298,10 @@ public class UserControllerTest {
   public void getAllNotesByUser_whenUserNotExists_ShouldReturnNotFound() throws Exception {
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
 
+    //this is mocking the user Authentication
+    mockUserAuthentication();
+    given(userService.getByEmail("user")).willReturn(Optional.empty());
+
     String token = JWT.create().withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
             .sign(HMAC512(SECRET.getBytes()));
@@ -324,5 +314,13 @@ public class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
+  }
+
+  private void mockUserAuthentication() {
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
   }
 }
