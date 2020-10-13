@@ -3,7 +3,7 @@
 .div-container {
   text-align: center;
   border: 1px solid;
-  padding: 3%;
+  padding: 2% 1%;
   margin: 6% 38%;
   border-radius: 1rem;
 
@@ -29,6 +29,7 @@
 
 .change-password {
   margin-top: 5%;
+  margin-right: 10%;
   background-color: $elephant-green;
   height: 2.2rem;
 }
@@ -66,9 +67,8 @@
   display: block;
 }
 .flex-container {
-  margin-top: 5%;
+  margin-top: 3%;
   display: flex;
-  flex-direction: column;
   text-align: center;
   align-items: center;
 }
