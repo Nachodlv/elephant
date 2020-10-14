@@ -28,7 +28,7 @@ public class EmailServiceImpl implements EmailService {
   private String getHtml() {
     StringBuilder data = new StringBuilder();
     try {
-      File myObj = new File("src/main/resources/mail.html");
+      File myObj = new File("src/main/resources/verification-email.html");
       Scanner myReader = new Scanner(myObj);
       while (myReader.hasNextLine()) {
         data.append(myReader.nextLine());
@@ -43,6 +43,7 @@ public class EmailServiceImpl implements EmailService {
   
   private void sendEmail(String to, String subject, String text) {
     final MimeMessage message = emailSender.createMimeMessage();
+    if (message == null) return;
     final MimeMessageHelper helper = new MimeMessageHelper(message, "utf-8");
     try {
       helper.setFrom("johnfromelephant@gmail.com");
