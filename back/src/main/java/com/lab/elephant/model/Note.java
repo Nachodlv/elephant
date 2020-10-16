@@ -1,6 +1,7 @@
 package com.lab.elephant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -15,7 +16,7 @@ public class Note {
   @Id
   @GeneratedValue
   private long uuid;
-  
+
   @NotNull
   private String title;
 
@@ -27,17 +28,17 @@ public class Note {
   @OneToMany(cascade = CascadeType.ALL)
   private List<Comment> comments = new ArrayList<>();
 
-  @JsonIgnore
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
   private List<Permission> permissions = new ArrayList<>();
-  
+
   @ElementCollection
   List<String> tags = new ArrayList<>();
-  
+
   private boolean isLocked = false;
-  
+
   private Timestamp lastLocked;
-  
+
   public Note(String title, String content, Timestamp created) {
     this.title = title;
     this.content = content;
@@ -94,35 +95,35 @@ public class Note {
   public void addComment(Comment comment) {
     comments.add(comment);
   }
-  
+
   public List<Permission> getPermissions() {
     return permissions;
   }
-  
+
   public void setPermissions(List<Permission> permissions) {
     this.permissions = permissions;
   }
-  
+
   public List<String> getTags() {
     return tags;
   }
-  
+
   public void setTags(List<String> tags) {
     this.tags = tags;
   }
-  
+
   public boolean isLocked() {
     return isLocked;
   }
-  
+
   public void setLocked(boolean locked) {
     isLocked = locked;
   }
-  
+
   public Timestamp getLastLocked() {
     return lastLocked;
   }
-  
+
   public void setLastLocked(Timestamp lastLocked) {
     this.lastLocked = lastLocked;
   }
