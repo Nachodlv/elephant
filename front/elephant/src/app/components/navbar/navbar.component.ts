@@ -44,8 +44,6 @@ export class NavbarComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    console.log('local user', localStorage.getItem('user'));
-    console.log('auth', this.authService.authenticate());
     return localStorage.getItem('user') !== null;
   }
 }

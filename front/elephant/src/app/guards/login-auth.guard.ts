@@ -19,11 +19,6 @@ export class LoginAuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    this.authService.authenticate().pipe(map(res => {
-      console.log('res', res);
-    }, error => {
-      console.error(error);
-    }));
     if (this.authService.authenticate()) {
       console.log('Login true', this.authService.authenticate());
       this.router.navigate(['/home']);

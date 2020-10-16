@@ -18,6 +18,8 @@ const routes: Routes = [
   {path: 'note', component: NoteComponent, canActivate: [AuthGuard]},
   {path: '', component: LoginComponent, canActivate: [LoginAuthGuard]},
   {path: 'register', component: RegisterComponent, canActivate: [LoginAuthGuard]},
+  // {path: '', component: LoginComponent},
+  // {path: 'register', component: RegisterComponent},
   {path: 'home', component: HomeComponent, canActivate: [AuthGuard]},
   {path: 'note/:id', component: SeeNoteComponent, canActivate: [AuthGuard]},
   {path: 'profile', component: SeeProfileComponent, canActivate: [AuthGuard]},
