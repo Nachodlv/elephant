@@ -29,7 +29,7 @@ public class Note {
   private List<Comment> comments = new ArrayList<>();
 
   @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-  @OneToMany(mappedBy = "note", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "note", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   private List<Permission> permissions = new ArrayList<>();
 
   @ElementCollection
