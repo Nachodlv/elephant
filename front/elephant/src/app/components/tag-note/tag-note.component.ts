@@ -14,11 +14,11 @@ import {Subscription} from 'rxjs';
 export class TagNoteComponent implements OnInit, OnDestroy {
 
   selectable = true;
-  removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   @Input() tags: string[] = [];
   @Input() noteId: number;
+  @Input() disableAddTag: boolean;
   tagSubscription: Subscription;
 
   constructor(private noteService: NoteService,
@@ -39,7 +39,8 @@ export class TagNoteComponent implements OnInit, OnDestroy {
 
     if ((value || '').trim()) {
       this.tags.push(value.trim());
-      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {}, error => {
+      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {
+      }, error => {
         this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
       });
     }
@@ -55,7 +56,8 @@ export class TagNoteComponent implements OnInit, OnDestroy {
 
     if (index >= 0) {
       this.tags.splice(index, 1);
-      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {}, error => {
+      this.tagSubscription = this.noteService.addTags(this.noteId, new Tags(this.tags)).subscribe(res => {
+      }, error => {
         this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
       });
     }
