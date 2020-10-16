@@ -93,15 +93,11 @@ public class UserController {
   }
 
   @DeleteMapping()
-  public void deleteUser(@RequestBody String password) {
+  public void deleteUser(@RequestParam String password) {
     final User user = getAuthenticatedUser();
     if (!passwordEncoder.matches(password, user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
     userService.delete(user.getUuid());
-    //todo password string arrives with double "
-    //also have to check if every relation user has is also safely deleted
-    //tests
-    //check JTW token bug (old tokens work)
   }
   
   private User getAuthenticatedUser() {

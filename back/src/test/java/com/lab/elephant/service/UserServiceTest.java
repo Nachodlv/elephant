@@ -30,11 +30,12 @@ public class UserServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
-    private PermissionRepository permissionRepository;
-
+    private PermissionService permissionService;
+    @Autowired
+    private NoteService noteService;
     @Bean
     public UserService userService() {
-      return new UserServiceImpl(userRepository, passwordEncoder, permissionRepository);
+      return new UserServiceImpl(userRepository, passwordEncoder, permissionService, noteService);
     }
 
     @Bean
@@ -51,7 +52,11 @@ public class UserServiceTest {
   private UserRepository userRepository;
   @MockBean
   private PermissionRepository permissionRepository;
-
+  //these mockbeans are not used but needed for the test to run
+  @MockBean
+  private PermissionService permissionService;
+  @MockBean
+  private NoteService noteService;
   @Test
   public void AddUser_ShouldEncryptPassword() {
     String email = "john@elephant.com";
@@ -200,7 +205,7 @@ public class UserServiceTest {
     permissions.add(new Permission(user, note2, PermissionType.Editor));
     permissions.add(new Permission(user, note3, PermissionType.Viewer));
 
-    Mockito.when(permissionRepository.findAllByUser(user)).thenReturn(permissions);
+    Mockito.when(permissionService.findAllByUser(user)).thenReturn(permissions);
     Mockito.when(userRepository.save(user)).thenReturn(user);
 
     List<Note> notes = userService.getAllNotesByUser(user);
@@ -209,5 +214,37 @@ public class UserServiceTest {
     assertThat(notes.get(0).getUuid()).isEqualTo(note1.getUuid());
     assertThat(notes.get(1).getUuid()).isEqualTo(note2.getUuid());
     assertThat(notes.get(2).getUuid()).isEqualTo(note3.getUuid());
+  }
+  
+  @Test
+  public void delete_ShouldDeleteUserAndAllTheirNotes() {
+    final User user = new User();
+    final long id = 1;
+    final Note note1 = new Note();
+    final Note note2 = new Note();
+    final Note note3 = new Note();
+  
+    note1.setUuid(2);
+    note2.setUuid(3);
+    note3.setUuid(4);
+    
+    final Permission p1 = new Permission(user, note1, PermissionType.Owner);
+    final Permission p2 = new Permission(user, note2, PermissionType.Editor);
+    final Permission p3 = new Permission(user, note3, PermissionType.Viewer);
+    final List<Permission> permissions = new ArrayList<>();
+    
+    permissions.add(p1);
+    permissions.add(p2);
+    permissions.add(p3);
+    
+    Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(user));
+    Mockito.when(permissionService.findAllByUser(user)).thenReturn(permissions);
+    
+    userService.delete(id);
+    
+    Mockito.verify(userRepository, Mockito.times(1)).delete(user);
+    Mockito.verify(noteService, Mockito.times(1)).deleteNote(note1.getUuid());
+    Mockito.verify(noteService, Mockito.times(1)).deleteNote(note2.getUuid());
+    Mockito.verify(noteService, Mockito.times(1)).deleteNote(note3.getUuid());
   }
 }

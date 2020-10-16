@@ -4,7 +4,6 @@ import com.lab.elephant.model.EditUserDTO;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.Permission;
 import com.lab.elephant.model.User;
-import com.lab.elephant.repository.PermissionRepository;
 import com.lab.elephant.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,12 +16,14 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
   private final PasswordEncoder passwordEncoder;
   private final UserRepository userRepository;
-  private final PermissionRepository permissionRepository;
-
-  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, PermissionRepository permissionRepository) {
+  private final PermissionService permissionService;
+  private final NoteService noteService;
+  
+  public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, PermissionService permissionService, NoteService noteService) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
-    this.permissionRepository = permissionRepository;
+    this.permissionService = permissionService;
+    this.noteService = noteService;
   }
 
   @Override
@@ -72,7 +73,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<Note> getAllNotesByUser(User user) {
-    List<Permission> permissions = permissionRepository.findAllByUser(user);
+    List<Permission> permissions = permissionService.findAllByUser(user);
     List<Note> notes = new ArrayList<>();
     permissions.forEach(permission -> notes.add(permission.getNote()));
     return notes;
@@ -80,6 +81,11 @@ public class UserServiceImpl implements UserService {
   
   @Override
   public void delete(long id) {
-    userRepository.deleteById(id);
+    final Optional<User> optionalUser = getUser(id);
+    if (optionalUser.isPresent()) {
+      final User user = optionalUser.get();
+      for (Note note : getAllNotesByUser(user)) noteService.deleteNote(note.getUuid());
+      userRepository.delete(user);
+    }
   }
 }

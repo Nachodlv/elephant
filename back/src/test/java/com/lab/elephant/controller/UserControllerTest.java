@@ -327,4 +327,41 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
+  
+  @Test
+  public void deleteUser_WhenEverythingIsOk_ShouldReturn200() throws Exception {
+    final String password = "strong password";
+    final User user = new User();
+    user.setPassword(passwordEncoder.encode(password));
+    
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    mvc.perform(delete("/user?password=" + password))
+            .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void deleteUser_WhenPasswordIsWrong_ShouldReturn401() throws Exception {
+    final String password = "strong password";
+    final User user = new User();
+    user.setPassword(passwordEncoder.encode("wrong password"));
+    
+    //this is mocking the user Authentication
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    mvc.perform(delete("/user?password=" + password))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("Incorrect Password"));
+  }
 }
