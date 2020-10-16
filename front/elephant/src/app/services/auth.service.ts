@@ -26,10 +26,11 @@ export class AuthService {
   authenticate(): Observable<boolean> {
     return this.jwtClientService.authenticate().pipe(map(res => {
       if (res.body === true) {
+        console.log('Esta autenticado', res.body);
         return true;
       } else {
-        localStorage.setItem('user', undefined);
-        this.router.navigate(['/']);
+        console.log('No esta autenticado', res.body);
+        localStorage.removeItem('user');
         return false;
       }
     }));
