@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {SnackbarService} from '../../services/snackbar.service';
 import {UserService} from '../../services/user.service';
+import {AuthService} from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,6 +14,7 @@ export class NavbarComponent implements OnInit {
   constructor(private router: Router,
               private snackbar: SnackbarService,
               private userService: UserService,
+              private authService: AuthService,
   ) {
   }
 
@@ -29,13 +31,12 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.userService.logout().subscribe(res => {
-      if (res === 'Success') {
-        localStorage.removeItem('user');
-        this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
-      } else {
-        this.snackbar.openSnackbar('No se pudo cerrar sesion!');
-      }
-    }, error => {
+        if (res === 'Success') {
+          this.router.navigate(['']).then(() => this.snackbar.openSnackbar('Usted ha cerrado sesión correctamente!'));
+        } else {
+          this.snackbar.openSnackbar('No se pudo cerrar sesion!');
+        }
+      }, error => {
         this.snackbar.openSnackbar('No se pudo cerrar sesion!', 0);
         console.error(error);
       }
@@ -43,6 +44,8 @@ export class NavbarComponent implements OnInit {
   }
 
   isLoggedIn(): boolean {
+    console.log('local user', localStorage.getItem('user'));
+    console.log('auth', this.authService.authenticate());
     return localStorage.getItem('user') !== null;
   }
 }
