@@ -317,14 +317,6 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
-
-  private void mockUserAuthentication() {
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
-  }
   
   @Test
   public void deleteUser_WhenEverythingIsOk_ShouldReturn200() throws Exception {
@@ -333,11 +325,7 @@ public class UserControllerTest {
     user.setPassword(passwordEncoder.encode(password));
     
     //this is mocking the user Authentication
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
+    mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
     
     mvc.perform(delete("/user?password=" + password))
@@ -350,16 +338,19 @@ public class UserControllerTest {
     final User user = new User();
     user.setPassword(passwordEncoder.encode("wrong password"));
     
-    //this is mocking the user Authentication
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
+    mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
     
     mvc.perform(delete("/user?password=" + password))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("Incorrect Password"));
+  }
+  
+  private void mockUserAuthentication() {
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
   }
 }
