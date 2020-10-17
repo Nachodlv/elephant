@@ -43,6 +43,13 @@
   bottom: 10px;
 }
 
+.empty-notes {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  bottom: 250px;
+}
+
 ::ng-deep {
   .mat-focused .mat-form-field-label {
     /*change color of label*/
