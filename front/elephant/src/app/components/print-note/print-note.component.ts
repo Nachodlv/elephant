@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {Note} from '../../models/note-model';
+import {SnackbarService} from '../../services/snackbar.service';
 
 @Component({
   selector: 'app-print-note',
@@ -10,7 +11,9 @@ export class PrintNoteComponent implements OnInit, AfterViewInit {
 
   @Input() noteToPrint: Note;
 
-  constructor() {
+  constructor(
+    private snackBar: SnackbarService
+  ) {
   }
 
   ngOnInit(): void {
@@ -22,9 +25,13 @@ export class PrintNoteComponent implements OnInit, AfterViewInit {
 
   print(): void {
     document.body.innerHTML = document.getElementById('printable').innerHTML;
-    window.focus();
-    window.print();
-    window.close();
+    try {
+      window.focus();
+      window.print();
+      window.close();
+    } catch {
+      this.snackBar.openSnackbar('Ha ocurrido un error al imprimir la nota!', 0);
+    }
     location.reload();
   }
 
