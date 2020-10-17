@@ -22,13 +22,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private snackBar: SnackbarService,
     private authService: AuthService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
-    if (this.authService.authenticate()) {
-      this.router.navigate(['/']);
-    }
-
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -41,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
 
-    if (this.loginForm.invalid){
+    if (this.loginForm.invalid) {
       return;
     }
 
