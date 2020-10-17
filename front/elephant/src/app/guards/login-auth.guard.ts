@@ -19,14 +19,10 @@ export class LoginAuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (this.authService.authenticate()) {
-      console.log('Login true', this.authService.authenticate());
-      this.router.navigate(['/home']);
-      return false;
-    } else {
-      console.log('Login false', this.authService.authenticate());
-      return true;
-    }
+    return this.authService.authenticate().pipe(map(result => {
+      if (result) this.router.navigate(['/home']);
+      return !result;
+    }));
   }
 
 }
