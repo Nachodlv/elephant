@@ -1,6 +1,5 @@
 import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {Note} from '../../models/note-model';
-import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-print-note',
@@ -11,9 +10,7 @@ export class PrintNoteComponent implements OnInit, AfterViewInit {
 
   @Input() noteToPrint: Note;
 
-  constructor(
-    private router: Router
-  ) {
+  constructor() {
   }
 
   ngOnInit(): void {
@@ -24,16 +21,11 @@ export class PrintNoteComponent implements OnInit, AfterViewInit {
   }
 
   print(): void {
-    const printContents = document.getElementById('printable').innerHTML;
-    const originalContents = document.body.innerHTML;
-
-    document.body.innerHTML = printContents;
-
+    document.body.innerHTML = document.getElementById('printable').innerHTML;
+    window.focus();
     window.print();
-
-    document.body.innerHTML = originalContents;
-
-    this.router.navigate(['/home']);
+    window.close();
+    location.reload();
   }
 
 }

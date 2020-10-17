@@ -3,12 +3,13 @@
     <div class="print-header-content">
       <div class="print-header">
         <h1 class="print-title">{{noteToPrint.title}}</h1>
-        <app-tag-note
-          class="print-tag-note"
-          [noteId]="noteToPrint.uuid"
-          [tags]="noteToPrint.tags"
-        ></app-tag-note>
-        <h2 class="print-date">{{noteToPrint.created}}</h2>
+        <h2 class="print-date">{{'Fecha: ' + noteToPrint.created}}</h2>
+      </div>
+      <div class="flex-tags print-tags">
+        <span>Etiquetas: </span>
+        <div class="print-single-tag" *ngFor="let tag of noteToPrint.tags">
+          {{tag}}
+        </div>
       </div>
       <p class="print-content">{{noteToPrint.content}}</p>
     </div>
