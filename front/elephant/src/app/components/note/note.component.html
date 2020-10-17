@@ -35,7 +35,7 @@
           {{note.content}}
         </div>
         <mat-chip-list>
-          <mat-chip class="single-chip" *ngFor="let tag of note.tags">
+          <mat-chip class="single-chip" *ngFor="let tag of note.tags.slice(0,5)">
             {{tag}}
           </mat-chip>
         </mat-chip-list>
