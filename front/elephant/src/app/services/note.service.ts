@@ -61,6 +61,12 @@ export class NoteService {
     }));
   }
 
+  hasOwnerPermission(noteId): Observable<boolean> {
+    return this.getPermissions(noteId).pipe(map(res => {
+      return res === 'Owner';
+    }));
+  }
+
   startEdit(noteId): Observable<boolean> {
     return this.httpService.get(`/note/startEdit/${noteId}`).pipe(tap((_ => {
       }), err => console.error(err)

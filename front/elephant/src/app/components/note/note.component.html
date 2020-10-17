@@ -17,14 +17,14 @@
     <mat-card>
       <mat-card-title>
         {{note.title}}
-        <button mat-icon-button [matMenuTriggerFor]="menu" class="optionsButton">
+        <button mat-icon-button [matMenuTriggerFor]="menu" class="optionsButton" (click)="checkPermission(note)">
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item>
             <span>Imprimir</span>
           </button>
-          <button mat-menu-item (click)="deleteNote(note)">
+          <button mat-menu-item (click)="deleteNote(note)" *ngIf="isOwner">
             <span>Eliminar</span>
           </button>
         </mat-menu>
