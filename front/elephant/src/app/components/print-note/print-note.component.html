@@ -1,0 +1,19 @@
+<div id="printable" class="hidden">
+  <div class="print-container">
+    <div class="print-header-content">
+      <div class="print-header">
+        <h1 class="print-title">{{note.title}}</h1>
+        <h2 class="print-date">{{'Fecha: ' + note.created}}</h2>
+      </div>
+      <div class="flex-tags print-tags">
+        <span>Etiquetas: </span>
+        <span class="no-tags" *ngIf="note.tags.length === 0">No se han agregado etiquetas</span>
+        <div class="print-single-tag" *ngFor="let tag of note.tags">
+          {{tag}}
+        </div>
+      </div>
+      <p class="print-content">{{note.content ? note.content : 'No se ha agregado ningún contenido'}}</p>
+    </div>
+  </div>
+</div>
+

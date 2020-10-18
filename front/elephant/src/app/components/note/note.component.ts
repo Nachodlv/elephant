@@ -19,6 +19,8 @@ export class NoteComponent implements OnInit, OnDestroy {
   loaded = false;
   filterString = '';
 
+  noteToPrint: Note;
+
   isOwner = false;
 
   notesSubscription: Subscription;
@@ -99,5 +101,9 @@ export class NoteComponent implements OnInit, OnDestroy {
       console.error(error);
       this.snackBar.openSnackbar('Ha ocurrido un error al obtener los permisos sobre la nota', 0);
     });
+  }
+
+  printNote(note): void {
+    this.noteToPrint = note;
   }
 }
