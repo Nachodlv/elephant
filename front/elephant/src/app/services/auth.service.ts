@@ -28,8 +28,7 @@ export class AuthService {
       if (res.body === true) {
         return true;
       } else {
-        localStorage.setItem('user', undefined);
-        this.router.navigate(['/']);
+        localStorage.removeItem('user');
         return false;
       }
     }));
