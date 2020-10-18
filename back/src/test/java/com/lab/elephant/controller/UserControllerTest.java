@@ -4,10 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lab.elephant.model.EditUserDTO;
-import com.lab.elephant.model.Note;
-import com.lab.elephant.model.UpdatePasswordDto;
-import com.lab.elephant.model.User;
+import com.lab.elephant.model.*;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.*;
 import org.junit.Test;
@@ -328,7 +325,10 @@ public class UserControllerTest {
     mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
     
-    mvc.perform(delete("/user?password=" + password))
+    final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
+    
+    mvc.perform(delete("/user").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
   }
   
@@ -341,7 +341,10 @@ public class UserControllerTest {
     mockUserAuthentication();
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
     
-    mvc.perform(delete("/user?password=" + password))
+    final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
+    
+    mvc.perform(delete("/user").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("Incorrect Password"));
   }

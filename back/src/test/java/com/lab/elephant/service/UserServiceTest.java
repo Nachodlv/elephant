@@ -217,6 +217,28 @@ public class UserServiceTest {
   }
   
   @Test
+  public void getAllNotesMadeByUser_whenUserExists_ShouldReturnAllHisOwnNotes() {
+    final User user = new User();
+    
+    final Note note1 = new Note("note1");
+    final Note note2 = new Note("note2");
+    final Note note3 = new Note("note3");
+  
+    note1.setUuid(1);
+    final List<Permission> permissions = new ArrayList<>();
+    permissions.add(new Permission(user, note1, PermissionType.Owner));
+    permissions.add(new Permission(user, note2, PermissionType.Editor));
+    permissions.add(new Permission(user, note3, PermissionType.Viewer));
+    
+    Mockito.when(permissionService.findAllByUser(user)).thenReturn(permissions);
+    
+    final List<Note> notes = userService.getAllNotesMadeByUser(user);
+    
+    assertThat(notes.size()).isEqualTo(1);
+    assertThat(notes.get(0).getUuid()).isEqualTo(note1.getUuid());
+  }
+  
+  @Test
   public void delete_ShouldDeleteUserAndAllTheirNotes() {
     final User user = new User();
     final long id = 1;
@@ -244,7 +266,7 @@ public class UserServiceTest {
     
     Mockito.verify(userRepository, Mockito.times(1)).delete(user);
     Mockito.verify(noteService, Mockito.times(1)).deleteNote(note1.getUuid());
-    Mockito.verify(noteService, Mockito.times(1)).deleteNote(note2.getUuid());
-    Mockito.verify(noteService, Mockito.times(1)).deleteNote(note3.getUuid());
+    Mockito.verify(noteService, Mockito.times(0)).deleteNote(note2.getUuid());
+    Mockito.verify(noteService, Mockito.times(0)).deleteNote(note3.getUuid());
   }
 }

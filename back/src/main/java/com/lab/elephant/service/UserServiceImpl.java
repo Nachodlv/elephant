@@ -1,9 +1,6 @@
 package com.lab.elephant.service;
 
-import com.lab.elephant.model.EditUserDTO;
-import com.lab.elephant.model.Note;
-import com.lab.elephant.model.Permission;
-import com.lab.elephant.model.User;
+import com.lab.elephant.model.*;
 import com.lab.elephant.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -84,8 +81,18 @@ public class UserServiceImpl implements UserService {
     final Optional<User> optionalUser = getUser(id);
     if (optionalUser.isPresent()) {
       final User user = optionalUser.get();
-      for (Note note : getAllNotesByUser(user)) noteService.deleteNote(note.getUuid());
+      for (Note note : getAllNotesMadeByUser(user)) noteService.deleteNote(note.getUuid());
       userRepository.delete(user);
     }
+  }
+  
+  @Override
+  public List<Note> getAllNotesMadeByUser(User user) {
+    List<Permission> permissions = permissionService.findAllByUser(user);
+    List<Note> notes = new ArrayList<>();
+    for (Permission p : permissions)
+      if (p.getType().equals(PermissionType.Owner))
+        notes.add(p.getNote());
+    return notes;
   }
 }

@@ -26,7 +26,7 @@ public class User {
   private String password;
   
   @JsonIgnore
-  @OneToMany(mappedBy = "user", cascade = CascadeType.MERGE)
+  @OneToMany(mappedBy = "user", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
   private List<Permission> permissions = new ArrayList<>();
   
   @JsonIgnore

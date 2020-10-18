@@ -1,9 +1,6 @@
 package com.lab.elephant.controller;
 
-import com.lab.elephant.model.EditUserDTO;
-import com.lab.elephant.model.Note;
-import com.lab.elephant.model.UpdatePasswordDto;
-import com.lab.elephant.model.User;
+import com.lab.elephant.model.*;
 import com.lab.elephant.service.EmailService;
 import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.UserService;
@@ -93,7 +90,8 @@ public class UserController {
   }
 
   @DeleteMapping()
-  public void deleteUser(@RequestParam String password) {
+  public void deleteUser(@RequestBody DeleteUserDTO dto) {
+    final String password = dto.getPassword();
     final User user = getAuthenticatedUser();
     if (!passwordEncoder.matches(password, user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
