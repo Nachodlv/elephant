@@ -40,7 +40,6 @@ export class CommentComponent implements OnInit {
     } else {
       this.snackBar.openSnackbar('No se puede crear un comentario vacio. Intentelo nuevamente!', 2500);
     }
-    console.log('Comment value: ', this.comment.value);
     this.comment.setValue('');
   }
 

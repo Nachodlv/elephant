@@ -14,8 +14,8 @@
 
 .searchable-input {
   margin-top: 1%;
-  left: 43%;
-  width: 250px;
+  display: flex;
+  justify-content: center;
   text-align: center;
 }
 
@@ -64,6 +64,10 @@
   .mat-form-field-ripple {
     /*change color of underline when focused*/
     background-color: $elephant-green !important;
+  }
+
+  .mat-form-field-infix {
+    width: 250px !important;
   }
 }
 

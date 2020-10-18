@@ -16,7 +16,7 @@ export class CommentService {
   createComment(idNote, comment: Comment): Observable<Note> {
     return this.httpService.post('/comment/add/' + idNote, JSON.stringify(comment)).pipe(tap((_ => {
     }), err => {
-      console.log(err);
+      console.error(err);
     }), map(response => {
       return Note.fromJson(response.body);
     }));
