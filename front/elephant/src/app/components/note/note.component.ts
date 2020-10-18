@@ -65,7 +65,6 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   openNote(note): void {
-    console.log(note);
     this.router.navigate(['/note/', note.uuid]);
   }
 
