@@ -60,6 +60,7 @@ export class UserService {
     return this.httpService.post('/logout', '').pipe(tap((_ => {
       }), err => console.error(err)
     ), map(res => {
+      localStorage.removeItem('user');
       return 'Success';
     }));
   }

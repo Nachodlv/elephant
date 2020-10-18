@@ -22,7 +22,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private snackBar: SnackbarService,
     private authService: AuthService
-  ) { }
+  ) {
+  }
 
   ngOnInit(): void {
     this.loginForm = this.formBuilder.group({
@@ -37,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
 
-    if (this.loginForm.invalid){
+    if (this.loginForm.invalid) {
       return;
     }
 

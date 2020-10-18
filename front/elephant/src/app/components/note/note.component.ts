@@ -19,7 +19,10 @@ export class NoteComponent implements OnInit, OnDestroy {
   loaded = false;
   filterString = '';
 
+  isOwner = false;
+
   notesSubscription: Subscription;
+  hasOwnerPermissionSubscription: Subscription;
 
   constructor(
     private dialog: MatDialog,
@@ -35,6 +38,7 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.notesSubscription?.unsubscribe();
+    this.hasOwnerPermissionSubscription?.unsubscribe();
   }
 
   loadNotes(): void {
@@ -44,6 +48,7 @@ export class NoteComponent implements OnInit, OnDestroy {
     }, error => {
       console.error(error);
       this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar las notas!', 0);
+      this.loaded = true;
     });
   }
 
@@ -65,7 +70,6 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   openNote(note): void {
-    console.log(note);
     this.router.navigate(['/note/', note.uuid]);
   }
 
@@ -85,6 +89,15 @@ export class NoteComponent implements OnInit, OnDestroy {
           this.snackBar.openSnackbar('Ha ocurrido un error y la nota no se pudo eliminar.', 0);
         });
       }
+    });
+  }
+
+  checkPermission(note): void {
+    this.hasOwnerPermissionSubscription = this.noteService.hasOwnerPermission(note.uuid).subscribe(res => {
+      this.isOwner = res;
+    }, error => {
+      console.error(error);
+      this.snackBar.openSnackbar('Ha ocurrido un error al obtener los permisos sobre la nota', 0);
     });
   }
 }
