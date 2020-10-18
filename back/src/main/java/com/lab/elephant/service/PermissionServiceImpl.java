@@ -40,4 +40,9 @@ public class PermissionServiceImpl implements PermissionService {
     }
     return Optional.empty();
   }
+  
+  @Override
+  public List<Permission> findAllByUser(User user) {
+    return permissionRepository.findAllByUser(user);
+  }
 }
