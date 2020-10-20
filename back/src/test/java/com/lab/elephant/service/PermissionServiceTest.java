@@ -71,4 +71,11 @@ public class PermissionServiceTest {
     final Optional<PermissionType> permissionBetween = permissionService.getPermissionBetween(new User(), new Note());
     assertThat(permissionBetween.isPresent()).isFalse();
   }
+  
+  @Test
+  public void findAllByUser_ShouldCallThePermissionRepositoryToDoIt() {
+    final User user = new User();
+    permissionService.findAllByUser(user);
+    Mockito.verify(permissionRepository, Mockito.times(1)).findAllByUser(user);
+  }
 }

@@ -4,10 +4,7 @@ import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lab.elephant.model.EditUserDTO;
-import com.lab.elephant.model.Note;
-import com.lab.elephant.model.UpdatePasswordDto;
-import com.lab.elephant.model.User;
+import com.lab.elephant.model.*;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.*;
 import org.junit.Test;
@@ -317,7 +314,41 @@ public class UserControllerTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isNotFound());
   }
-
+  
+  @Test
+  public void deleteUser_WhenEverythingIsOk_ShouldReturn200() throws Exception {
+    final String password = "strong password";
+    final User user = new User();
+    user.setPassword(passwordEncoder.encode(password));
+    
+    //this is mocking the user Authentication
+    mockUserAuthentication();
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
+    
+    mvc.perform(delete("/user").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void deleteUser_WhenPasswordIsWrong_ShouldReturn401() throws Exception {
+    final String password = "strong password";
+    final User user = new User();
+    user.setPassword(passwordEncoder.encode("wrong password"));
+    
+    mockUserAuthentication();
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    
+    final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
+    
+    mvc.perform(delete("/user").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("Incorrect Password"));
+  }
+  
   private void mockUserAuthentication() {
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);

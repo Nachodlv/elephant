@@ -21,7 +21,7 @@
           <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>
+          <button mat-menu-item (click)="printNote(note)">
             <span>Imprimir</span>
           </button>
           <button mat-menu-item (click)="deleteNote(note)" *ngIf="isOwner">
@@ -35,7 +35,7 @@
           {{note.content ? note.content : 'No se ha agregado contenido'}}
         </div>
         <mat-chip-list>
-          <mat-chip class="single-chip" *ngFor="let tag of note.tags">
+          <mat-chip class="single-chip" *ngFor="let tag of note.tags.slice(0,4)">
             {{tag}}
           </mat-chip>
         </mat-chip-list>
@@ -45,3 +45,5 @@
 </mat-grid-list>
 
 <h2 *ngIf="(notes | filterNote:filterString).length === 0" class="empty-notes">No hay notas disponibles</h2>
+
+<app-print-note [noteToPrint]="noteToPrint" *ngIf="noteToPrint"></app-print-note>
