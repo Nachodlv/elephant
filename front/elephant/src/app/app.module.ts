@@ -26,6 +26,7 @@ import { FilterNotePipe } from './pipes/filter-note.pipe';
 import { DeleteNoteDialogComponent } from './components/delete-note-dialog/delete-note-dialog.component';
 import { EditNoteComponent } from './components/edit-note/edit-note.component';
 import { PrintNoteComponent } from './components/print-note/print-note.component';
+import {MarkdownModule} from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { PrintNoteComponent } from './components/print-note/print-note.component
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
