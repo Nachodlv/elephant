@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {HttpService} from './http.service';
 import {User} from '../models/user-model';
 import {map, tap} from 'rxjs/operators';
@@ -47,12 +47,13 @@ export class UserService {
         }), err => console.error(err)
       ));
   }
-  updateUserName(user, fullName): any{
-    if (fullName.trim()){
-    const firstName = fullName.split(' ').slice(0, -1).join(' ');
-    const lastName = fullName.split(' ').slice(-1).join(' ');
-    user.updateName(firstName, lastName);
-    return this.httpService.put('/user/editUser', {firstName, lastName} );
+
+  updateUserName(user, fullName): any {
+    if (fullName.trim()) {
+      const firstName = fullName.split(' ').slice(0, -1).join(' ');
+      const lastName = fullName.split(' ').slice(-1).join(' ');
+      user.updateName(firstName, lastName);
+      return this.httpService.put('/user/editUser', {firstName, lastName});
     }
   }
 
@@ -63,5 +64,10 @@ export class UserService {
       localStorage.removeItem('user');
       return 'Success';
     }));
+  }
+
+  deleteUser(userPassword): Observable<any> {
+    return of({});
+    // return this.httpService.put(`/user/delete`, JSON.stringify(userPassword));
   }
 }
