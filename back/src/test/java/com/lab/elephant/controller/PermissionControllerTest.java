@@ -354,7 +354,7 @@ public class PermissionControllerTest {
     
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getUsersWithPermissions(note)).willReturn(users);
-    given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
+    given(permissionService.getPermissionTypeBetween(user, note)).willReturn(Optional.of(permissionType));
     
     MvcResult result = mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isOk()).andReturn();
@@ -379,7 +379,7 @@ public class PermissionControllerTest {
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
   
     given(noteService.getUsersWithPermissions(note)).willReturn(users);
-    given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
+    given(permissionService.getPermissionTypeBetween(user, note)).willReturn(Optional.of(permissionType));
   
     mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isNotFound())
@@ -401,7 +401,7 @@ public class PermissionControllerTest {
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
   
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
-    given(permissionService.getPermissionBetween(user, note)).willReturn(Optional.of(permissionType));
+    given(permissionService.getPermissionTypeBetween(user, note)).willReturn(Optional.of(permissionType));
   
     mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isUnauthorized())
