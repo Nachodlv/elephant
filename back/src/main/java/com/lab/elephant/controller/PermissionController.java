@@ -81,33 +81,39 @@ public class PermissionController {
   }
   
   @PutMapping(path = "editPermissions/{noteId}")
-  public void editPermissions(@PathVariable long noteId, List<PermissionDTO> list) {
+  public void editPermissions(@PathVariable long noteId, @RequestBody EditPermissionDTO dto) {
     final Note note = getNote(noteId);
     final User user = getUser();
     checkOwnership(user, note);
-    
+  
+    final List<PermissionDTO> list = dto.getList();
+  
     for (PermissionDTO e : list) {
       final Optional<User> optionalUser = userService.getByEmail(e.getEmail());
       if (!optionalUser.isPresent())
+        //todo test this
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email doesn't exist");
       final User u = optionalUser.get();
       final Optional<PermissionType> optionalP = permissionService.getPermissionTypeBetween(u, note);
       if (!optionalP.isPresent())
+        //todo test this
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no Permissions with Note");
       
       if (!e.getType().equals("deleted")) {
         try {
           final PermissionType permissionType = PermissionType.valueOf(e.getType());
           if (permissionType.equals(PermissionType.Owner))
+            //todo test this
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Owner can't be changed");
         } catch (IllegalArgumentException ignored) {
+          //todo test this
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permission Type Not Found");
         }
       }
       permissionService.editRelationship(u, note, e.getType());
     }
   }
-  //todo falta testear este controller
+
   private Note getNote(long noteId) {
     final Optional<Note> optionalNote = noteService.getNote(noteId);
     if (!optionalNote.isPresent())

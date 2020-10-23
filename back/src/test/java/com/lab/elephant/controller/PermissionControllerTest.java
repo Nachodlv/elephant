@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,10 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @RunWith(SpringRunner.class)
@@ -75,13 +77,8 @@ public class PermissionControllerTest {
     final String email = "john@elephant.com";
     friend.setEmail(email);
     PermissionType permissionType = PermissionType.Viewer;
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
@@ -115,13 +112,8 @@ public class PermissionControllerTest {
     friend.setUuid(2);
     final String email = "john@elephant.com";
     friend.setEmail(email);
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
@@ -154,13 +146,8 @@ public class PermissionControllerTest {
     //creating other objects for sharing
     final String email = "john@elephant.com";
     PermissionType permissionType = PermissionType.Viewer;
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
   
@@ -194,13 +181,8 @@ public class PermissionControllerTest {
     final String email = "john@elephant.com";
     friend.setEmail(email);
     PermissionType permissionType = PermissionType.Viewer;
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
   
@@ -228,13 +210,8 @@ public class PermissionControllerTest {
     final String email = "john@elephant.com";
     friend.setEmail(email);
     PermissionType permissionType = PermissionType.Viewer;
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
   
@@ -269,13 +246,8 @@ public class PermissionControllerTest {
     friend.setUuid(2);
     friend.setEmail(email);
     PermissionType permissionType = PermissionType.Viewer;
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("notOwner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("notOwner")).willReturn(Optional.of(friend));
+    final String notOwner = mockUserAuthentication();
+    given(userService.getByEmail(notOwner)).willReturn(Optional.of(friend));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
@@ -314,13 +286,8 @@ public class PermissionControllerTest {
     
     final List<User> permissionUsers = new ArrayList<>();
     permissionUsers.add(friend);
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
     given(userService.getByEmail(email)).willReturn(Optional.of(friend));
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getOwner(note)).willReturn(Optional.of(owner));
@@ -344,13 +311,8 @@ public class PermissionControllerTest {
     final List<User> users = new ArrayList<>();
     final PermissionType permissionType = PermissionType.Viewer;
     users.add(user);
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
     
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getUsersWithPermissions(note)).willReturn(users);
@@ -370,13 +332,8 @@ public class PermissionControllerTest {
     final List<User> users = new ArrayList<>();
     final PermissionType permissionType = PermissionType.Viewer;
     users.add(user);
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
   
     given(noteService.getUsersWithPermissions(note)).willReturn(users);
     given(permissionService.getPermissionTypeBetween(user, note)).willReturn(Optional.of(permissionType));
@@ -392,13 +349,8 @@ public class PermissionControllerTest {
     final Note note = new Note();
     final User user = new User();
     final PermissionType permissionType = PermissionType.Viewer;
-    //this is to mock the logged in user
-    Authentication a = Mockito.mock(Authentication.class);
-    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
-    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
-    SecurityContextHolder.setContext(securityContext);
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
   
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(permissionService.getPermissionTypeBetween(user, note)).willReturn(Optional.of(permissionType));
@@ -406,5 +358,118 @@ public class PermissionControllerTest {
     mvc.perform(get("/" + noteId + "/permission"))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("User has no Permission"));
+  }
+  
+  @Test
+  public void allPermissions_WhenEverythingIsOk_ShouldReturn200() throws Exception {
+    final long noteId = 1;
+    final Note note = new Note();
+    final User user = new User();
+    final List<Permission> permissions = new ArrayList<>();
+    permissions.add(new Permission(user, note, PermissionType.Owner));
+    note.setPermissions(permissions);
+    
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
+    given(noteService.getOwner(note)).willReturn(Optional.of(user));
+  
+    final MvcResult result = mvc.perform(get("/allPermissions/" + noteId))
+            .andExpect(status().isOk()).andReturn();
+    final String contentAsString = result.getResponse().getContentAsString();
+  
+    List<PermissionDTO> permissionDTOS = new ArrayList<>();
+    permissions.forEach(e -> permissionDTOS.add(new PermissionDTO(e)));
+    
+    final String s = new ObjectMapper().writeValueAsString(permissionDTOS);
+    assertThat(contentAsString).isEqualTo(s);
+  }
+  //todo de aca a vvvvvvv
+  @Test
+  public void allPermissions_WhenNoteDoesNotExist_ShouldReturn404() throws Exception {
+    final long noteId = 1;
+    mvc.perform(get("/allPermissions/" + noteId))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
+  }
+  
+  @Test
+  public void allPermissions_WhenNoteHasNoOwner_ShouldReturn500() throws Exception {
+    final long noteId = 1;
+    final String email = mockUserAuthentication();
+    given(noteService.getNote(noteId)).willReturn(Optional.of(new Note()));
+    given(userService.getByEmail(email)).willReturn(Optional.of(new User()));
+    mvc.perform(get("/allPermissions/" + noteId))
+            .andExpect(status().isInternalServerError())
+            .andExpect(status().reason("Note has no owner"));
+  }
+  
+  @Test
+  public void allPermissions_WhenUserIsNotOwner_ShouldReturn401() throws Exception {
+    final long noteId = 1;
+    final User user = new User();
+    final Note note = new Note();
+    final String email = mockUserAuthentication();
+    user.setUuid(2);
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
+    given(noteService.getOwner(note)).willReturn(Optional.of(new User()));
+    mvc.perform(get("/allPermissions/" + noteId))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User is not the Note owner"));
+  }
+  //todo hasta aca ^^^^
+  
+  
+  //todo devuelvo el user owner en la lista de permissions?
+  @Test
+  public void editPermissions_WhenEverythingIsOk_ShouldReturn200() throws Exception {
+    final long noteId = 1;
+    final Note note = new Note();
+    final User owner = new User();
+  
+    final String email1 = "a@a.com";
+    final String email2 = "b@b.com";
+
+    final User user1 = new User("user1", "one", email1, "asd");
+    final User user2 = new User("user2", "two", email2, "asd");
+    
+    final Permission p1 = new Permission(user1, note, PermissionType.Editor);
+    final Permission p2 = new Permission(user2, note, PermissionType.Viewer);
+    
+    final List<PermissionDTO> list = new ArrayList<>();
+    list.add(new PermissionDTO(email1, "Viewer"));
+    list.add(new PermissionDTO(email2, "Editor"));
+    
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
+    
+    given(userService.getByEmail(email1)).willReturn(Optional.of(user1));
+    given(userService.getByEmail(email2)).willReturn(Optional.of(user2));
+    
+    given(permissionService.getPermissionBetween(user1, note)).willReturn(Optional.of(p1));
+    given(permissionService.getPermissionBetween(user2, note)).willReturn(Optional.of(p2));
+    
+    final String json = new ObjectMapper().writeValueAsString(new EditPermissionDTO(list));
+    
+    final MvcResult result = mvc.perform(put("/editPermissions/" + noteId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isOk())
+            .andReturn();
+    
+  }
+  
+  
+  private String mockUserAuthentication() {
+    final String email = "user";
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn(email);
+    SecurityContextHolder.setContext(securityContext);
+    return email;
   }
 }
