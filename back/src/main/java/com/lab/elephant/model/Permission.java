@@ -1,6 +1,7 @@
 package com.lab.elephant.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
@@ -10,7 +11,8 @@ public class Permission {
   @GeneratedValue
   private long uuid;
 
-  @ManyToOne(fetch = FetchType.LAZY)
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+  @ManyToOne(fetch = FetchType.EAGER)
   private User user;
 
   @JsonIgnore

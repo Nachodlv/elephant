@@ -25,17 +25,19 @@
 
 .edit-button {
   background-color: $elephant-green;
+  color: $elephant-white;
 }
 
 .change-password {
   background-color: $elephant-green;
+  color: $elephant-white;
   height: 2.2rem;
   font-size: 80%;
 }
 
 .delete-user {
-  border-color: $elephant-red;
-  color: $elephant-red;
+  background-color: $elephant-red;
+  color: $elephant-white;
   height: 2.2rem;
   font-size: 80%;
 }
