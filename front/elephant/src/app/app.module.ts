@@ -26,6 +26,7 @@ import { FilterNotePipe } from './pipes/filter-note.pipe';
 import { DeleteNoteDialogComponent } from './components/delete-note-dialog/delete-note-dialog.component';
 import { EditNoteComponent } from './components/edit-note/edit-note.component';
 import { PrintNoteComponent } from './components/print-note/print-note.component';
+import { DeleteUserDialogComponent } from './components/delete-user-dialog/delete-user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { PrintNoteComponent } from './components/print-note/print-note.component
     FilterNotePipe,
     DeleteNoteDialogComponent,
     PrintNoteComponent,
+    DeleteUserDialogComponent,
   ],
   imports: [
     BrowserModule,
