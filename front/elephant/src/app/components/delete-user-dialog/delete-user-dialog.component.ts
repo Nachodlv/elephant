@@ -40,6 +40,7 @@ export class DeleteUserDialogComponent implements OnInit, OnDestroy {
       this.snackBar.openSnackbar('¡Se ha eliminado su cuenta con éxito!', 0);
       this.dialogRef.close();
       this.router.navigate(['']);
+      location.reload();
     }, error => {
       console.error(error);
       if (error.status === 401) {
