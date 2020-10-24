@@ -89,7 +89,7 @@ public class UserController {
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
   }
 
-  @DeleteMapping()
+  @PutMapping()
   public void deleteUser(@RequestBody DeleteUserDTO dto) {
     final String password = dto.getPassword();
     final User user = getAuthenticatedUser();

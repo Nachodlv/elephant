@@ -1,0 +1,32 @@
+@import "../../_vars.scss";
+
+.dialog-container {
+  text-align: center;
+}
+
+.title {
+  font-size: 1vw;
+}
+
+.actions-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.close-btn {
+  background-color: $elephant-red;
+  color: $elephant-white
+}
+
+.update-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
+}
+
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
