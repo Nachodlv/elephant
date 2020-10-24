@@ -76,7 +76,10 @@ public class PermissionController {
     final User user = getUser();
     checkOwnership(user, note);
     final List<PermissionDTO> list = new ArrayList<>();
-    note.getPermissions().forEach(e -> list.add(new PermissionDTO(e)));
+    for (Permission p : note.getPermissions())
+      if (!p.getType().equals(PermissionType.Owner))
+        list.add(new PermissionDTO(p));
+    
     return list;
   }
   
@@ -91,14 +94,12 @@ public class PermissionController {
     for (PermissionDTO e : list) {
       final Optional<User> optionalUser = userService.getByEmail(e.getEmail());
       if (!optionalUser.isPresent())
-        //todo test this
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email doesn't exist");
       final User u = optionalUser.get();
       final Optional<PermissionType> optionalP = permissionService.getPermissionTypeBetween(u, note);
       if (!optionalP.isPresent())
-        //todo test this
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no Permissions with Note");
-      
+      //todo test vvv
       if (!e.getType().equals("deleted")) {
         try {
           final PermissionType permissionType = PermissionType.valueOf(e.getType());
