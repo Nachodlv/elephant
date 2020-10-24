@@ -67,7 +67,11 @@ export class UserService {
   }
 
   deleteUser(userPassword): Observable<any> {
-    return of({});
-    // return this.httpService.put(`/user/delete`, JSON.stringify(userPassword));
+    return this.httpService.put('/user', JSON.stringify(userPassword)).pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      localStorage.removeItem('user');
+      return res;
+    }));
   }
 }

@@ -38,9 +38,8 @@ export class DeleteUserDialogComponent implements OnInit, OnDestroy {
   onSubmit(): void {
     this.deleteUserSubscription = this.userService.deleteUser(this.form.value).subscribe(res => {
       this.snackBar.openSnackbar('¡Se ha eliminado su cuenta con éxito!', 0);
-      localStorage.removeItem('user');
       this.dialogRef.close();
-      this.router.navigate(['/']);
+      this.router.navigate(['']);
     }, error => {
       console.error(error);
       if (error.status === 401) {
