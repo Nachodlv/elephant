@@ -327,7 +327,7 @@ public class UserControllerTest {
     
     final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
     
-    mvc.perform(delete("/user").content(json)
+    mvc.perform(put("/user").content(json)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
   }
@@ -343,7 +343,7 @@ public class UserControllerTest {
     
     final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
     
-    mvc.perform(delete("/user").content(json)
+    mvc.perform(put("/user").content(json)
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("Incorrect Password"));

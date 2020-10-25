@@ -1,0 +1,20 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title class="title">¿Está seguro que quiere eliminar su cuenta?
+    Esta acción es <b>irreversible</b> y todos <b>sus datos se perderán.</b>
+    Ingrese su contraseña para continuar:
+  </h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div mat-dialog-content class="dialog-content">
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password"/>
+      </mat-form-field>
+    </div>
+
+    <div class="actions-div" mat-dialog-actions>
+      <button class="close-btn" mat-button mat-dialog-close>Cancelar</button>
+      <button class="update-btn" mat-button type="submit" [disabled]="!form.valid">Confirmar</button>
+    </div>
+  </form>
+</div>
+
