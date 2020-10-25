@@ -4,6 +4,7 @@ import {User} from '../../models/user-model';
 import {UpdatePasswordDialogComponent} from '../update-password-dialog/update-password-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {SnackbarService} from '../../services/snackbar.service';
+import {DeleteUserDialogComponent} from '../delete-user-dialog/delete-user-dialog.component';
 
 
 @Component({
@@ -49,6 +50,13 @@ export class SeeProfileComponent implements OnInit {
 
   openUpdatePasswordDialog(): void {
     this.dialog.open(UpdatePasswordDialogComponent, {
+      width: '26vw',
+      position: {top: '10%'}
+    });
+  }
+
+  openDeleteUserDialog(): void {
+    this.dialog.open(DeleteUserDialogComponent, {
       width: '26vw',
       position: {top: '10%'}
     });
