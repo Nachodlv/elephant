@@ -99,15 +99,12 @@ public class PermissionController {
       final Optional<PermissionType> optionalP = permissionService.getPermissionTypeBetween(u, note);
       if (!optionalP.isPresent())
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no Permissions with Note");
-      //todo test vvv
       if (!e.getType().equals("deleted")) {
         try {
           final PermissionType permissionType = PermissionType.valueOf(e.getType());
           if (permissionType.equals(PermissionType.Owner))
-            //todo test this
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Owner can't be changed");
         } catch (IllegalArgumentException ignored) {
-          //todo test this
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permission Type Not Found");
         }
       }
