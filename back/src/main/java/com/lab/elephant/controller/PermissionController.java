@@ -100,7 +100,7 @@ public class PermissionController {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no Permissions with Note");
       if (optionalP.get().equals(PermissionType.Owner))
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has Owner permission that can't be changed");
-      if (!e.getType().equals("deleted")) {
+      if (!e.getType().equals("delete")) {
         try {
           final PermissionType permissionType = PermissionType.valueOf(e.getType());
           if (permissionType.equals(PermissionType.Owner))
