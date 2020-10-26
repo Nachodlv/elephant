@@ -2,6 +2,7 @@ package com.lab.elephant.repository;
 
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.Permission;
+import com.lab.elephant.model.PermissionType;
 import com.lab.elephant.model.User;
 import com.lab.elephant.service.NoteService;
 import org.junit.Before;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -57,4 +59,31 @@ public class PermissionRepositoryTest {
     assertThat(permissions.get(1).getNote().getUuid()).isEqualTo(note2.getUuid());
   }
 
+  @Test
+  public void findByUserAndNote_WhenPermissionExists_ShouldReturnOptionalOfThatPermission() {
+    final User user = new User("firstName", "lastName", "em@ail", "password");
+    final Note note = new Note("title1");
+    final Note otherNote = new Note("otherNote");
+    userRepository.save(user);
+    noteRepository.save(note);
+    noteRepository.save(otherNote);
+    final Permission permission = new Permission(user, note, PermissionType.Owner);
+    
+    permissionRepository.save(permission);
+    permissionRepository.save(new Permission(user, otherNote, PermissionType.Viewer));
+    
+    final Optional<Permission> optionalPermission = permissionRepository.findByUserAndNote(user, note);
+    assertThat(optionalPermission.isPresent()).isTrue();
+    assertThat(optionalPermission.get().getUuid()).isEqualTo(permission.getUuid());
+  }
+  
+  @Test
+  public void findByUserAndNote_WhenPermissionDoesntExist_ShouldReturnEmptyOptional() {
+    final User user = new User("firstName", "lastName", "em@ail", "password");
+    final Note note = new Note("title1");
+    userRepository.save(user);
+    noteRepository.save(note);
+    final Optional<Permission> p = permissionRepository.findByUserAndNote(user, note);
+    assertThat(p.isPresent()).isFalse();
+  }
 }

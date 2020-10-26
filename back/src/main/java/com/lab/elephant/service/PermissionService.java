@@ -14,7 +14,11 @@ public interface PermissionService {
   
   void addRelationship(User user, Note note, PermissionType type);
   
-  Optional<PermissionType> getPermissionBetween(User user, Note note);
+  Optional<PermissionType> getPermissionTypeBetween(User user, Note note);
   
   List<Permission> findAllByUser(User user);
+  
+  void editRelationship(User user, Note note, String newPermissionType);
+  
+  Optional<Permission> getPermissionBetween(User user, Note note);
 }
