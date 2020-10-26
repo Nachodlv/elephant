@@ -9,9 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -89,9 +87,10 @@ public class PermissionController {
     final User user = getUser();
     checkOwnership(user, note);
   
-    final List<PermissionDTO> list = dto.getList();
+    final List<PermissionDTO> permissionDTOList = dto.getList();
+    final Map<User, String> map = new HashMap<>();
   
-    for (PermissionDTO e : list) {
+    for (PermissionDTO e : permissionDTOList) {
       final Optional<User> optionalUser = userService.getByEmail(e.getEmail());
       if (!optionalUser.isPresent())
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email doesn't exist");
@@ -99,17 +98,20 @@ public class PermissionController {
       final Optional<PermissionType> optionalP = permissionService.getPermissionTypeBetween(u, note);
       if (!optionalP.isPresent())
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has no Permissions with Note");
+      if (optionalP.get().equals(PermissionType.Owner))
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User has Owner permission that can't be changed");
       if (!e.getType().equals("deleted")) {
         try {
           final PermissionType permissionType = PermissionType.valueOf(e.getType());
           if (permissionType.equals(PermissionType.Owner))
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Owner can't be changed");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "The Owner permission can't be assigned to a new user");
         } catch (IllegalArgumentException ignored) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Permission Type Not Found");
         }
       }
-      permissionService.editRelationship(u, note, e.getType());
+      map.put(u, e.getType());
     }
+    map.forEach((u, s) -> permissionService.editRelationship(u, note, s));
   }
 
   private Note getNote(long noteId) {

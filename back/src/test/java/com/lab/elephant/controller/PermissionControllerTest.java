@@ -607,7 +607,7 @@ public class PermissionControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(json))
             .andExpect(status().isUnauthorized())
-            .andExpect(status().reason("Owner can't be changed"));
+            .andExpect(status().reason("The Owner permission can't be assigned to a new user"));
   }
   
   @Test
@@ -647,6 +647,45 @@ public class PermissionControllerTest {
             .content(json))
             .andExpect(status().isNotFound())
             .andExpect(status().reason("Permission Type Not Found"));
+  }
+  
+  @Test
+  public void editPermissions_WhenTryingToChangeOwnerPermission_ShouldReturn400() throws Exception {
+    final long noteId = 1;
+    final Note note = new Note();
+    final User owner = new User();
+    
+    final String email1 = "a@a.com";
+    final String email2 = "b@b.com";
+    
+    final User user1 = new User("user1", "one", email1, "asd");
+    final User user2 = new User("user2", "two", email2, "asd");
+    
+    final Permission p1 = new Permission(user1, note, PermissionType.Owner);
+    final Permission p2 = new Permission(user2, note, PermissionType.Viewer);
+    
+    final List<PermissionDTO> list = new ArrayList<>();
+    list.add(new PermissionDTO(email1, "Viewer"));
+    list.add(new PermissionDTO(email2, "Editor"));
+    
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+    final String ownerEmail = mockUserAuthentication();
+    given(userService.getByEmail(ownerEmail)).willReturn(Optional.of(owner));
+    
+    given(userService.getByEmail(email1)).willReturn(Optional.of(user1));
+    given(userService.getByEmail(email2)).willReturn(Optional.of(user2));
+    
+    given(permissionService.getPermissionTypeBetween(user1, note)).willReturn(Optional.of(p1.getType()));
+    given(permissionService.getPermissionTypeBetween(user2, note)).willReturn(Optional.of(p2.getType()));
+    
+    final String json = new ObjectMapper().writeValueAsString(new EditPermissionDTO(list));
+    
+    mvc.perform(put("/editPermissions/" + noteId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(json))
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason("User has Owner permission that can't be changed"));
   }
   
   private String mockUserAuthentication() {
