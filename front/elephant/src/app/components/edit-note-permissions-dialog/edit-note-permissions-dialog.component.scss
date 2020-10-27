@@ -1,0 +1,45 @@
+@import "../../_vars.scss";
+
+.dialog-container {
+  text-align: center;
+}
+
+.title {
+  font-size: 3vh;
+}
+
+.actions-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.close-btn {
+  background-color: $elephant-red;
+  color: $elephant-white
+}
+
+.update-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
+}
+
+.dialog-content {
+  display: flex;
+}
+
+.email-container {
+  width: 60%;
+  align-self: center;
+  margin-top: 1%;
+}
+
+.clear-icon {
+  margin-left: 3%;
+  align-self: center;
+  cursor: pointer;
+}
+
+.mode-selector {
+  margin-top: 2%;
+}
+
