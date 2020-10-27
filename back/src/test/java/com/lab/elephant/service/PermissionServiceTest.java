@@ -52,7 +52,7 @@ public class PermissionServiceTest {
   }
   
   @Test
-  public void getPermissionBetween_WhenPermissionExists_ShouldReturnOptionalOfIt() {
+  public void getPermissionTypeBetween_WhenPermissionExists_ShouldReturnOptionalOfIt() {
     final User user = new User();
     final Note note = new Note();
     final Permission p = new Permission(user, note, PermissionType.Editor);
@@ -61,14 +61,14 @@ public class PermissionServiceTest {
     user.setPermissions(permissionList);
     note.setPermissions(permissionList);
     
-    final Optional<PermissionType> permissionBetween = permissionService.getPermissionBetween(user, note);
+    final Optional<PermissionType> permissionBetween = permissionService.getPermissionTypeBetween(user, note);
     assertThat(permissionBetween.isPresent()).isTrue();
     assertThat(permissionBetween.get()).isEqualTo(p.getType());
   }
   
   @Test
-  public void getPermissionBetween_WhenPermissionDoesNotExist_ShouldReturnEmptyOptional() {
-    final Optional<PermissionType> permissionBetween = permissionService.getPermissionBetween(new User(), new Note());
+  public void getPermissionTypeBetween_WhenPermissionDoesNotExist_ShouldReturnEmptyOptional() {
+    final Optional<PermissionType> permissionBetween = permissionService.getPermissionTypeBetween(new User(), new Note());
     assertThat(permissionBetween.isPresent()).isFalse();
   }
   
@@ -77,5 +77,38 @@ public class PermissionServiceTest {
     final User user = new User();
     permissionService.findAllByUser(user);
     Mockito.verify(permissionRepository, Mockito.times(1)).findAllByUser(user);
+  }
+  
+  @Test
+  public void getPermissionBetween_ShouldCallThePermissionRepositoryToDoIt() {
+    final User user = new User();
+    final Note note = new Note();
+    permissionService.getPermissionBetween(user, note);
+    Mockito.verify(permissionRepository, Mockito.times(1)).findByUserAndNote(user, note);
+  }
+  
+  @Test
+  public void editRelationship_WhenNewPermissionTypeIsValidAndNotDeleted_ShouldSaveEditedRelationShip() {
+    final User user = new User();
+    final Note note = new Note();
+    final Permission p = new Permission(user, note, PermissionType.Editor);
+    final String newPermissionType = "Viewer";
+    Mockito.when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
+    
+    permissionService.editRelationship(user, note, newPermissionType);
+    assertThat(p.getType()).isEqualTo(PermissionType.valueOf(newPermissionType));
+    Mockito.verify(permissionRepository, Mockito.times(1)).save(p);
+  }
+  
+  @Test
+  public void editRelationship_WhenNewPermissionTypeIsDeleted_ShouldDeleteTheRelationShip() {
+    final User user = new User();
+    final Note note = new Note();
+    final Permission p = new Permission(user, note, PermissionType.Editor);
+    final String newPermissionType = "delete";
+    Mockito.when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
+    
+    permissionService.editRelationship(user, note, newPermissionType);
+    Mockito.verify(permissionRepository, Mockito.times(1)).delete(p);
   }
 }

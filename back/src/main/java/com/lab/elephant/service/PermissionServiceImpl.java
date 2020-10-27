@@ -32,7 +32,7 @@ public class PermissionServiceImpl implements PermissionService {
   }
   
   @Override
-  public Optional<PermissionType> getPermissionBetween(User user, Note note) {
+  public Optional<PermissionType> getPermissionTypeBetween(User user, Note note) {
     final List<Permission> permissions = note.getPermissions();
     for (Permission p : permissions) {
       if (user.getUuid() == p.getUser().getUuid())
@@ -44,5 +44,23 @@ public class PermissionServiceImpl implements PermissionService {
   @Override
   public List<Permission> findAllByUser(User user) {
     return permissionRepository.findAllByUser(user);
+  }
+  
+  @Override
+  public void editRelationship(User user, Note note, String newPermissionType) {
+    final Optional<Permission> optionalPermission = getPermissionBetween(user, note);
+    if (!optionalPermission.isPresent()) return;
+    Permission p = optionalPermission.get();
+    if (newPermissionType.equals("delete"))
+      permissionRepository.delete(p);
+    else {
+      p.setType(PermissionType.valueOf(newPermissionType));
+      permissionRepository.save(p);
+    }
+  }
+  
+  @Override
+  public Optional<Permission> getPermissionBetween(User user, Note note) {
+    return permissionRepository.findByUserAndNote(user, note);
   }
 }
