@@ -19,16 +19,25 @@ public class EmailServiceImpl implements EmailService {
   private JavaMailSender emailSender;
   
   @Override
-  public void sendSimpleEmail(User user) {
-    final String subject = "Welcome to Elephant " + user.getFirstName() + " " + user.getLastName();
-    final String text = getHtml();
+  public void sendWelcomeEmail(User user) {
+    final String subject = "Bienvenido a Elephant " + user.getFirstName() + " " + user.getLastName();
+    final String welcomeHtmlPath = "src/main/resources/verification-email.html";
+    final String text = getHtml(welcomeHtmlPath);
     sendEmail(user.getEmail(), subject, text);
   }
   
-  private String getHtml() {
+  @Override
+  public void sendUpdatedPasswordEmail(User user) {
+    final String subject = user.getFirstName() + " "+ user.getLastName() +" tu contraseña de Elephant ha sido actualizada exitosamente";
+    final String updatedPasswordPath = "src/main/resources/updated-password-email.html";
+    final String text = getHtml(updatedPasswordPath);
+    sendEmail(user.getEmail(), subject, text);
+  }
+  
+  private String getHtml(String path) {
     StringBuilder data = new StringBuilder();
     try {
-      File myObj = new File("src/main/resources/verification-email.html");
+      File myObj = new File(path);
       Scanner myReader = new Scanner(myObj);
       while (myReader.hasNextLine()) {
         data.append(myReader.nextLine());

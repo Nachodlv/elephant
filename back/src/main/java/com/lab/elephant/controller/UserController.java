@@ -40,7 +40,7 @@ public class UserController {
               HttpStatus.CONFLICT, "Email already in use");
 
     userService.addUser(user);
-    emailService.sendSimpleEmail(user);
+//    emailService.sendWelcomeEmail(user);
   }
 
   @GetMapping()
@@ -70,6 +70,7 @@ public class UserController {
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
     userService.updatePassword(user.getEmail(), dto.getNewPassword());
+    emailService.sendUpdatedPasswordEmail(user);
   }
 
   @PutMapping("/editUser")
