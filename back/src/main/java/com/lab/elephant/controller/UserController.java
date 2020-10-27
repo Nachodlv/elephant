@@ -40,7 +40,7 @@ public class UserController {
               HttpStatus.CONFLICT, "Email already in use");
 
     userService.addUser(user);
-//    emailService.sendWelcomeEmail(user);
+    emailService.sendWelcomeEmail(user);
   }
 
   @GetMapping()
