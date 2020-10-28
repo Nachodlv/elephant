@@ -28,6 +28,9 @@ import { EditNoteComponent } from './components/edit-note/edit-note.component';
 import { PrintNoteComponent } from './components/print-note/print-note.component';
 import {MarkdownModule} from 'ngx-markdown';
 import { DeleteUserDialogComponent } from './components/delete-user-dialog/delete-user-dialog.component';
+import 'prismjs/prism';
+import 'prismjs/components/prism-typescript.min.js';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 
 @NgModule({
   declarations: [

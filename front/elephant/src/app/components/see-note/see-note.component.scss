@@ -1,4 +1,7 @@
 @import "../../_vars.scss";
+@import "~prismjs/themes/prism-okaidia.css";
+@import '~prismjs/plugins/line-numbers/prism-line-numbers.css';
+@import '~prismjs/plugins/line-highlight/prism-line-highlight.css';
 
 .container {
   display: flex;
@@ -102,4 +105,8 @@
   flex: auto;
   margin-right: 200px;
   margin-left: 30px;
+}
+
+ul, li{
+  color:red;
 }
