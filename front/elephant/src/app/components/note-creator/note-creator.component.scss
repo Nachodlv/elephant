@@ -1,44 +1,32 @@
-.close-button {
-  margin-top: -37%;
-  margin-left: 85%;
-  cursor: pointer;
+@import "../../_vars.scss";
+
+.dialog-container {
+  text-align: center;
+}
+
+.close-btn {
+  background-color: $elephant-red;
+  color: $elephant-white
+}
+
+.share-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
 }
 
 .dialog-title {
-  text-align: center;
-  margin-bottom: -22%;
-  font-size: 23px;
+  font-size: 1.5vw;
 }
 
-.create-note-form {
-  margin-top: 10%;
-  margin-left: 30%;
-  font-size: 20px;
+.dialog-content {
+  display: flex;
 }
 
-.create-button {
-  margin-left: 60%;
-  height: 2rem;
-  border-radius: 0.3rem;
-  background-color: white;
-  font-size: 15px;
-  border: 1px solid;
-  cursor: pointer;
+.name-input {
+  width: 100%;
 }
 
-.create-input {
-  margin-left: -10%;
-  width: 12rem;
-  border-radius: 0.4rem;
-  height: 1.5rem;
-  font-size: 15px;
-  border: 1px solid;
-  display: block;
+.actions-div {
+  display: flex;
+  justify-content: space-between;
 }
-
-.create-label {
-  margin-left: -10%;
-  display: block;
-  margin-bottom: 3%;
-}
-
