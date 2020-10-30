@@ -5,7 +5,7 @@ import com.auth0.jwt.JWT;
 import com.lab.elephant.model.BlackListedToken;
 import com.lab.elephant.security.UserDetailsServiceImpl;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
-import com.lab.elephant.service.UserService;
+import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,10 @@ public class JWTControllerTest {
   private MockMvc mvc;
   @MockBean
   private BlackListedTokenServiceImpl tokenService;
-  // UserService, UserDetailsServiceImpl and BCryptPasswordEncoder
+  // UserServiceImpl, UserDetailsServiceImpl and BCryptPasswordEncoder
   // are not used but are needed for the tests to run.
   @MockBean
-  private UserService userService;
+  private UserServiceImpl userService;
   @MockBean
   private UserDetailsServiceImpl userDetailsService;
   @MockBean
