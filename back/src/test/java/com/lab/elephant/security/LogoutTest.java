@@ -3,13 +3,13 @@ package com.lab.elephant.security;
 import com.auth0.jwt.JWT;
 import com.lab.elephant.model.BlackListedToken;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
+import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,12 +28,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
   @Autowired
   private MockMvc mvc;
   @MockBean
-  private UserDetailsServiceImpl userDetailsService;
-  @Autowired
-  private BCryptPasswordEncoder passwordEncoder;
-  // BlackListedTokenServiceImpl is not used but is needed for the test to run
-  @MockBean
   private BlackListedTokenServiceImpl tokenService;
+  //MockBeans bellow are not used but are needed for the test to run
+  @MockBean
+  private UserServiceImpl userService;
+  @MockBean
+  private UserDetailsServiceImpl userDetailsService;
   
   @Test
   public void logoutWithToken_ShouldReturn_200() throws Exception {

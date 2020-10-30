@@ -5,10 +5,7 @@ import com.lab.elephant.model.Note;
 import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
-import com.lab.elephant.service.BlackListedTokenServiceImpl;
-import com.lab.elephant.service.NoteServiceImpl;
-import com.lab.elephant.service.PermissionService;
-import com.lab.elephant.service.UserService;
+import com.lab.elephant.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -49,7 +46,7 @@ public class NoteControllerTest {
   @MockBean
   private NoteServiceImpl noteService;
   @MockBean
-  private UserService userService;
+  private UserServiceImpl userService;
   // All of the MockBeans below
   // are not used but are necessary for the tests to run.
   @MockBean

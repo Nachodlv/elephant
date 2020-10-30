@@ -4,7 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.lab.elephant.model.BlackListedToken;
+import com.lab.elephant.model.User;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
+import com.lab.elephant.service.UserServiceImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,9 +24,11 @@ import static com.lab.elephant.security.SecurityConstants.*;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
   private final BlackListedTokenServiceImpl tokenService;
-  public JWTAuthorizationFilter(AuthenticationManager authManager, BlackListedTokenServiceImpl tokenService) {
+  private final UserServiceImpl userService;
+  public JWTAuthorizationFilter(AuthenticationManager authManager, BlackListedTokenServiceImpl tokenService, UserServiceImpl userService) {
     super(authManager);
     this.tokenService = tokenService;
+    this.userService = userService;
   }
   
   @Override
@@ -60,7 +64,8 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                 .build()
                 .verify(token.replace(TOKEN_PREFIX, ""))
                 .getSubject();
-        if (user != null) {
+        final Optional<User> optionalEmail = userService.getByEmail(user);
+        if (optionalEmail.isPresent()) {
           return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
         }
       } catch (TokenExpiredException ignored) {}
