@@ -1,6 +1,7 @@
 package com.lab.elephant.security;
 
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
+import com.lab.elephant.service.UserServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,10 +31,12 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   private final UserDetailsServiceImpl userDetailsService;
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
   private final BlackListedTokenServiceImpl blackListedTokenService;
-  public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, BlackListedTokenServiceImpl blackListedTokenService) {
+  private final UserServiceImpl userService;
+  public WebSecurityConfiguration(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, BlackListedTokenServiceImpl blackListedTokenService, UserServiceImpl userService) {
     this.userDetailsService = userDetailsService;
     this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     this.blackListedTokenService = blackListedTokenService;
+    this.userService = userService;
   }
   
   @Override
@@ -43,7 +46,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
             .anyRequest().authenticated()
             .and()
             .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-            .addFilter(new JWTAuthorizationFilter(authenticationManager(), blackListedTokenService))
+            .addFilter(new JWTAuthorizationFilter(authenticationManager(), blackListedTokenService, userService))
             // this disables session creation on Spring Security
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and().logout()

@@ -3,10 +3,7 @@ package com.lab.elephant.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.*;
 import com.lab.elephant.security.UserDetailsServiceImpl;
-import com.lab.elephant.service.BlackListedTokenServiceImpl;
-import com.lab.elephant.service.NoteService;
-import com.lab.elephant.service.PermissionService;
-import com.lab.elephant.service.UserService;
+import com.lab.elephant.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -45,7 +42,7 @@ public class PermissionControllerTest {
   @MockBean
   private PermissionService permissionService;
   @MockBean
-  private UserService userService;
+  private UserServiceImpl userService;
   @MockBean
   private NoteService noteService;
   // All of the MockBeans below
