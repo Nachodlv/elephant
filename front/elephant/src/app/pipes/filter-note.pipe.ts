@@ -11,19 +11,7 @@ export class FilterNotePipe implements PipeTransform {
       note.tags.some(tag => tag.toLowerCase().includes(filter));
   }
 
-  static sortNotesByFavourite(noteList: Note[]): Note[] {
-    return noteList.slice().sort((a: Note, b: Note) => {
-      if (a.pinUp) {
-        return -1;
-      } else if (b.pinUp) {
-        return 1;
-      }
-      return 0;
-    });
-  }
-
   transform(notes: Note[], filter?: string): any {
-    notes = FilterNotePipe.sortNotesByFavourite(notes);
     if (!notes || !filter) return notes;
     return notes.filter(note => FilterNotePipe.containsFilterNote(note, filter.toLowerCase()));
   }

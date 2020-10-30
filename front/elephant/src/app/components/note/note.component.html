@@ -16,9 +16,7 @@
   <mat-grid-tile *ngFor="let note of notes | filterNote:filterString">
     <mat-card>
       <mat-card-title>
-<!--        <i class="material-icons pinUp-icon" *ngIf="note.pinUp">push_pin</i>-->
-        <mat-icon *ngIf="note.pinUp" class="star-pinUp">star</mat-icon>
-        <mat-icon *ngIf="!note.pinUp">star_border</mat-icon>
+        <i class="material-icons pinUp-icon" *ngIf="note.pinUp" (click)="toggleStickNote(note)">push_pin</i>
         {{note.title}}
         <button mat-icon-button [matMenuTriggerFor]="menu" class="optionsButton" (click)="checkPermission(note)">
           <mat-icon>more_vert</mat-icon>
@@ -26,7 +24,7 @@
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="toggleStickNote(note)">
             <span *ngIf="!note.pinUp">Fijar</span>
-            <span *ngIf="note.pinUp">Desfijar</span>
+            <span *ngIf="note.pinUp">No Fijar</span>
           </button>
           <button mat-menu-item (click)="printNote(note)">
             <span>Imprimir</span>

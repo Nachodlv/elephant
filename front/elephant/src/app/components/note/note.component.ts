@@ -46,7 +46,7 @@ export class NoteComponent implements OnInit, OnDestroy {
   loadNotes(): void {
     this.notesSubscription = this.noteService.getAllNotes().subscribe(res => {
       this.notes = this.resolveNotesData(res);
-      // this.sortNotes(this.notes);
+      this.sortNotes(this.notes);
       this.loaded = true;
     }, error => {
       console.error(error);
@@ -114,18 +114,18 @@ export class NoteComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       note.pinUp = !note.pinUp;
       this.notes[index] = note;
-      // this.sortNotes(this.notes);
+      this.sortNotes(this.notes);
     }
   }
 
-  // sortNotes(noteList: Note[]): void {
-  //   noteList.sort((a: Note, b: Note) => {
-  //     if (a.pinUp) {
-  //       return -1;
-  //     } else if (b.pinUp) {
-  //       return 1;
-  //     }
-  //     return 0;
-  //   });
-  // }
+  sortNotes(noteList: Note[]): void {
+    noteList.sort((a: Note, b: Note) => {
+      if (a.pinUp) {
+        return -1;
+      } else if (b.pinUp) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 }
