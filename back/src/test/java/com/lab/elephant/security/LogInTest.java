@@ -3,6 +3,7 @@ package com.lab.elephant.security;
 import com.lab.elephant.model.User;
 import com.lab.elephant.model.UserDetailsImpl;
 import com.lab.elephant.service.BlackListedTokenServiceImpl;
+import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
   private UserDetailsServiceImpl userDetailsService;
   @Autowired
   private BCryptPasswordEncoder passwordEncoder;
-  // BlackListedTokenServiceImpl is not used but is needed for the test to run
+  //MockBeans bellow are not used but are needed for the test to run
   @MockBean
   private BlackListedTokenServiceImpl tokenService;
+  @MockBean
+  private UserServiceImpl userService;
   
   @Test
   public void logIn_withValidUser_ShouldReturn_200() throws Exception {
