@@ -26,6 +26,8 @@
 .see-card-text {
   font-size: 1vw;
   margin-top: 6% !important;
+  overflow: hidden;
+  margin-bottom: 5%;
 }
 
 .flex-col {
@@ -36,6 +38,7 @@
 .card-content {
   height: 90%;
   justify-content: space-between;
+  width: 100%;
 }
 
 .optionsButton {
