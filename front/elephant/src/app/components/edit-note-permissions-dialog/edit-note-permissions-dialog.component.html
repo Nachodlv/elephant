@@ -1,5 +1,8 @@
 <div class="dialog-container">
   <h2 mat-dialog-title class="title">Cambiar permisos</h2>
+  <div *ngIf="permissions.length === 0">
+    <h2>No se han otorgado permisos en esta nota</h2>
+  </div>
   <div mat-dialog-content class="dialog-content" *ngFor="let permission of permissions;let i = index">
     <div appearance="outline" class="email-container">
       <h2>{{permission.email}}</h2>
@@ -20,7 +23,7 @@
 
   <div class="actions-div" mat-dialog-actions>
     <button class="close-btn" mat-button mat-dialog-close>Cancelar</button>
-    <button class="update-btn" mat-button type="submit" (click)="onSubmit()">Confirmar cambios</button>
+    <button class="update-btn" mat-button type="submit" [disabled]="permissions.length === 0" (click)="onSubmit()">Confirmar cambios</button>
   </div>
 </div>
 
