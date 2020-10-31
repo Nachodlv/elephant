@@ -27,6 +27,7 @@ import { DeleteNoteDialogComponent } from './components/delete-note-dialog/delet
 import { EditNoteComponent } from './components/edit-note/edit-note.component';
 import { PrintNoteComponent } from './components/print-note/print-note.component';
 import { DeleteUserDialogComponent } from './components/delete-user-dialog/delete-user-dialog.component';
+import { EditNotePermissionsDialogComponent } from './components/edit-note-permissions-dialog/edit-note-permissions-dialog.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { DeleteUserDialogComponent } from './components/delete-user-dialog/delet
     DeleteNoteDialogComponent,
     PrintNoteComponent,
     DeleteUserDialogComponent,
+    EditNotePermissionsDialogComponent,
   ],
   imports: [
     BrowserModule,
