@@ -109,7 +109,6 @@ export class NoteComponent implements OnInit, OnDestroy {
   }
 
   toggleStickNote(note: Note): void {
-    console.log('note', note);
     const index = this.notes.indexOf(note);
     if (index >= 0) {
       note.pinUp = !note.pinUp;
@@ -120,12 +119,15 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   sortNotes(noteList: Note[]): void {
     noteList.sort((a: Note, b: Note) => {
-      if (a.pinUp) {
+      if (a.pinUp && !b.pinUp)
         return -1;
-      } else if (b.pinUp) {
+      else if (b.pinUp && !a.pinUp)
         return 1;
-      }
-      return 0;
+
+      if (new Date(a.created) > new Date(b.created))
+        return -1;
+      else
+        return 1;
     });
   }
 }
