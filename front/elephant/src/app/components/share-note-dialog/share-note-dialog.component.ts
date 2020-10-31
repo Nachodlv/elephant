@@ -1,5 +1,5 @@
-import {Component, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, FormGroupDirective, Validators} from '@angular/forms';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Subscription} from 'rxjs';
 import {NoteService} from '../../services/note.service';
 import {SnackbarService} from '../../services/snackbar.service';
@@ -38,7 +38,7 @@ export class ShareNoteDialogComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     this.shareSubscription = this.noteService.shareNote(this.data.noteId, this.shareForm.value).subscribe(res => {
-      this.snackBar.openSnackbar('¡Se ha compartido con exito!', 0);
+      this.snackBar.openSnackbar('¡Se ha compartido con éxito!', 0);
       this.dialogRef.close();
     }, error => {
       if (error.status === 404) {

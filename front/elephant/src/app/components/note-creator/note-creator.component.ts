@@ -4,6 +4,7 @@ import {SnackbarService} from '../../services/snackbar.service';
 import {NoteService} from '../../services/note.service';
 import {Router} from '@angular/router';
 import {Note} from '../../models/note-model';
+import {MatDialogRef} from '@angular/material/dialog';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class NoteCreatorComponent implements OnInit {
               private snackBar: SnackbarService,
               private noteService: NoteService,
               private router: Router,
+              public dialogRef: MatDialogRef<NoteCreatorComponent>
   ) {
   }
 
@@ -28,14 +30,11 @@ export class NoteCreatorComponent implements OnInit {
 
   }
 
-  disabled(): boolean {
-    return this.noteForm.value.title === '';
-  }
-
   createNote(): void {
     const title = this.noteForm.value.title;
     this.noteService.createNote(new Note(null, title)).subscribe(res => {
       this.snackBar.openSnackbar('¡Creación de Nota Exitosa!', 0);
+      this.dialogRef.close();
       this.router.navigate(['/note/', res.uuid]);
     }, error => {
       this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);

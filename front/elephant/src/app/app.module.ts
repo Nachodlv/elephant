@@ -31,6 +31,7 @@ import { DeleteUserDialogComponent } from './components/delete-user-dialog/delet
 import 'prismjs/prism';
 import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
+import { EditNotePermissionsDialogComponent } from './components/edit-note-permissions-dialog/edit-note-permissions-dialog.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +55,7 @@ import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
     DeleteNoteDialogComponent,
     PrintNoteComponent,
     DeleteUserDialogComponent,
+    EditNotePermissionsDialogComponent,
   ],
   imports: [
     BrowserModule,
