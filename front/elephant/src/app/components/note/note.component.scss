@@ -50,6 +50,11 @@
   bottom: 250px;
 }
 
+.pinUp-icon {
+  max-height: 20px;
+  font-size: 20px;
+}
+
 ::ng-deep {
   .mat-focused .mat-form-field-label {
     /*change color of label*/

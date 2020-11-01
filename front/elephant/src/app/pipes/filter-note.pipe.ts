@@ -11,11 +11,8 @@ export class FilterNotePipe implements PipeTransform {
       note.tags.some(tag => tag.toLowerCase().includes(filter));
   }
 
-  transform(notes: Note[], filter: string): any {
-    if (!notes || !filter) {
-      return notes;
-    }
-
+  transform(notes: Note[], filter?: string): any {
+    if (!notes || !filter) return notes;
     return notes.filter(note => FilterNotePipe.containsFilterNote(note, filter.toLowerCase()));
   }
 }
