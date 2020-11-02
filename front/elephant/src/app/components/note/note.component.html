@@ -37,7 +37,9 @@
 
       <mat-card-content class="flex-col card-content" (click)="openNote(note)">
         <div class="see-card-text">
+          <markdown>
           {{note.content ? note.content : 'No se ha agregado contenido'}}
+          </markdown>
         </div>
         <mat-chip-list>
           <mat-chip class="single-chip" *ngFor="let tag of note.tags.slice(0,4)">

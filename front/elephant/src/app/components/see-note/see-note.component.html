@@ -10,7 +10,7 @@
       ></app-tag-note>
       <h2 class="date">{{created}}</h2>
     </div>
-    <p class="content" #target>{{content}}</p>
+    <markdown class="content" [data] = "content"> </markdown>
   </div>
   <div>
     <mat-divider [vertical]="true" class="divider"></mat-divider>
