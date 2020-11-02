@@ -106,4 +106,16 @@ export class NoteComponent implements OnInit, OnDestroy {
   printNote(note): void {
     this.noteToPrint = note;
   }
+  duplicate(note: Note): void{
+    const title = 'Copy - ' + note.title;
+    this.noteService.createDuplicate(new Note(null, title, note.content, null, note.tags)).subscribe(res => {
+      this.snackBar.openSnackbar('¡Creación de Nota duplicada exitosa!', 0);
+      this.refresh();
+    }, error => {
+      this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
+    });
+  }
+  public refresh(): void {
+    window.location.reload();
+  }
 }

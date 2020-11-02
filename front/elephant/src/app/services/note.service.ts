@@ -25,6 +25,9 @@ export class NoteService {
       return Note.fromJson(response.body);
     }));
   }
+  createDuplicate(note: Note): Observable<Note>{
+    return of(note);
+  }
 
   getNote(id): Observable<Note> {
     return this.httpService.get(`/note/${id}`).pipe(tap((_ => {
