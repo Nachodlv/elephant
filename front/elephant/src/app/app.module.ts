@@ -26,7 +26,11 @@ import { FilterNotePipe } from './pipes/filter-note.pipe';
 import { DeleteNoteDialogComponent } from './components/delete-note-dialog/delete-note-dialog.component';
 import { EditNoteComponent } from './components/edit-note/edit-note.component';
 import { PrintNoteComponent } from './components/print-note/print-note.component';
+import {MarkdownModule} from 'ngx-markdown';
 import { DeleteUserDialogComponent } from './components/delete-user-dialog/delete-user-dialog.component';
+import 'prismjs/prism';
+import 'prismjs/components/prism-typescript.min.js';
+import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import { EditNotePermissionsDialogComponent } from './components/edit-note-permissions-dialog/edit-note-permissions-dialog.component';
 
 @NgModule({
@@ -62,6 +66,7 @@ import { EditNotePermissionsDialogComponent } from './components/edit-note-permi
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
