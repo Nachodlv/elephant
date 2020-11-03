@@ -1,6 +1,5 @@
 package com.lab.elephant.controller;
 
-import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,10 +26,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
-import static com.lab.elephant.security.SecurityConstants.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,7 +48,10 @@ public class UserControllerTest {
   private TokenServiceImpl tokenService;
   @MockBean
   private NoteServiceImpl noteService;
-
+  //the MockBean bellow is not used but it is necessary for the test to run
+  @MockBean
+  private PermissionService permissionService;
+  
   private final ObjectMapper o = new ObjectMapper().configure(MapperFeature.USE_ANNOTATIONS, false);
 
   @TestConfiguration
@@ -121,57 +124,17 @@ public class UserControllerTest {
   public void getUser_whenUserDoesExist_ShouldReturnTheUser() throws Exception {
     User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
 
-    userService.addUser(user);
-
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
     final String noteJson = o.writeValueAsString(user);
 
     given(userService.getUser(1L)).willReturn(Optional.of(user));
     given(userService.getByEmail(user.getEmail())).willReturn(Optional.of(user));
 
-    String token = JWT.create().withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .sign(HMAC512(SECRET.getBytes()));
-
-    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
-
     mvc.perform(get("/user").content(noteJson)
-            .header("Authorization", TOKEN_PREFIX + token)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
-  }
-
-  @Test
-  public void getUser_whenTokenNotSend_ShouldReturnBadRequest() throws Exception {
-    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
-
-    userService.addUser(user);
-
-    final String noteJson = o.writeValueAsString(user);
-    given(userService.getUser(1L)).willReturn(Optional.of(user));
-
-    mvc.perform(get("/user").content(noteJson)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isBadRequest());
-  }
-
-  @Test
-  public void getUser_whenUserNotExists_ShouldReturnNotFound() throws Exception {
-    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
-
-    String token = JWT.create().withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .sign(HMAC512(SECRET.getBytes()));
-
-    final String noteJson = o.writeValueAsString(user);
-    given(userService.getUser(1L)).willReturn(Optional.of(user));
-
-    mvc.perform(get("/user").content(noteJson)
-            .header("Authorization", TOKEN_PREFIX + token)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isNotFound());
   }
 
   @Test
@@ -184,8 +147,8 @@ public class UserControllerTest {
 
     user.setPassword(passwordEncoder.encode(oldPassword));
 
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
 
     mvc.perform(put("/user/updatePassword").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -203,8 +166,8 @@ public class UserControllerTest {
 
     user.setPassword(passwordEncoder.encode(userPassword));
 
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
 
     mvc.perform(put("/user/updatePassword").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -222,8 +185,8 @@ public class UserControllerTest {
     final String json = o.writeValueAsString(dto);
 
     //this is mocking the user Authentication
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
 
     mvc.perform(put("/user/editUser").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -236,8 +199,8 @@ public class UserControllerTest {
     final String json = o.writeValueAsString(new EditUserDTO());
 
     //this is mocking the user Authentication
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(new User()));
 
     mvc.perform(put("/user/editUser").content(json)
             .contentType(MediaType.APPLICATION_JSON))
@@ -255,9 +218,8 @@ public class UserControllerTest {
     noteService.addNote(note1, user);
     noteService.addNote(note2, user);
     noteService.addNote(note3, user);
-    mockUserAuthentication();
-
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
 
     given(userService.getAllNotesByUser(user)).willReturn(Arrays.asList(note1, note2, note3));
     given(userService.getUser(1L)).willReturn(Optional.of(user));
@@ -270,49 +232,28 @@ public class UserControllerTest {
     given(noteService.getUsersWithPermissions(note2)).willReturn(Collections.singletonList(user));
     given(noteService.getUsersWithPermissions(note3)).willReturn(Collections.singletonList(user));
 
-    String token = JWT.create().withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .sign(HMAC512(SECRET.getBytes()));
+    final Permission p1 = new Permission(user, note1, PermissionType.Owner, true);
+    final Permission p2 = new Permission(user, note2, PermissionType.Editor, false);
+    final Permission p3 = new Permission(user, note3, PermissionType.Viewer, true);
 
-    given(tokenService.getEmailByToken(token)).willReturn(user.getEmail());
+    given(permissionService.getPermissionBetween(user, note1)).willReturn(Optional.of(p1));
+    given(permissionService.getPermissionBetween(user, note2)).willReturn(Optional.of(p2));
+    given(permissionService.getPermissionBetween(user, note3)).willReturn(Optional.of(p3));
 
     MvcResult result = mvc.perform(get("/user/notes")
-            .header("Authorization", TOKEN_PREFIX + token)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk()).andReturn();
 
     String json = result.getResponse().getContentAsString();
 
-    List<Note> notes = o.readValue(json, new TypeReference<List<Note>>() {
+    List<NoteDTO> notes = o.readValue(json, new TypeReference<List<NoteDTO>>() {
     });
 
     assertThat(notes.size()).isEqualTo(3);
-    assertThat(notes.get(0).getUuid()).isEqualTo(note1.getUuid());
-    assertThat(notes.get(1).getUuid()).isEqualTo(note2.getUuid());
-    assertThat(notes.get(2).getUuid()).isEqualTo(note3.getUuid());
-  }
-
-  @Test
-  public void getAllNotesByUser_whenUserNotExists_ShouldReturnNotFound() throws Exception {
-    User user = new User("maxi", "perez", "maxi@gmail.com", "qwerty");
-
-    //this is mocking the user Authentication
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.empty());
-
-    String token = JWT.create().withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-            .sign(HMAC512(SECRET.getBytes()));
-
-    final String noteJson = o.writeValueAsString(user);
-    given(userService.getUser(1L)).willReturn(Optional.of(user));
-
-    mvc.perform(get("/user/notes").content(noteJson)
-            .header("Authorization", TOKEN_PREFIX + token)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isNotFound());
+    assertThat(notes.get(0)).isEqualToComparingFieldByField(new NoteDTO(note1, true));
+    assertThat(notes.get(1)).isEqualToComparingFieldByField(new NoteDTO(note2, false));
+    assertThat(notes.get(2)).isEqualToComparingFieldByField(new NoteDTO(note3, true));
   }
   
   @Test
@@ -322,8 +263,8 @@ public class UserControllerTest {
     user.setPassword(passwordEncoder.encode(password));
     
     //this is mocking the user Authentication
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
     
     final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
     
@@ -337,9 +278,9 @@ public class UserControllerTest {
     final String password = "strong password";
     final User user = new User();
     user.setPassword(passwordEncoder.encode("wrong password"));
-    
-    mockUserAuthentication();
-    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+  
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
     
     final String json = new ObjectMapper().writeValueAsString(new DeleteUserDTO(password));
     
@@ -349,11 +290,13 @@ public class UserControllerTest {
             .andExpect(status().reason("Incorrect Password"));
   }
   
-  private void mockUserAuthentication() {
+  private String mockUserAuthentication() {
+    final String email = "user";
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
-    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn(email);
     SecurityContextHolder.setContext(securityContext);
+    return email;
   }
 }
