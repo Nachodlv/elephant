@@ -1,8 +1,7 @@
 package com.lab.elephant.controller;
 
-import com.lab.elephant.model.EditUserDTO;
-import com.lab.elephant.model.UpdatePasswordDto;
-import com.lab.elephant.model.User;
+import com.lab.elephant.model.*;
+import com.lab.elephant.service.EmailService;
 import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -13,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
@@ -24,11 +24,12 @@ public class UserController {
   private final UserService userService;
   private final TokenService tokenService;
   private final BCryptPasswordEncoder passwordEncoder;
-  
-  public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder) {
+  private final EmailService emailService;
+  public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
     this.userService = userService;
     this.tokenService = tokenService;
     this.passwordEncoder = passwordEncoder;
+    this.emailService = emailService;
   }
 
   @PostMapping(path = "/create")
@@ -39,6 +40,7 @@ public class UserController {
               HttpStatus.CONFLICT, "Email already in use");
 
     userService.addUser(user);
+    emailService.sendWelcomeEmail(user);
   }
 
   @GetMapping()
@@ -64,19 +66,43 @@ public class UserController {
 
   @PutMapping("/updatePassword")
   public void updatePassword(@Valid @RequestBody UpdatePasswordDto dto) {
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
-    
+    final User user = getAuthenticatedUser();
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
     userService.updatePassword(user.getEmail(), dto.getNewPassword());
+    emailService.sendUpdatedPasswordEmail(user);
   }
-  
+
   @PutMapping("/editUser")
   public void editUser(@Valid @RequestBody EditUserDTO dto) {
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
-    
+    final User user = getAuthenticatedUser();
     userService.editUser(user.getEmail(), dto);
+  }
+
+  @GetMapping("/notes")
+  public List<Note> getAllNotesByUser() {
+    final String mail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Optional<User> optionalUser = userService.getByEmail(mail);
+    if (optionalUser.isPresent()) {
+      final User user = optionalUser.get();
+      return userService.getAllNotesByUser(user);
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+  }
+
+  @PutMapping()
+  public void deleteUser(@RequestBody DeleteUserDTO dto) {
+    final String password = dto.getPassword();
+    final User user = getAuthenticatedUser();
+    if (!passwordEncoder.matches(password, user.getPassword()))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
+    userService.delete(user.getUuid());
+  }
+  
+  private User getAuthenticatedUser() {
+    final String mail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    Optional<User> optionalUser = userService.getByEmail(mail);
+    //this .get() is not checked because we know by the JWTFilter that the user exists.
+    return optionalUser.get();
   }
 }

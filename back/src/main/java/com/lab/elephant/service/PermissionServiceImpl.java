@@ -8,6 +8,7 @@ import com.lab.elephant.repository.PermissionRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
@@ -28,5 +29,38 @@ public class PermissionServiceImpl implements PermissionService {
     user.setPermissions(userPermissions);
     note.setPermissions(notePermissions);
     permissionRepository.save(p);
+  }
+  
+  @Override
+  public Optional<PermissionType> getPermissionTypeBetween(User user, Note note) {
+    final List<Permission> permissions = note.getPermissions();
+    for (Permission p : permissions) {
+      if (user.getUuid() == p.getUser().getUuid())
+        return Optional.of(p.getType());
+    }
+    return Optional.empty();
+  }
+  
+  @Override
+  public List<Permission> findAllByUser(User user) {
+    return permissionRepository.findAllByUser(user);
+  }
+  
+  @Override
+  public void editRelationship(User user, Note note, String newPermissionType) {
+    final Optional<Permission> optionalPermission = getPermissionBetween(user, note);
+    if (!optionalPermission.isPresent()) return;
+    Permission p = optionalPermission.get();
+    if (newPermissionType.equals("delete"))
+      permissionRepository.delete(p);
+    else {
+      p.setType(PermissionType.valueOf(newPermissionType));
+      permissionRepository.save(p);
+    }
+  }
+  
+  @Override
+  public Optional<Permission> getPermissionBetween(User user, Note note) {
+    return permissionRepository.findByUserAndNote(user, note);
   }
 }

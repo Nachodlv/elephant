@@ -1,4 +1,7 @@
 @import "../../_vars.scss";
+@import "~prismjs/themes/prism-okaidia.css";
+@import '~prismjs/plugins/line-numbers/prism-line-numbers.css';
+@import '~prismjs/plugins/line-highlight/prism-line-highlight.css';
 
 .container {
   display: flex;
@@ -54,6 +57,14 @@
   display: flex;
   flex-direction: column;
   width: 25%;
+}
+
+.edit-note-btn {
+  background-color: $elephant-green;
+  color: $elephant-white;
+  width: 60%;
+  margin-top: 3%;
+  align-self: center;
 }
 
 /* show comment style */

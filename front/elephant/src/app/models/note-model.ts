@@ -5,6 +5,7 @@ export class Note {
     public content?: string,
     public created?: string,
     public tags?: string[],
+    public pinUp?: boolean,
   ) {
   }
 

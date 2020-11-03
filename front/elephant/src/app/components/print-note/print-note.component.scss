@@ -1,0 +1,68 @@
+@import "../../_vars.scss";
+
+::ng-deep {
+  body {
+    -webkit-print-color-adjust: exact !important;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+.print-container {
+  display: flex;
+  flex-direction: row;
+  margin: 2% 4% 0 4%;
+}
+
+.print-header-content {
+  width: 100%;
+}
+
+.print-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.print-title {
+  font-size: 30px;
+}
+
+.print-date {
+  margin-right: 2%;
+  font-size: 20px;
+}
+
+.flex-tags {
+  display: flex;
+  align-items: baseline;
+}
+
+.print-content {
+  font-size: 20px;
+  margin-top: 6%;
+  margin-right: 2%;
+  word-spacing: 5px;
+  line-height: 30px;
+}
+
+.print-tags {
+  font-size: 18px;
+  margin-top: 2% !important;
+  margin-bottom: 2% !important;
+  flex-flow: wrap;
+}
+
+.print-single-tag {
+  background-color: $elephant-light-grey;
+  margin: 1%;
+  padding: 8px;
+  border-radius: 20%;
+}
+
+.no-tags {
+  margin-left: 1%;
+}

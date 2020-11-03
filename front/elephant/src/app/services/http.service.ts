@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class HttpService {
 
   private readonly baseUrl: string;
 
-  get authToken(): string {
+  get authToken(): string | null | undefined {
     return localStorage.getItem('user');
   }
 
@@ -35,6 +36,14 @@ export class HttpService {
 
   public get(url: string, options?: any, ignoreBaseUrl?: boolean): Observable<HttpResponse<any>> {
     return this.http.get((ignoreBaseUrl ? '' : this.baseUrl) + url, {headers: this.requestOptions(options), observe: 'response'});
+  }
+
+  public getText(url: string, options?: any, ignoreBaseUrl?: boolean): Observable<HttpResponse<any>> {
+    return this.http.get((ignoreBaseUrl ? '' : this.baseUrl) + url, {
+      headers: this.requestOptions(options),
+      observe: 'response',
+      responseType: 'text'
+    });
   }
 
   public getImage(url: string, options?: any, ignoreBaseUrl?: boolean): Observable<any> {
@@ -69,12 +78,16 @@ export class HttpService {
     return (this.http.options(this.baseUrl + url, {headers: this.requestOptions(options), observe: 'response'}));
   }
 
-  private requestOptions(options?: any) {
+  private requestOptions(options?: any): HttpHeaders {
     const authHeader = {Authorization: `Bearer ${this.authToken}`};
     if (options) {
-      return new HttpHeaders(Object.assign(options, authHeader));
+      return isNotNullOrUndefined(this.authToken) ?
+        new HttpHeaders(Object.assign(options, authHeader)) :
+        new HttpHeaders(Object.assign(options));
     } else {
-      return new HttpHeaders(Object.assign(this.DEFAULT_HEADERS, authHeader));
+      return isNotNullOrUndefined(this.authToken) ?
+        new HttpHeaders(Object.assign(this.DEFAULT_HEADERS, authHeader)) :
+        new HttpHeaders(Object.assign(this.DEFAULT_HEADERS));
     }
   }
 }

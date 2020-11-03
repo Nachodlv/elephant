@@ -7,6 +7,7 @@ import {ShareNoteDialogComponent} from '../share-note-dialog/share-note-dialog.c
 import {Subscription} from 'rxjs';
 import {Comment} from '../../models/comment-model';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
+import {EditNotePermissionsDialogComponent} from '../edit-note-permissions-dialog/edit-note-permissions-dialog.component';
 
 @Component({
   selector: 'app-see-note',
@@ -27,11 +28,15 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
   noteLoading = true;
 
   comments: Comment[] = [];
-
   hasComments = false;
+
+  hasEditPermission = false;
+  hasOwnerPermission = false;
 
   noteSubscription: Subscription;
   commentsSubscription: Subscription;
+  setEditPermissionSubscription: Subscription;
+  setOwnerPermissionSubscription: Subscription;
 
   constructor(
     private noteService: NoteService,
@@ -47,11 +52,15 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
 
     this.loadNote();
     this.loadComments();
+    this.setEditPermission();
+    this.setOwnerPermission();
   }
 
   ngOnDestroy(): void {
     this.noteSubscription?.unsubscribe();
     this.commentsSubscription?.unsubscribe();
+    this.setEditPermissionSubscription?.unsubscribe();
+    this.setOwnerPermissionSubscription?.unsubscribe();
   }
 
   ngAfterViewChecked(): void {
@@ -68,7 +77,8 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.noteSubscription = this.noteService.getNote(this.id).subscribe(res => {
       this.title = res.title;
       this.content = res.content;
-      if (isNotNullOrUndefined(res.tags)){
+      this.setNoteToEditData();
+      if (isNotNullOrUndefined(res.tags)) {
         this.tags = res.tags;
       }
 
@@ -84,6 +94,10 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
       }
       this.router.navigate(['/home']);
     });
+  }
+
+  private setNoteToEditData(): void {
+    this.noteService.saveNoteToEdit({title: this.title, content: this.content});
   }
 
   openDialog(): void {
@@ -133,4 +147,31 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
     }
   }
 
+  setEditPermission(): void {
+    this.setEditPermissionSubscription = this.noteService.hasEditPermission(this.id).subscribe(res => {
+      this.hasEditPermission = res;
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  setOwnerPermission(): void {
+    this.setOwnerPermissionSubscription = this.noteService.hasOwnerPermission(this.id).subscribe(res => {
+      this.hasOwnerPermission = res;
+    }, error => {
+      console.error(error);
+    });
+  }
+
+  startEdit(): void {
+    this.router.navigate(['/note/edit/', this.id]);
+  }
+
+  changePermissions(): void {
+    this.dialog.open(EditNotePermissionsDialogComponent, {
+      width: '40%',
+      position: {top: '10%'},
+      data: {noteId: this.id}
+    });
+  }
 }

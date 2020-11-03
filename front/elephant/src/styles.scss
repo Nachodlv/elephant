@@ -1,18 +1,17 @@
 @import "app/vars";
+@import "~prismjs/themes/prism-okaidia.css";
+@import '~prismjs/plugins/line-numbers/prism-line-numbers.css';
+@import '~prismjs/plugins/line-highlight/prism-line-highlight.css';
 
 html {
   height: 100%;
 }
 
-li{
-  display: block;
-}
-
-.clickable{
+.clickable {
   cursor: pointer;
 }
 
-.overflow-auto{
+.overflow-auto {
   overflow: auto;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -25,22 +24,64 @@ body {
 
 h1, h2, h3, h4 {
   font-family: Calibri, arial, serif;
-  text-shadow: 0 3px 3px rgba(255,255,255,0.5);
+  text-shadow: 0 3px 3px rgba(255, 255, 255, 0.5);
   color: $elephant-light-black;
 }
+
 h1 {
   font-size: 36px;
   letter-spacing: 5px;
 }
+
 p {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
   color: $elephant-light-black;
 }
+
 span {
   font-family: "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 // Form Validation
-input.ng-dirty.ng-invalid{
+input.ng-dirty.ng-invalid {
   border: 1px solid $elephant-dark-red;
 }
+
+// Angular Material Cards Styling
+
+.mat-card {
+  background-color: $elephant-light-grey;
+  -webkit-box-shadow: -1px 7px 14px -2px rgba(0, 0, 0, 0.41) !important;
+  box-shadow: -1px 7px 14px -2px rgba(0, 0, 0, 0.41) !important;
+  margin: 5%;
+  width: 90%;
+  height: 80%;
+  border-radius: 1rem !important;
+  cursor: pointer;
+}
+
+blockquote {
+  border-left: 3px solid rgba(0, 0, 0, 0.21);
+  padding-left: 12px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 90%;
+  margin-left: 15px;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+
+
+

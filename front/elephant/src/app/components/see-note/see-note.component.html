@@ -1,21 +1,24 @@
 <div class="container">
-  <div class="header-content" >
+  <div class="header-content">
     <div class="header">
       <h1 class="title">{{title}}</h1>
       <app-tag-note
         class="tag-note"
         [noteId]="id"
         [tags]="tags"
+        [disableAddTag]="!hasEditPermission"
       ></app-tag-note>
       <h2 class="date">{{created}}</h2>
     </div>
-    <p class="content" #target>{{content}}</p>
+    <markdown class="content" [data] = "content"> </markdown>
   </div>
   <div>
     <mat-divider [vertical]="true" class="divider"></mat-divider>
   </div>
   <div class="right-container">
     <button mat-raised-button class="share-note-btn" (click)="openDialog()">Compartir</button>
+    <button mat-raised-button class="edit-note-btn" (click)="startEdit()" *ngIf="hasEditPermission">Editar nota</button>
+    <button mat-raised-button class="edit-note-btn" (click)="changePermissions()" *ngIf="hasOwnerPermission">Editar permisos</button>
     <app-comment
       [noteId]="id"
     ></app-comment>
