@@ -17,6 +17,8 @@ export class EditNotePermissionsDialogComponent implements OnInit, OnDestroy {
   getAllPermissionsSubscription: Subscription;
   editPermissionsSubscription: Subscription;
 
+  allDeletedPermissions = false;
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private noteService: NoteService,
@@ -39,12 +41,14 @@ export class EditNotePermissionsDialogComponent implements OnInit, OnDestroy {
       this.permissions = res;
     }, error => {
       console.error(error);
+      this.dialogRef.close();
       this.snackBar.openSnackbar('¡Ha ocurrido un error al cargar los permisos, vuelva a intentarlo!', 0);
     });
   }
 
   onSubmit(): void {
-    this.editPermissionsSubscription = this.noteService.editPermissions(this.data.noteId, this.permissions).subscribe(res => {
+    const permissionsJson = {list: this.permissions};
+    this.editPermissionsSubscription = this.noteService.editPermissions(this.data.noteId, permissionsJson).subscribe(res => {
       this.snackBar.openSnackbar('¡Se han modificado los permisos con éxito!', 0);
       this.dialogRef.close();
     }, error => {
@@ -54,6 +58,11 @@ export class EditNotePermissionsDialogComponent implements OnInit, OnDestroy {
   }
 
   onDelete(index): void {
-    this.permissions.splice(index, 1);
+    this.permissions[index].type = 'delete';
+    this.checkAllDeletedPermissions();
+  }
+
+  checkAllDeletedPermissions(): void {
+    this.allDeletedPermissions = this.permissions.every(permission => permission.type === 'delete');
   }
 }
