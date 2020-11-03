@@ -107,7 +107,17 @@ export class NoteComponent implements OnInit, OnDestroy {
   printNote(note): void {
     this.noteToPrint = note;
   }
-
+  duplicate(note: Note): void{
+    const title = 'Copy - ' + note.title;
+    this.noteService.createDuplicate(note.uuid).subscribe(res => {
+      this.snackBar.openSnackbar('¡Creación de Nota duplicada exitosa!', 0);
+      this.router.navigate(['/note/', res.uuid]);
+      // como falta implementacion del back, la redireccion por ahora va a ser a la misma nota, una vez implementado,
+      // rediccionara a la nueva nota
+    }, error => {
+      this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
+    });
+  }
   toggleStickNote(note: Note): void {
     const index = this.notes.indexOf(note);
     if (index >= 0) {

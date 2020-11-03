@@ -32,6 +32,9 @@
           <button mat-menu-item (click)="deleteNote(note)" *ngIf="isOwner">
             <span>Eliminar</span>
           </button>
+          <button mat-menu-item (click)="duplicate(note)">
+            <span>Duplicar</span>
+          </button>
         </mat-menu>
       </mat-card-title>
 

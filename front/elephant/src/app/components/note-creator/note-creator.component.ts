@@ -40,5 +40,4 @@ export class NoteCreatorComponent implements OnInit {
       this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
     });
   }
-
 }

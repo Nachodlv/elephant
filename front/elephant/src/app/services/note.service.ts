@@ -25,6 +25,13 @@ export class NoteService {
       return Note.fromJson(response.body);
     }));
   }
+  createDuplicate(id: number): Observable<Note>{
+    return this.getNote(id);
+    /*
+    porahora hice que devuelva la misma nota porque falta el metodo de duplicar en el back, asi que la
+    redireccion va a ser a la misma nota
+     */
+  }
 
   getNote(id): Observable<Note> {
     return this.httpService.get(`/note/${id}`).pipe(tap((_ => {
