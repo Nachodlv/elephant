@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="close-btn-container">
+    <mat-icon aria-hidden="false" aria-label="Delete permission" (click)="onClose()">clear</mat-icon>
+  </div>
+  <div class="title-container">
+    <span>{{titleToShow}}</span>
+  </div>
+  <div class="carousel-container">
+    <mat-carousel
+      [autoplay]="false"
+      [slides]="slidesList.length"
+      [hideArrows]="false"
+      [hideIndicators]="false"
+      [timings]="'250ms ease-in'"
+      [color]="'primary'"
+      [slideHeight]="'400px'"
+      [maintainAspectRatio]="false"
+      (change)="onChange($event)"
+    >
+      <mat-carousel-slide *ngFor="let slide of slidesList"
+                          [image]="slide.imagePath"
+                          [hideOverlay]="true"
+      >
+      </mat-carousel-slide>
+    </mat-carousel>
+  </div>
+  <div class="description-container">
+    <span class="description">{{descriptionToShow}}</span>
+  </div>
+
+  <div class="actions-div">
+    <button class="previous-btn" mat-button>Anterior</button>
+    <button class="next-btn" mat-button>Siguiente</button>
+  </div>
+</div>

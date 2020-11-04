@@ -7,6 +7,7 @@ import {Router} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {SnackbarService} from '../../services/snackbar.service';
 import {DeleteNoteDialogComponent} from '../delete-note-dialog/delete-note-dialog.component';
+import {TutorialDialogComponent} from '../tutorial-dialog/tutorial-dialog.component';
 
 @Component({
   selector: 'app-note',
@@ -36,6 +37,11 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadNotes();
+
+    if (localStorage.getItem('firstTime') === 'true') {
+      this.openTutorialDialog();
+      localStorage.setItem('firstTime', 'true');
+    }
   }
 
   ngOnDestroy(): void {
@@ -107,7 +113,8 @@ export class NoteComponent implements OnInit, OnDestroy {
   printNote(note): void {
     this.noteToPrint = note;
   }
-  duplicate(note: Note): void{
+
+  duplicate(note: Note): void {
     const title = 'Copy - ' + note.title;
     this.noteService.createDuplicate(note.uuid).subscribe(res => {
       this.snackBar.openSnackbar('¡Creación de Nota duplicada exitosa!', 0);
@@ -118,6 +125,7 @@ export class NoteComponent implements OnInit, OnDestroy {
       this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
     });
   }
+
   toggleStickNote(note: Note): void {
     const index = this.notes.indexOf(note);
     if (index >= 0) {
@@ -138,6 +146,14 @@ export class NoteComponent implements OnInit, OnDestroy {
         return -1;
       else
         return 1;
+    });
+  }
+
+
+  openTutorialDialog(): void {
+    this.dialog.open(TutorialDialogComponent, {
+      width: '60%',
+      height: '80%',
     });
   }
 }

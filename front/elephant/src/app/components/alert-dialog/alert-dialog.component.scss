@@ -1,0 +1,16 @@
+@import "../../_vars.scss";
+
+.actions-div {
+  display: flex;
+  justify-content: space-between;
+}
+
+.close-btn {
+  background-color: $elephant-red;
+  color: $elephant-white
+}
+
+.update-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
+}

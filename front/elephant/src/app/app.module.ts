@@ -32,6 +32,9 @@ import 'prismjs/prism';
 import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
 import { EditNotePermissionsDialogComponent } from './components/edit-note-permissions-dialog/edit-note-permissions-dialog.component';
+import { TutorialDialogComponent } from './components/tutorial-dialog/tutorial-dialog.component';
+import {MatCarouselModule} from '@ngbmodule/material-carousel';
+import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,18 +59,21 @@ import { EditNotePermissionsDialogComponent } from './components/edit-note-permi
     PrintNoteComponent,
     DeleteUserDialogComponent,
     EditNotePermissionsDialogComponent,
+    TutorialDialogComponent,
+    AlertDialogComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    AppMaterialModule,
-    HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MarkdownModule.forRoot(),
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        AppMaterialModule,
+        HttpClientModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MarkdownModule.forRoot(),
+        MatCarouselModule,
+    ],
   providers: [
     {provide: ErrorHandler, useClass: ErrorService}
   ],

@@ -1,0 +1,46 @@
+@import "../../_vars.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.close-btn-container {
+  text-align: right;
+  cursor: pointer;
+}
+
+.carousel-container {
+  margin-top: 4%;
+}
+
+.description-container {
+  margin-top: 4%;
+}
+
+.description {
+  font-size: 1vw;
+  font-weight: 500;
+}
+
+.title-container {
+  text-align: center;
+  font-size: 1vw;
+  font-weight: 500;
+}
+
+.actions-div {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12%;
+}
+
+.previous-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
+}
+
+.next-btn {
+  background-color: $elephant-green;
+  color: $elephant-white
+}
