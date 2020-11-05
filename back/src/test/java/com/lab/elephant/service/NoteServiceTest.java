@@ -7,7 +7,6 @@ import com.lab.elephant.model.User;
 import com.lab.elephant.repository.NoteRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,6 +17,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class NoteServiceTest {
@@ -28,6 +28,7 @@ public class NoteServiceTest {
     private NoteRepository noteRepository;
     @Autowired
     private PermissionService permissionService;
+
     @Bean
     public NoteService employeeService() {
       return new NoteServiceImpl(noteRepository, permissionService);
@@ -41,14 +42,14 @@ public class NoteServiceTest {
   //this is not used but needed for the Application Context to load
   @MockBean
   private PermissionService permissionService;
-  
+
   @Test
   public void AddNote_WhenAddingANewNote_ShouldReturnANewNote() {
 
     Note note = new Note("Nueva Nota");
 
-    Mockito.when(noteRepository.save(note)).thenReturn(note);
-    Mockito.when(noteRepository.findById(note.getUuid())).thenReturn(Optional.of(note));
+    when(noteRepository.save(note)).thenReturn(note);
+    when(noteRepository.findById(note.getUuid())).thenReturn(Optional.of(note));
     noteService.addNote(note, new User());
 
     Optional<Note> optionalNote = noteRepository.findById(note.getUuid());
@@ -65,11 +66,11 @@ public class NoteServiceTest {
     Note note1 = new Note("Nueva Nota");
     Note note2 = new Note("Nueva Nota");
 
-    Mockito.when(noteRepository.save(note1)).thenReturn(note1);
-    Mockito.when(noteRepository.findById(note1.getUuid())).thenReturn(Optional.of(note1));
+    when(noteRepository.save(note1)).thenReturn(note1);
+    when(noteRepository.findById(note1.getUuid())).thenReturn(Optional.of(note1));
 
-    Mockito.when(noteRepository.save(note2)).thenReturn(note2);
-    Mockito.when(noteRepository.findById(note2.getUuid())).thenReturn(Optional.of(note2));
+    when(noteRepository.save(note2)).thenReturn(note2);
+    when(noteRepository.findById(note2.getUuid())).thenReturn(Optional.of(note2));
     noteService.addNote(note1, new User());
     noteService.addNote(note2, new User());
 
@@ -86,12 +87,12 @@ public class NoteServiceTest {
     Note note1 = new Note("Nueva Nota");
     Note note2 = new Note("Nueva Nota");
 
-    Mockito.when(noteRepository.findAll()).thenReturn(Arrays.asList(note1, note2));
+    when(noteRepository.findAll()).thenReturn(Arrays.asList(note1, note2));
     noteService.addNote(note1, new User());
     noteService.addNote(note2, new User());
 
-    Mockito.when(noteRepository.save(note1)).thenReturn(note1);
-    Mockito.when(noteRepository.save(note2)).thenReturn(note2);
+    when(noteRepository.save(note1)).thenReturn(note1);
+    when(noteRepository.save(note2)).thenReturn(note2);
 
     List<Note> notes = noteService.getAllNotes();
 
@@ -103,11 +104,11 @@ public class NoteServiceTest {
   public void DeleteNote_WhenNoteExists_ShouldDeleteTheNote() {
     Note note = new Note("This is the new note");
 
-    Mockito.when(noteRepository.findById(1L)).thenReturn(Optional.of(note));
+    when(noteRepository.findById(1L)).thenReturn(Optional.of(note));
     noteService.addNote(note, new User());
 
-    Mockito.when(noteRepository.save(note)).thenReturn(note);
-    Mockito.when(noteRepository.findAll()).thenReturn(Collections.singletonList(note));
+    when(noteRepository.save(note)).thenReturn(note);
+    when(noteRepository.findAll()).thenReturn(Collections.singletonList(note));
 
     List<Note> notes = noteService.getAllNotes();
     assertThat(notes.size()).isEqualTo(1);
@@ -115,7 +116,7 @@ public class NoteServiceTest {
 
     noteService.deleteNote(note.getUuid());
 
-    Mockito.when(noteRepository.findAll()).thenReturn(Collections.emptyList());
+    when(noteRepository.findAll()).thenReturn(Collections.emptyList());
 
     List<Note> noteList = noteService.getAllNotes();
     assertThat(noteList.size()).isEqualTo(0);
@@ -123,7 +124,7 @@ public class NoteServiceTest {
 
     assertThat(noteService.getAllNotes().contains(note)).isFalse();
   }
-  
+
   @Test
   public void getOwner_WhenOwnerExists_ShouldReturnIt() {
     final Note note = new Note();
@@ -138,7 +139,7 @@ public class NoteServiceTest {
     assertThat(owner.isPresent()).isTrue();
     assertThat(owner.get().getUuid()).isEqualTo(id);
   }
-  
+
   @Test
   public void getOwner_WhenOwnerDoesNotExist_ShouldReturnEmptyOptional() {
     final Note note = new Note();
@@ -152,7 +153,7 @@ public class NoteServiceTest {
     final Optional<User> owner = noteService.getOwner(note);
     assertThat(owner.isPresent()).isFalse();
   }
-  
+
   @Test
   public void getUsersWithPermissions_WhenNoteHasPermissions_ShouldReturnThem() {
     final Note note = new Note();
@@ -169,13 +170,13 @@ public class NoteServiceTest {
     assertThat(usersWithPermissions.size()).isEqualTo(2);
     assertThat(usersWithPermissions).isEqualTo(userList);
   }
-  
+
   @Test
   public void getUsersWithPermissions_WhenNoteHasNoPermissions_ShouldReturnEmptyList() {
     final List<User> usersWithPermissions = noteService.getUsersWithPermissions(new Note());
     assertThat(usersWithPermissions.size()).isEqualTo(0);
   }
-  
+
   @Test
   public void getUsersWithEditOrOwner_WhenNoteHasPermissions_ShouldReturnThem() {
     final Note note = new Note();
@@ -193,13 +194,13 @@ public class NoteServiceTest {
     assertThat(usersWithPermissions.contains(editor)).isEqualTo(true);
     assertThat(usersWithPermissions.contains(viewer)).isEqualTo(false);
   }
-  
+
   @Test
   public void getUsersWithEditOrOwner_WhenNoteHasNoPermissions_ShouldReturnEmptyList() {
     final List<User> users = noteService.getUsersWithEditOrOwner(new Note());
     assertThat(users.size()).isEqualTo(0);
   }
-  
+
   @Test
   public void addTags_WhenNoteExists_ShouldReturnOptionalOfNoteWithOnlyTheNewTags() {
     final Note note = new Note();
@@ -211,16 +212,16 @@ public class NoteServiceTest {
     newTags.add("fun");
     newTags.add("inspirational");
     newTags.add("diy");
-    
-    Mockito.when(noteRepository.findById(id)).thenReturn(Optional.of(note));
-    Mockito.when(noteRepository.save(note)).thenReturn(note);
+
+    when(noteRepository.findById(id)).thenReturn(Optional.of(note));
+    when(noteRepository.save(note)).thenReturn(note);
     final Optional<Note> optionalNote = noteService.addTags(id, newTags);
-    
+
     assertThat(optionalNote.isPresent()).isTrue();
     assertThat(optionalNote.get().getTags()).isEqualTo(newTags);
     assertThat(optionalNote.get().getTags().containsAll(oldTags)).isFalse();
   }
-  
+
   @Test
   public void addTags_WhenNoteDoesNotExist_ShouldReturnEmptyOptional() {
     final long id = 1;
@@ -228,33 +229,33 @@ public class NoteServiceTest {
     final Optional<Note> optionalNote = noteService.addTags(id, tags);
     assertThat(optionalNote.isPresent()).isFalse();
   }
-  
+
   @Test
   public void unlockNote_ShouldLockNote() {
     final Note note = new Note();
     note.setLocked(true);
-    
-    Mockito.when(noteRepository.save(note)).thenReturn(note);
+
+    when(noteRepository.save(note)).thenReturn(note);
     final Optional<Note> optionalNote = noteService.unlockNote(note);
-    
+
     assertThat(optionalNote.isPresent()).isTrue();
     assertThat(optionalNote.get().isLocked()).isFalse();
   }
-  
+
   @Test
   public void setLocked_ShouldLockNoteAndSetLastLockedToActualTime() {
     final Note note = new Note();
 
-    Mockito.when(noteRepository.save(note)).thenReturn(note);
-    
+    when(noteRepository.save(note)).thenReturn(note);
+
     final long actualTime = System.currentTimeMillis();
     final Optional<Note> optionalNote = noteService.setLocked(note);
-    
+
     assertThat(optionalNote.isPresent()).isTrue();
     assertThat(optionalNote.get().isLocked()).isTrue();
     assertThat(optionalNote.get().getLastLocked()).isEqualTo(new Timestamp(actualTime));
   }
-  
+
   @Test
   public void editNote_WhenEverythingIsOk_ShouldReturnOptionalOfEditedNote() {
     //this test does not test if the Note gets locked when edited because that is already tested on another test.
@@ -266,9 +267,9 @@ public class NoteServiceTest {
     oldNote.setUuid(oldNoteId);
     newNote.setTitle(title);
     newNote.setContent(content);
-    Mockito.when(noteRepository.findById(oldNoteId)).thenReturn(Optional.of(oldNote));
+    when(noteRepository.findById(oldNoteId)).thenReturn(Optional.of(oldNote));
 
-    Mockito.when(noteRepository.save(oldNote)).thenReturn(oldNote);
+    when(noteRepository.save(oldNote)).thenReturn(oldNote);
     final Optional<Note> optionalNote = noteService.editNote(oldNoteId, newNote);
 
     assertThat(optionalNote.isPresent()).isTrue();
@@ -277,4 +278,30 @@ public class NoteServiceTest {
     assertThat(note.getContent()).isEqualTo(content);
     assertThat(note.getUuid()).isEqualTo(oldNoteId);
   }
+
+  @Test
+  public void copyNote_WhenNoteExists_ReturnNewNoteCopied() {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Nueva Nota", "", ts);
+    User user = new User();
+    noteService.addNote(note, user);
+
+    when(noteRepository.findById(note.getUuid())).thenReturn(Optional.of(note));
+    when(noteRepository.save(note)).thenReturn(note);
+    noteService.addNote(note, new User());
+
+    Note noteCopied = new Note("Nueva Nota (Copia)", "", ts);
+    when(noteRepository.findById(noteCopied.getUuid())).thenReturn(Optional.of(noteCopied));
+    when(noteRepository.save(noteCopied)).thenReturn(noteCopied);
+    when(noteRepository.findAll()).thenReturn(Arrays.asList(note, noteCopied));
+
+    noteService.copyNote(note, user);
+
+    Optional<Note> optionalNote = noteService.getNote(noteCopied.getUuid());
+
+    assertThat(optionalNote.isPresent()).isTrue();
+    assertThat(optionalNote.get().getTitle()).isEqualTo(noteCopied.getTitle());
+    assertThat(noteService.getAllNotes().size()).isEqualTo(2);
+  }
+
 }
