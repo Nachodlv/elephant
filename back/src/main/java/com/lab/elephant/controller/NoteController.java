@@ -22,7 +22,7 @@ public class NoteController {
 
   private final NoteService noteService;
   private final UserService userService;
-  
+
   public NoteController(NoteService noteService, UserService userService) {
     this.noteService = noteService;
     this.userService = userService;
@@ -33,7 +33,7 @@ public class NoteController {
     if (note.getTitle().length() > 60)
       throw new ResponseStatusException(
               HttpStatus.BAD_REQUEST, "Title is too long");
-  
+
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final Optional<User> user = userService.getByEmail(string);
     return noteService.addNote(note, user.get());
@@ -60,26 +60,31 @@ public class NoteController {
     Optional<Note> optionalNote = noteService.getNote(id);
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();
-    
+
     if (optionalNote.isPresent()) {
       final Optional<User> owner = noteService.getOwner(optionalNote.get());
       if (!owner.isPresent())
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Note has no owner");
-      if (user.getUuid() != owner.get().getUuid())
+      if (user.getUuid() != owner.get().getUuid()) {
+        List<User> users = noteService.getUsersWithPermissions(optionalNote.get());
+        if (users.contains(user)) {
+          return noteService.deletePermission(optionalNote.get(), user);
+        }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User can't delete this note");
+      }
       noteService.deleteNote(id);
       return true;
     }
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
   }
-  
+
   @PutMapping("/addTags/{id}")
   public void addTags(@PathVariable("id") long id, @RequestBody TagsDTO dto) {
     final List<String> tags = dto.getTags();
     Optional<Note> optionalNote = noteService.getNote(id);
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();
-    
+
     if (!optionalNote.isPresent())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
     final Note note = optionalNote.get();
@@ -88,7 +93,7 @@ public class NoteController {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot add Tags to this note");
     noteService.addTags(note.getUuid(), tags);
   }
-  
+
   @GetMapping(path = "/startEdit/{noteId}")
   public boolean startEdit(@PathVariable long noteId) {
     editChecks(noteId);
@@ -100,26 +105,26 @@ public class NoteController {
     noteService.setLocked(note);
     return true;
   }
-  
+
   @PutMapping(path = "/autoSave/{noteId}")
   public void autoSave(@PathVariable long noteId, @RequestBody @Valid Note editedNote) {
     editChecks(noteId);
     noteService.editNote(noteId, editedNote);
   }
-  
+
   @PutMapping(path = "/endEdit/{noteId}")
   public void endEdit(@PathVariable long noteId, @RequestBody @Valid Note editedNote) {
     editChecks(noteId);
     noteService.editNote(noteId, editedNote);
     noteService.unlockNote(noteService.getNote(noteId).get());
   }
-  
+
   private void editChecks(long noteId) {
     final Optional<Note> optionalNote = noteService.getNote(noteId);
     if (!optionalNote.isPresent())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
     Note note = optionalNote.get();
-  
+
     final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     final User user = userService.getByEmail(string).get();
     if (!noteService.getUsersWithEditOrOwner(note).contains(user))

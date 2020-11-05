@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class PermissionServiceTest {
@@ -26,6 +27,7 @@ public class PermissionServiceTest {
   static class PermissionServiceTestContextConfiguration {
     @Autowired
     private PermissionRepository permissionRepository;
+    
     @Bean
     public PermissionService permissionService() {
       return new PermissionServiceImpl(permissionRepository);
@@ -42,7 +44,7 @@ public class PermissionServiceTest {
     final User user = new User();
     final Note note = new Note();
     final Permission p = new Permission(user, note, PermissionType.Viewer);
-    Mockito.when(permissionRepository.save(p)).thenReturn(p);
+    when(permissionRepository.save(p)).thenReturn(p);
     permissionService.addRelationship(user, note, PermissionType.Viewer);
     
     assertThat(user.getPermissions().size()).isEqualTo(1);
@@ -93,7 +95,7 @@ public class PermissionServiceTest {
     final Note note = new Note();
     final Permission p = new Permission(user, note, PermissionType.Editor);
     final String newPermissionType = "Viewer";
-    Mockito.when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
+    when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
     
     permissionService.editRelationship(user, note, newPermissionType);
     assertThat(p.getType()).isEqualTo(PermissionType.valueOf(newPermissionType));
@@ -106,9 +108,31 @@ public class PermissionServiceTest {
     final Note note = new Note();
     final Permission p = new Permission(user, note, PermissionType.Editor);
     final String newPermissionType = "delete";
-    Mockito.when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
+    when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
     
     permissionService.editRelationship(user, note, newPermissionType);
     Mockito.verify(permissionRepository, Mockito.times(1)).delete(p);
+  }
+  
+  @Test
+  public void deleteNote_WhenUserIsCollaborator_ShouldDeletePermission() {
+    final User user = new User();
+    final Note note = new Note();
+    final Permission p = new Permission(user, note, PermissionType.Viewer);
+    when(permissionRepository.save(p)).thenReturn(p);
+    permissionService.addRelationship(user, note, PermissionType.Viewer);
+    
+    when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(p));
+    Optional<Permission> permission = permissionService.getPermissionBetween(user, note);
+    assertThat(permission.isPresent()).isTrue();
+    
+    boolean perm = permissionService.deletePermission(note, user);
+    assertThat(perm).isTrue();
+  
+    when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.empty());
+    boolean perm2 = permissionService.deletePermission(note, user);
+    assertThat(perm2).isFalse();
+    Optional<Permission> permissionThen = permissionService.getPermissionBetween(user, note);
+    assertThat(permissionThen.isPresent()).isFalse();
   }
 }
