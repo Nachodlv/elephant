@@ -154,6 +154,7 @@ export class NoteComponent implements OnInit, OnDestroy {
     this.dialog.open(TutorialDialogComponent, {
       width: '60%',
       height: '80%',
+      disableClose: true
     });
   }
 }
