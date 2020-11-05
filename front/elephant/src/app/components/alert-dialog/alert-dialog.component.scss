@@ -3,6 +3,7 @@
 .container {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .message {
@@ -14,7 +15,7 @@
 .actions-div {
   display: flex;
   justify-content: space-between;
-  margin-top: 10%;
+  margin-top: auto;
 }
 
 .close-btn {

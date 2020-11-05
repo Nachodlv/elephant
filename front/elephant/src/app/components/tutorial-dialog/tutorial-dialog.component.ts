@@ -36,12 +36,23 @@ export class TutorialDialogComponent implements OnInit {
     this.dialog.open(AlertDialogComponent, {
       width: '22%',
       height: '18%',
-      data: '¿Está seguro que quiere saltearse el tutorial?'
+      data: {
+        message: '¿Está seguro que quiere saltearse el tutorial?',
+        parentDialog: this.dialogRef
+      }
     });
   }
 
   onChange(index): void {
+    this.titleToShow = this.slidesList[index].title;
     this.descriptionToShow = this.slidesList[index].description;
   }
 
+  onPrevious(carousel): void {
+    carousel.previous();
+  }
+
+  onNext(carousel): void {
+    carousel.next();
+  }
 }

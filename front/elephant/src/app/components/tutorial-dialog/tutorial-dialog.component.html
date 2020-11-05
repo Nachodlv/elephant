@@ -12,10 +12,11 @@
       [hideArrows]="false"
       [hideIndicators]="false"
       [timings]="'250ms ease-in'"
-      [color]="'primary'"
+      [color]="'accent'"
       [slideHeight]="'400px'"
       [maintainAspectRatio]="false"
       (change)="onChange($event)"
+      #matCarousel
     >
       <mat-carousel-slide *ngFor="let slide of slidesList"
                           [image]="slide.imagePath"
@@ -29,7 +30,7 @@
   </div>
 
   <div class="actions-div">
-    <button class="previous-btn" mat-button>Anterior</button>
-    <button class="next-btn" mat-button>Siguiente</button>
+    <button class="previous-btn" mat-button (click)="onPrevious(matCarousel)">Anterior</button>
+    <button class="next-btn" mat-button (click)="onNext(matCarousel)">Siguiente</button>
   </div>
 </div>
