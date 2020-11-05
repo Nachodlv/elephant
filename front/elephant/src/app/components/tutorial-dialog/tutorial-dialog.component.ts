@@ -36,6 +36,7 @@ export class TutorialDialogComponent implements OnInit {
     this.dialog.open(AlertDialogComponent, {
       width: '22%',
       height: '18%',
+      data: '¿Está seguro que quiere saltearse el tutorial?'
     });
   }
 

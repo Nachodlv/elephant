@@ -16,7 +16,7 @@ export class AlertDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.message = '¿Está seguro que quiere saltearse el tutorial?';
+    this.message = this.data;
   }
 
   onConfirm(): void {

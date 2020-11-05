@@ -1,8 +1,20 @@
 @import "../../_vars.scss";
 
+.container {
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  text-align: center;
+  font-size: 1vw;
+  font-weight: 500;
+}
+
 .actions-div {
   display: flex;
   justify-content: space-between;
+  margin-top: 10%;
 }
 
 .close-btn {
@@ -10,7 +22,7 @@
   color: $elephant-white
 }
 
-.update-btn {
+.confirm-btn {
   background-color: $elephant-green;
   color: $elephant-white
 }
