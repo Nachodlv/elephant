@@ -114,6 +114,16 @@ public class PermissionController {
     map.forEach((u, s) -> permissionService.editRelationship(u, note, s));
   }
 
+  @PutMapping("/changePin/{noteId}")
+  public boolean changePin(@PathVariable long noteId) {
+    final Note note = getNote(noteId);
+    final User user = getUser();
+    if (!noteService.getUsersWithPermissions(note).contains(user))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User has no Permissions with Note");
+    return permissionService.changePin(user, note);
+  }
+  
+  // Private Methods
   private Note getNote(long noteId) {
     final Optional<Note> optionalNote = noteService.getNote(noteId);
     if (!optionalNote.isPresent())

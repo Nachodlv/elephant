@@ -111,4 +111,27 @@ public class PermissionServiceTest {
     permissionService.editRelationship(user, note, newPermissionType);
     Mockito.verify(permissionRepository, Mockito.times(1)).delete(p);
   }
+  
+  @Test
+  public void changePin_WhenPermissionBetweenUserAndNoteDoesNotExist_ShouldReturnFalse() {
+    final boolean b = permissionService.changePin(new User(), new Note());
+    assertThat(b).isFalse();
+  }
+  
+  @Test
+  public void changePin_WhenPermissionBetweenUserAndNoteExists_ShouldChangePinAndSave() {
+    final User user = new User();
+    final Note note = new Note();
+    final Permission permission = new Permission(user, note, PermissionType.Owner);
+    
+    Mockito.when(permissionRepository.findByUserAndNote(user, note)).thenReturn(Optional.of(permission));
+    final boolean b1 = permissionService.changePin(user, note);
+    final boolean b2 = permissionService.changePin(user, note);
+    final boolean b3 = permissionService.changePin(user, note);
+    Mockito.verify(permissionRepository, Mockito.times(3)).save(permission);
+    
+    assertThat(b1).isTrue();
+    assertThat(b2).isFalse();
+    assertThat(b3).isTrue();
+  }
 }
