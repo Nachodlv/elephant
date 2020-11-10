@@ -9,7 +9,7 @@
     <mat-carousel
       [autoplay]="false"
       [slides]="slidesList.length"
-      [hideArrows]="false"
+      [hideArrows]="true"
       [hideIndicators]="false"
       [timings]="'250ms ease-in'"
       [color]="'accent'"
@@ -31,6 +31,7 @@
 
   <div class="actions-div">
     <button class="previous-btn" mat-button (click)="onPrevious(matCarousel)">Anterior</button>
-    <button class="next-btn" mat-button (click)="onNext(matCarousel)">Siguiente</button>
+    <button class="next-btn" mat-button (click)="onNext(matCarousel)" *ngIf="matCarousel.currentIndex !== slidesList.length - 1">Siguiente</button>
+    <button class="next-btn" mat-button (click)="onFinish()" *ngIf="matCarousel.currentIndex === slidesList.length - 1">Finalizar</button>
   </div>
 </div>
