@@ -21,14 +21,24 @@ public class Permission {
 
   private PermissionType type;
 
+  private boolean isPinned = false;
+  
   public Permission() {
   }
 
-  public Permission(long uuid, User user, Note note, PermissionType type) {
+  public Permission(long uuid, User user, Note note, PermissionType type, boolean isPinned) {
     this.uuid = uuid;
     this.user = user;
     this.note = note;
     this.type = type;
+    this.isPinned = isPinned;
+  }
+
+  public Permission(User user, Note note, PermissionType type, boolean isPinned) {
+    this.user = user;
+    this.note = note;
+    this.type = type;
+    this.isPinned = isPinned;
   }
 
   public Permission(User user, Note note, PermissionType type) {
@@ -67,5 +77,17 @@ public class Permission {
 
   public void setType(PermissionType type) {
     this.type = type;
+  }
+  
+  public boolean isPinned() {
+    return isPinned;
+  }
+  
+  public void setPinned(boolean pinned) {
+    isPinned = pinned;
+  }
+  
+  public void changePin() {
+    isPinned = !isPinned;
   }
 }
