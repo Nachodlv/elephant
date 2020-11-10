@@ -44,6 +44,8 @@ export class UpdatePasswordDialogComponent implements OnInit, OnDestroy {
       console.error(error);
       if (error.status === 401) {
         this.snackBar.openSnackbar('¡La contraseña es incorrecta!', 0);
+      } else if (error.status === 400) {
+        this.snackBar.openSnackbar('¡La nueva contraseña debe ser distinta a la anterior!', 0);
       } else {
         this.snackBar.openSnackbar('¡Ha ocurrido un error, vuelva a intentarlo!', 0);
       }
