@@ -1,29 +1,31 @@
 <div class="dialog-container">
-  <h2 mat-dialog-title class="title">Cambiar permisos</h2>
-  <div *ngIf="permissions.length === 0">
+  <h2 mat-dialog-title>Cambiar permisos</h2>
+  <div *ngIf="permissions.length === 0 || allDeletedPermissions">
     <h2>No se han otorgado permisos en esta nota</h2>
   </div>
-  <div mat-dialog-content class="dialog-content" *ngFor="let permission of permissions;let i = index">
-    <div appearance="outline" class="email-container">
-      <h2>{{permission.email}}</h2>
-    </div>
+  <div mat-dialog-content *ngFor="let permission of permissions;let i = index">
+    <div class="dialog-content" *ngIf="permission.type !== 'delete'">
+      <div appearance="outline" class="email-container">
+        <h2>{{permission.email}}</h2>
+      </div>
 
-    <mat-form-field appearance="outline" class="mode-selector">
-      <mat-label>Modo</mat-label>
-      <mat-select matNativeControl [(value)]="permission.type">
-        <mat-option value="Editor">Editor</mat-option>
-        <mat-option value="Viewer">Lector</mat-option>
-      </mat-select>
-    </mat-form-field>
+      <mat-form-field appearance="outline" class="mode-selector">
+        <mat-label>Modo</mat-label>
+        <mat-select matNativeControl [(value)]="permission.type">
+          <mat-option value="Editor">Editor</mat-option>
+          <mat-option value="Viewer">Lector</mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <div class="clear-icon">
-      <mat-icon aria-hidden="false" aria-label="Delete permission" (click)="onDelete(i)">clear</mat-icon>
+      <div class="clear-icon">
+        <mat-icon aria-hidden="false" aria-label="Finished auto save" (click)="onDelete(i)">clear</mat-icon>
+      </div>
     </div>
   </div>
 
   <div class="actions-div" mat-dialog-actions>
     <button class="close-btn" mat-button mat-dialog-close>Cancelar</button>
-    <button class="update-btn" mat-button type="submit" [disabled]="permissions.length === 0" (click)="onSubmit()">Confirmar cambios</button>
+    <button class="update-btn" mat-button type="submit" (click)="onSubmit()">Confirmar cambios</button>
   </div>
 </div>
 

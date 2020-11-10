@@ -21,4 +21,8 @@ public interface PermissionService {
   void editRelationship(User user, Note note, String newPermissionType);
   
   Optional<Permission> getPermissionBetween(User user, Note note);
+  
+  boolean changePin(User user, Note note);
+
+  boolean deletePermission(Note note, User user);
 }

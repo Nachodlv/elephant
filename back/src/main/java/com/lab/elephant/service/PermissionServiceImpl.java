@@ -12,13 +12,13 @@ import java.util.Optional;
 
 @Service
 public class PermissionServiceImpl implements PermissionService {
-  
+
   private final PermissionRepository permissionRepository;
-  
+
   public PermissionServiceImpl(PermissionRepository permissionRepository) {
     this.permissionRepository = permissionRepository;
   }
-  
+
   @Override
   public void addRelationship(User user, Note note, PermissionType type) {
     Permission p = new Permission(user, note, type);
@@ -30,7 +30,7 @@ public class PermissionServiceImpl implements PermissionService {
     note.setPermissions(notePermissions);
     permissionRepository.save(p);
   }
-  
+
   @Override
   public Optional<PermissionType> getPermissionTypeBetween(User user, Note note) {
     final List<Permission> permissions = note.getPermissions();
@@ -40,12 +40,12 @@ public class PermissionServiceImpl implements PermissionService {
     }
     return Optional.empty();
   }
-  
+
   @Override
   public List<Permission> findAllByUser(User user) {
     return permissionRepository.findAllByUser(user);
   }
-  
+
   @Override
   public void editRelationship(User user, Note note, String newPermissionType) {
     final Optional<Permission> optionalPermission = getPermissionBetween(user, note);
@@ -58,9 +58,31 @@ public class PermissionServiceImpl implements PermissionService {
       permissionRepository.save(p);
     }
   }
-  
+
   @Override
   public Optional<Permission> getPermissionBetween(User user, Note note) {
     return permissionRepository.findByUserAndNote(user, note);
+  }
+
+  @Override
+  public boolean deletePermission(Note note, User user) {
+    final Optional<Permission> optionalPermission = getPermissionBetween(user, note);
+    if (!optionalPermission.isPresent())
+      return false;
+    Permission p = optionalPermission.get();
+    permissionRepository.delete(p);
+    return true;
+  }
+  
+  @Override
+  public boolean changePin(User user, Note note) {
+    final Optional<Permission> permissionBetween = getPermissionBetween(user, note);
+    if (permissionBetween.isPresent()) {
+      final Permission permission = permissionBetween.get();
+      permission.changePin();
+      permissionRepository.save(permission);
+      return permission.isPinned();
+    }
+    return false;
   }
 }

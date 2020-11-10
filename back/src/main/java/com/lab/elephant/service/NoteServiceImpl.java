@@ -17,7 +17,7 @@ public class NoteServiceImpl implements NoteService {
 
   private final NoteRepository noteRepository;
   private final PermissionService permissionService;
-  
+
   public NoteServiceImpl(NoteRepository noteRepository, PermissionService permissionService) {
     this.noteRepository = noteRepository;
     this.permissionService = permissionService;
@@ -46,7 +46,7 @@ public class NoteServiceImpl implements NoteService {
   public void deleteNote(long id) {
     noteRepository.deleteById(id);
   }
-  
+
   @Override
   public Optional<User> getOwner(Note note) {
     for (Permission p : note.getPermissions()) {
@@ -54,7 +54,7 @@ public class NoteServiceImpl implements NoteService {
     }
     return Optional.empty();
   }
-  
+
   @Override
   public List<User> getUsersWithPermissions(Note note) {
     List<User> users = new ArrayList<>();
@@ -62,7 +62,7 @@ public class NoteServiceImpl implements NoteService {
       users.add(p.getUser());
     return users;
   }
-  
+
   @Override
   public List<User> getUsersWithEditOrOwner(Note note) {
     List<User> users = new ArrayList<>();
@@ -71,7 +71,7 @@ public class NoteServiceImpl implements NoteService {
         users.add(p.getUser());
     return users;
   }
-  
+
   @Override
   public Optional<Note> addTags(long id, List<String> tags) {
     final Optional<Note> optionalNote = getNote(id);
@@ -82,7 +82,7 @@ public class NoteServiceImpl implements NoteService {
     }
     return Optional.empty();
   }
-  
+
   @Override
   public Optional<Note> editNote(long oldNoteId, Note newNote) {
     final Optional<Note> optionalNote = getNote(oldNoteId);
@@ -92,17 +92,32 @@ public class NoteServiceImpl implements NoteService {
     note.setContent(newNote.getContent());
     return setLocked(note);
   }
-  
+
   @Override
   public Optional<Note> setLocked(Note note) {
     note.setLocked(true);
     note.setLastLocked(new Timestamp(System.currentTimeMillis()));
     return Optional.of(noteRepository.save(note));
   }
-  
+
   @Override
   public Optional<Note> unlockNote(Note note) {
     note.setLocked(false);
     return Optional.of(noteRepository.save(note));
+  }
+
+  @Override
+  public boolean deletePermission(Note note, User user) {
+    return permissionService.deletePermission(note, user);
+  }
+
+  @Override
+  public Note copyNote(Note oldNote, User user) {
+    Note newNote = new Note(oldNote.getTitle() + " (Copia)", oldNote.getContent(), new Timestamp(System.currentTimeMillis()));
+    if (!oldNote.getTags().isEmpty())
+      newNote.setTags(oldNote.getTags());
+    final Note savedNote = noteRepository.save(newNote);
+    permissionService.addRelationship(user, savedNote, PermissionType.Owner);
+    return savedNote;
   }
 }

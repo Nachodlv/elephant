@@ -2,6 +2,7 @@ package com.lab.elephant.controller;
 
 import com.lab.elephant.model.*;
 import com.lab.elephant.service.EmailService;
+import com.lab.elephant.service.PermissionService;
 import com.lab.elephant.service.TokenService;
 import com.lab.elephant.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -10,12 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static com.lab.elephant.security.SecurityConstants.HEADER_STRING;
 
 @CrossOrigin
 @RestController
@@ -25,11 +24,14 @@ public class UserController {
   private final TokenService tokenService;
   private final BCryptPasswordEncoder passwordEncoder;
   private final EmailService emailService;
-  public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder, EmailService emailService) {
+  private final PermissionService permissionService;
+  
+  public UserController(UserService userService, TokenService tokenService, BCryptPasswordEncoder passwordEncoder, EmailService emailService, PermissionService permissionService) {
     this.userService = userService;
     this.tokenService = tokenService;
     this.passwordEncoder = passwordEncoder;
     this.emailService = emailService;
+    this.permissionService = permissionService;
   }
 
   @PostMapping(path = "/create")
@@ -44,24 +46,8 @@ public class UserController {
   }
 
   @GetMapping()
-  public User getUser(HttpServletRequest request) {
-
-    String token = request.getHeader(HEADER_STRING);
-
-    if (token != null) {
-
-      String email = tokenService.getEmailByToken(token);
-
-      // verify and return if user exists with that email
-      Optional<User> optionalUser = userService.getByEmail(email);
-      if (optionalUser.isPresent()) {
-        return optionalUser.get();
-      } else {
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
-      }
-    }
-
-    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Token Not Found");
+  public User getUser() {
+    return getAuthenticatedUser();
   }
 
   @PutMapping("/updatePassword")
@@ -80,14 +66,17 @@ public class UserController {
   }
 
   @GetMapping("/notes")
-  public List<Note> getAllNotesByUser() {
-    final String mail = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    Optional<User> optionalUser = userService.getByEmail(mail);
-    if (optionalUser.isPresent()) {
-      final User user = optionalUser.get();
-      return userService.getAllNotesByUser(user);
-    }
-    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
+  public List<NoteDTO> getAllNotesByUser() {
+    final User user = getAuthenticatedUser();
+    final List<Note> allNotesByUser = userService.getAllNotesByUser(user);
+    final List<NoteDTO> noteDTOS = new ArrayList<>();
+    
+    allNotesByUser.forEach(n -> {
+      //no need to check if permission exists because getAllNoteByUser gets the notes with the permissions.
+      final boolean isPinned = permissionService.getPermissionBetween(user, n).get().isPinned();
+      noteDTOS.add(new NoteDTO(n, isPinned));
+    });
+    return noteDTOS;
   }
 
   @PutMapping()

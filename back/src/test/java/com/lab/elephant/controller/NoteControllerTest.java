@@ -5,7 +5,10 @@ import com.lab.elephant.model.Note;
 import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
-import com.lab.elephant.service.*;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
+import com.lab.elephant.service.NoteServiceImpl;
+import com.lab.elephant.service.PermissionService;
+import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -24,10 +27,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -173,7 +173,33 @@ public class NoteControllerTest {
     given(noteService.getOwner(note)).willReturn(Optional.of(user));
     given(noteService.getNote(1L)).willReturn(Optional.of(note));
     final String noteJson = objectMapper.writeValueAsString(note);
-
+    
+    mvc.perform(delete("/note/delete/1").content(noteJson)
+        .contentType(MediaType.APPLICATION_JSON))
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isOk());
+  }
+  
+  @Test
+  public void deleteNote_WhenUserIsCollaborator_ShouldDeletePermission() throws Exception {
+    Note note = new Note("This is the new note");
+    User owner = new User();
+    owner.setUuid(1);
+    User collaborator = new User();
+    collaborator.setUuid(2);
+    noteService.addNote(note, owner);
+    
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(owner));
+    given(noteService.getOwner(note)).willReturn(Optional.of(owner));
+    given(noteService.getUsersWithPermissions(note)).willReturn(Arrays.asList(owner, collaborator));
+    given(noteService.getNote(1L)).willReturn(Optional.of(note));
+    final String noteJson = objectMapper.writeValueAsString(note);
+    
     mvc.perform(delete("/note/delete/1").content(noteJson)
             .contentType(MediaType.APPLICATION_JSON))
             .andDo(MockMvcResultHandlers.print())
@@ -586,5 +612,50 @@ public class NoteControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isUnauthorized())
             .andExpect(status().reason("User cannot edit this note"));
+  }
+
+  @Test
+  public void copyNote_WhenNoteExists_ReturnNewNoteCopied() throws Exception {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Nueva Nota", "", ts);
+    final User user = new User();
+    noteService.addNote(note, user);
+
+    given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+
+    Note noteCopied = new Note("Nueva Nota (Copia)", "", ts);
+    given(noteService.copyNote(note, user)).willReturn(noteCopied);
+
+    MvcResult result = mvc.perform(post("/note/copy/" + note.getUuid()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk()).andReturn();
+
+    String json = result.getResponse().getContentAsString();
+    System.out.println("json = " + json);
+    Note noteResult = objectMapper.readValue(json, Note.class);
+    System.out.println("noteCopied = " + noteResult);
+  }
+
+  @Test
+  public void copyNote_WhenNoteDoesNotExist_ReturnNotFound() throws Exception {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Nueva Nota", "", ts);
+
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+
+    mvc.perform(post("/note/copy/" + note.getUuid())
+        .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isNotFound());
   }
 }

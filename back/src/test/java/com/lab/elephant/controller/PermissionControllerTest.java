@@ -22,11 +22,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -508,12 +510,6 @@ public class PermissionControllerTest {
     final String email1 = "a@a.com";
     final String email2 = "b@b.com";
     
-    final User user1 = new User("user1", "one", email1, "asd");
-    final User user2 = new User("user2", "two", email2, "asd");
-    
-    final Permission p1 = new Permission(user1, note, PermissionType.Editor);
-    final Permission p2 = new Permission(user2, note, PermissionType.Viewer);
-    
     final List<PermissionDTO> list = new ArrayList<>();
     list.add(new PermissionDTO(email1, "Viewer"));
     list.add(new PermissionDTO(email2, "Editor"));
@@ -683,6 +679,49 @@ public class PermissionControllerTest {
             .content(json))
             .andExpect(status().isBadRequest())
             .andExpect(status().reason("User has Owner permission that can't be changed"));
+  }
+  
+  @Test
+  public void changePin_WhenEverythingIsOk_ShouldReturn200() throws Exception {
+    final long noteId = 1;
+    final User user = new User();
+    final Note note = new Note();
+  
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    given(noteService.getUsersWithPermissions(note)).willReturn(Collections.singletonList(user));
+  
+    mvc.perform(put("/changePin/" + noteId))
+            .andExpect(status().isOk());
+    Mockito.verify(permissionService, times(1)).changePin(user, note);
+  }
+  
+  @Test
+  public void changePin_WhenUserHasNoPermissionWithNote_ShouldReturn401() throws Exception {
+    final long noteId = 1;
+    final User user = new User();
+    final Note note = new Note();
+    
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
+    given(noteService.getNote(noteId)).willReturn(Optional.of(note));
+    
+    mvc.perform(put("/changePin/" + noteId))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User has no Permissions with Note"));
+  }
+  @Test
+  public void changePin_WhenNoteIdIsInvalid_ShouldReturn404() throws Exception {
+    final long noteId = 1;
+    final User user = new User();
+    
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
+    
+    mvc.perform(put("/changePin/" + noteId))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
   }
   
   private String mockUserAuthentication() {

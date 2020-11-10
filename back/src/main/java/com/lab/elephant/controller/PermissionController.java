@@ -45,8 +45,8 @@ public class PermissionController {
     final User user = oUser.get();
     final Note note = oNote.get();
     
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final Optional<User> requestUser = userService.getByEmail(string);
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final Optional<User> requestUser = userService.getByEmail(email);
     final Optional<User> noteOwner = noteService.getOwner(note);
     if (!noteOwner.isPresent())
       throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Note has no owner");
@@ -114,6 +114,16 @@ public class PermissionController {
     map.forEach((u, s) -> permissionService.editRelationship(u, note, s));
   }
 
+  @PutMapping("/changePin/{noteId}")
+  public boolean changePin(@PathVariable long noteId) {
+    final Note note = getNote(noteId);
+    final User user = getUser();
+    if (!noteService.getUsersWithPermissions(note).contains(user))
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User has no Permissions with Note");
+    return permissionService.changePin(user, note);
+  }
+  
+  // Private Methods
   private Note getNote(long noteId) {
     final Optional<Note> optionalNote = noteService.getNote(noteId);
     if (!optionalNote.isPresent())
@@ -122,8 +132,8 @@ public class PermissionController {
   }
   
   private User getUser() {
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    return userService.getByEmail(string).get();
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    return userService.getByEmail(email).get();
   }
   
   private void checkOwnership(User user, Note note) {

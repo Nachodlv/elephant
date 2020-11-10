@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpService} from './http.service';
-import {BehaviorSubject, Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {Note, Tags} from '../models/note-model';
 import {map, tap} from 'rxjs/operators';
 import {Comment} from '../models/comment-model';
@@ -76,16 +76,16 @@ export class NoteService {
   }
 
   getAllPermissions(noteId): Observable<SharedUser[]> {
-    return of([
-      new SharedUser('mantecol@gmail.com', 'Editor'),
-      new SharedUser('georgalo@gmail.com', 'Viewer'),
-      new SharedUser('serenito@gmail.com', 'Editor'),
-      new SharedUser('elpepe@gmail.com', 'Viewer'),
-    ]);
+    return this.httpService.get(`/allPermissions/${noteId}`).pipe(tap((_ => {
+      }), err => console.error(err)
+    ), map(res => {
+      const permissions = res.body;
+      return permissions.map(permission => SharedUser.fromJson(permission));
+    }));
   }
 
   editPermissions(noteId, editedPermissions): Observable<any> {
-    return of({});
+    return this.httpService.put(`/editPermissions/${noteId}`, JSON.stringify(editedPermissions));
   }
 
   startEdit(noteId): Observable<boolean> {

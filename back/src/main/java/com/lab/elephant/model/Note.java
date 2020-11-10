@@ -33,7 +33,7 @@ public class Note {
   private List<Permission> permissions = new ArrayList<>();
 
   @ElementCollection
-  List<String> tags = new ArrayList<>();
+  private List<String> tags = new ArrayList<>();
 
   private boolean isLocked = false;
 
