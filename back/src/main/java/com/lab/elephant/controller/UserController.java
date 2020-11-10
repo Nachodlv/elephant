@@ -55,6 +55,8 @@ public class UserController {
     final User user = getAuthenticatedUser();
     if (!passwordEncoder.matches(dto.getOldPassword(), user.getPassword()))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Incorrect Password");
+    if (passwordEncoder.matches(dto.getNewPassword(), user.getPassword()))
+      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "New password must be different from old one");
     userService.updatePassword(user.getEmail(), dto.getNewPassword());
     emailService.sendUpdatedPasswordEmail(user);
   }

@@ -154,7 +154,26 @@ public class UserControllerTest {
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
   }
-
+  
+  @Test
+  public void updatePassword_WithNewPasswordEqualToOldOne_ShouldReturn400() throws Exception {
+    final User user = new User();
+    final String oldPassword = "oldPassword";
+    final String newPassword = oldPassword;
+    final UpdatePasswordDto dto = new UpdatePasswordDto(oldPassword, newPassword);
+    final String json = new ObjectMapper().writeValueAsString(dto);
+    
+    user.setPassword(passwordEncoder.encode(oldPassword));
+    
+    final String email = mockUserAuthentication();
+    given(userService.getByEmail(email)).willReturn(Optional.of(user));
+    
+    mvc.perform(put("/user/updatePassword").content(json)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest())
+            .andExpect(status().reason("New password must be different from old one"));
+  }
+  
   @Test
   public void updatePassword_WithIncorrectPassword_ShouldReturn401() throws Exception {
     final User user = new User();
