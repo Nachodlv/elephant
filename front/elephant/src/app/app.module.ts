@@ -91,21 +91,6 @@ export function markedOptionsFactory(): MarkedOptions {
     return '<blockquote class="blockquote"><p>' + text + '</p></blockquote>';
   };
 
-  // renderer.listitem = text => {
-  //   if (text.startsWith('[ ]') === true) {
-  //     text = text.replace('[ ]', '');
-  //     return `<li class="list-checkbox-item"><i class="fal fa-fw falistitem fa-square"></i>${text}</li>`;
-  //   }
-  //   if (text.startsWith('[x]') === true) {
-  //     text = text.replace('[x]', '');
-  //     return `<li class="list-checkbox-item"><i class="fal fa-fw falistitem fa-check-square"></i>${text}</li>`;
-  //   }
-  //   if (text.startsWith('[-]') === true) {
-  //     text = text.replace('[-]', '');
-  //     return `<li class="list-checkbox-item"><i class="fal fa-fw falistitem fa-minus-square"></i>${text}</li>`;
-  //   }
-  //   return `<li>${text}</li>`;
-  // };
   renderer.listitem = (text) => {
     if (/^\s*\[[x ]\]\s*/.test(text)) {
       text = text
