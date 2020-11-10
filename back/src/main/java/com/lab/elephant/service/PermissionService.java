@@ -23,4 +23,6 @@ public interface PermissionService {
   Optional<Permission> getPermissionBetween(User user, Note note);
   
   boolean changePin(User user, Note note);
+
+  boolean deletePermission(Note note, User user);
 }

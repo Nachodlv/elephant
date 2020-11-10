@@ -79,8 +79,13 @@ public class NoteController {
       final Optional<User> owner = noteService.getOwner(optionalNote.get());
       if (!owner.isPresent())
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Note has no owner");
-      if (user.getUuid() != owner.get().getUuid())
+      if (user.getUuid() != owner.get().getUuid()) {
+        List<User> users = noteService.getUsersWithPermissions(optionalNote.get());
+        if (users.contains(user)) {
+          return noteService.deletePermission(optionalNote.get(), user);
+        }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User can't delete this note");
+      }
       noteService.deleteNote(id);
       return true;
     }

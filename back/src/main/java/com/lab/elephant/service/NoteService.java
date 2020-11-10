@@ -32,5 +32,7 @@ public interface NoteService {
 
   Optional<Note> unlockNote(Note note);
 
+  boolean deletePermission(Note note, User user);
+
   Note copyNote(Note note, User user);
 }
