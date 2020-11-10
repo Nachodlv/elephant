@@ -41,8 +41,18 @@ export class NavbarComponent implements OnInit {
       }
     );
   }
+  viewAllNotes(): void {
+    this.router.navigate(['/home']);
+  }
 
   isLoggedIn(): boolean {
     return localStorage.getItem('user') !== null;
+  }
+
+  isNotOnHome(): boolean {
+    return this.router.url !== '/home';
+  }
+  isNotOnProfile(): boolean {
+    return this.router.url !== '/profile';
   }
 }
