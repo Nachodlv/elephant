@@ -63,4 +63,16 @@ public class PermissionServiceImpl implements PermissionService {
   public Optional<Permission> getPermissionBetween(User user, Note note) {
     return permissionRepository.findByUserAndNote(user, note);
   }
+  
+  @Override
+  public boolean changePin(User user, Note note) {
+    final Optional<Permission> permissionBetween = getPermissionBetween(user, note);
+    if (permissionBetween.isPresent()) {
+      final Permission permission = permissionBetween.get();
+      permission.changePin();
+      permissionRepository.save(permission);
+      return permission.isPinned();
+    }
+    return false;
+  }
 }
