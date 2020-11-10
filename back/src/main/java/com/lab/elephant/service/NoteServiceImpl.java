@@ -110,4 +110,14 @@ public class NoteServiceImpl implements NoteService {
   public boolean deletePermission(Note note, User user) {
     return permissionService.deletePermission(note, user);
   }
+
+  @Override
+  public Note copyNote(Note oldNote, User user) {
+    Note newNote = new Note(oldNote.getTitle() + " (Copia)", oldNote.getContent(), new Timestamp(System.currentTimeMillis()));
+    if (!oldNote.getTags().isEmpty())
+      newNote.setTags(oldNote.getTags());
+    final Note savedNote = noteRepository.save(newNote);
+    permissionService.addRelationship(user, savedNote, PermissionType.Owner);
+    return savedNote;
+  }
 }

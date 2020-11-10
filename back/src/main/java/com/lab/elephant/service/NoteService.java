@@ -17,20 +17,22 @@ public interface NoteService {
   List<Note> getAllNotes();
 
   void deleteNote(long id);
-  
+
   Optional<User> getOwner(Note note);
-  
+
   List<User> getUsersWithPermissions(Note note);
-  
+
   List<User> getUsersWithEditOrOwner(Note note);
-  
+
   Optional<Note> addTags(long id, List<String> tags);
-  
+
   Optional<Note> editNote(long oldNoteId, Note note);
-  
+
   Optional<Note> setLocked(Note note);
-  
+
   Optional<Note> unlockNote(Note note);
 
   boolean deletePermission(Note note, User user);
+
+  Note copyNote(Note note, User user);
 }

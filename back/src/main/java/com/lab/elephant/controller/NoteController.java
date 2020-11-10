@@ -32,17 +32,31 @@ public class NoteController {
   public Note addNote(@RequestBody Note note) {
     if (note.getTitle().length() > 60)
       throw new ResponseStatusException(
-              HttpStatus.BAD_REQUEST, "Title is too long");
+          HttpStatus.BAD_REQUEST, "Title is too long");
 
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final Optional<User> user = userService.getByEmail(string);
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final Optional<User> user = userService.getByEmail(email);
     return noteService.addNote(note, user.get());
+  }
+
+  @PostMapping("/copy/{id}")
+  public Note copyNote(@PathVariable("id") long id) {
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final Optional<User> optionalUser = userService.getByEmail(email);
+    if (optionalUser.isPresent()) {
+      final Optional<Note> optionalNote = noteService.getNote(id);
+      if (optionalNote.isPresent()) {
+        return noteService.copyNote(optionalNote.get(), optionalUser.get());
+      }
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
+    }
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User Not Found");
   }
 
   @GetMapping("{id}")
   public Note getNote(@PathVariable("id") long id) {
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(email).get();
     Optional<Note> noteOptional = noteService.getNote(id);
     if (noteOptional.isPresent()) {
       final Note note = noteOptional.get();
@@ -52,14 +66,14 @@ public class NoteController {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot view this note");
     }
     throw new ResponseStatusException(
-            HttpStatus.NOT_FOUND, "Note Not Found");
+        HttpStatus.NOT_FOUND, "Note Not Found");
   }
 
   @DeleteMapping(path = "/delete/{id}")
   public boolean deleteNote(@PathVariable("id") long id) {
     Optional<Note> optionalNote = noteService.getNote(id);
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(email).get();
 
     if (optionalNote.isPresent()) {
       final Optional<User> owner = noteService.getOwner(optionalNote.get());
@@ -82,8 +96,8 @@ public class NoteController {
   public void addTags(@PathVariable("id") long id, @RequestBody TagsDTO dto) {
     final List<String> tags = dto.getTags();
     Optional<Note> optionalNote = noteService.getNote(id);
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(email).get();
 
     if (!optionalNote.isPresent())
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
@@ -125,8 +139,8 @@ public class NoteController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Note Not Found");
     Note note = optionalNote.get();
 
-    final String string = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    final User user = userService.getByEmail(string).get();
+    final String email = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    final User user = userService.getByEmail(email).get();
     if (!noteService.getUsersWithEditOrOwner(note).contains(user))
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User cannot edit this note");
   }

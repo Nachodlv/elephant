@@ -1,12 +1,14 @@
 package com.lab.elephant.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lab.elephant.model.Note;
 import com.lab.elephant.model.TagsDTO;
 import com.lab.elephant.model.User;
 import com.lab.elephant.security.UserDetailsServiceImpl;
-import com.lab.elephant.service.*;
+import com.lab.elephant.service.BlackListedTokenServiceImpl;
+import com.lab.elephant.service.NoteServiceImpl;
+import com.lab.elephant.service.PermissionService;
+import com.lab.elephant.service.UserServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -36,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(NoteController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class NoteControllerTest {
-  
+
   @Autowired
   private MockMvc mvc;
   @Autowired
@@ -64,7 +66,7 @@ public class NoteControllerTest {
     final String noteJson = objectMapper.writeValueAsString(note);
     
     given(noteService.getNote(note.getUuid())).willReturn(optionalNote);
-    
+  
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
@@ -73,25 +75,25 @@ public class NoteControllerTest {
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
     
     mvc.perform(post("/note/new").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isOk());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
   }
-  
+
   @Test
   public void addNewNote_WhenTitleLengthIsMoreThan60_ShouldReturnBadRequest() throws Exception {
     Timestamp ts = new Timestamp(new Date().getTime());
     Note note = new Note("Este titulo contiene mas de 60 letras, por lo cual debe tirar un error",
-        "", ts);
-    
+            "", ts);
+
     final String noteJson = objectMapper.writeValueAsString(note);
-    
+
     mvc.perform(post("/note/new").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isBadRequest());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isBadRequest());
   }
-  
+
   @Test
   public void getANote_WhenNoteAddedAndUserCanView_ShouldReturnTheNote() throws Exception {
     Note note1 = new Note("Nueva nota 1");
@@ -109,19 +111,19 @@ public class NoteControllerTest {
     given(noteService.getUsersWithPermissions(note1)).willReturn(userList);
     given(noteService.getNote(1L)).willReturn(Optional.of(note1));
     final String noteJson = objectMapper.writeValueAsString(note1);
-    
+
     mvc.perform(get("/note/1").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isOk());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
   }
-  
+
   @Test
   public void getANote_WhenUserCantView_ShouldReturn401() throws Exception {
     Note note1 = new Note("Nueva nota 1");
     User user = new User();
     noteService.addNote(note1, user);
-    
+  
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
@@ -130,18 +132,18 @@ public class NoteControllerTest {
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
     given(noteService.getNote(1L)).willReturn(Optional.of(note1));
     final String noteJson = objectMapper.writeValueAsString(note1);
-    
+  
     mvc.perform(get("/note/1").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isUnauthorized())
-        .andExpect(status().reason("User cannot view this note"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot view this note"));
   }
   
   @Test
   public void getNote_WhenIdDoesNotExists_ShouldReturnNotFound() throws Exception {
     given(noteService.getNote(1L)).willReturn(Optional.empty());
-    
+  
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
@@ -150,17 +152,17 @@ public class NoteControllerTest {
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
     
     mvc.perform(get("/note/1")
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
   }
-  
+
   @Test
   public void deleteNote_WhenNoteExistsAndUserIsOwner_ShouldDeleteIt() throws Exception {
     Note note = new Note("This is the new note");
     User user = new User();
     user.setUuid(1);
     noteService.addNote(note, user);
-    
+  
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
@@ -199,9 +201,9 @@ public class NoteControllerTest {
     final String noteJson = objectMapper.writeValueAsString(note);
     
     mvc.perform(delete("/note/delete/1").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isOk());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
   }
   
   @Test
@@ -220,10 +222,10 @@ public class NoteControllerTest {
     final String noteJson = objectMapper.writeValueAsString(note);
     
     mvc.perform(delete("/note/delete/1").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isInternalServerError())
-        .andExpect(status().reason("Note has no owner"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isInternalServerError())
+            .andExpect(status().reason("Note has no owner"));
   }
   
   @Test
@@ -234,29 +236,29 @@ public class NoteControllerTest {
     user.setUuid(1);
     owner.setUuid(2);
     noteService.addNote(note, user);
-    
+  
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
     Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("owner");
     SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("owner")).willReturn(Optional.of(owner));
-    
+  
     given(noteService.getOwner(note)).willReturn(Optional.of(user));
     given(noteService.getNote(1L)).willReturn(Optional.of(note));
     final String noteJson = objectMapper.writeValueAsString(note);
-    
+  
     mvc.perform(delete("/note/delete/1").content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isUnauthorized())
-        .andExpect(status().reason("User can't delete this note"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User can't delete this note"));
   }
   
   @Test
   public void deleteNote_WhenNoteNotExists_ShouldReturnNotFound() throws Exception {
     given(noteService.getNote(1L)).willReturn(Optional.empty());
-    
+  
     Authentication a = Mockito.mock(Authentication.class);
     SecurityContext securityContext = Mockito.mock(SecurityContext.class);
     Mockito.when(securityContext.getAuthentication()).thenReturn(a);
@@ -265,9 +267,9 @@ public class NoteControllerTest {
     given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
     
     mvc.perform(delete("/note/delete/1")
-        .contentType(MediaType.APPLICATION_JSON))
-        .andDo(MockMvcResultHandlers.print())
-        .andExpect(status().isNotFound());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNotFound());
   }
   
   @Test
@@ -295,8 +297,8 @@ public class NoteControllerTest {
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new TagsDTO(tags));
     mvc.perform(put("/note/addTags/" + id).content(json)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
   }
   
   @Test
@@ -324,9 +326,9 @@ public class NoteControllerTest {
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new TagsDTO(tags));
     mvc.perform(put("/note/addTags/" + id).content(json)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound())
-        .andExpect(status().reason("Note Not Found"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
   }
   
   @Test
@@ -347,13 +349,13 @@ public class NoteControllerTest {
     tags.add("fun");
     tags.add("food");
     tags.add("frozen");
-    
+  
     ObjectMapper o = new ObjectMapper();
     String json = o.writeValueAsString(new TagsDTO(tags));
     mvc.perform(put("/note/addTags/" + id).content(json)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized())
-        .andExpect(status().reason("User cannot add Tags to this note"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot add Tags to this note"));
   }
   
   @Test
@@ -376,9 +378,10 @@ public class NoteControllerTest {
     given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
     
     
+    
     final MvcResult result = mvc.perform(get("/note/startEdit/" + noteId))
-        .andExpect(status().isOk())
-        .andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
     final String contentAsString = result.getResponse().getContentAsString();
     assertThat(contentAsString).isEqualTo("true");
   }
@@ -404,9 +407,10 @@ public class NoteControllerTest {
     given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
     
     
+    
     final MvcResult result = mvc.perform(get("/note/startEdit/" + noteId))
-        .andExpect(status().isOk())
-        .andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
     final String contentAsString = result.getResponse().getContentAsString();
     assertThat(contentAsString).isEqualTo("true");
   }
@@ -432,9 +436,10 @@ public class NoteControllerTest {
     given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
     
     
+    
     final MvcResult result = mvc.perform(get("/note/startEdit/" + noteId))
-        .andExpect(status().isOk())
-        .andReturn();
+            .andExpect(status().isOk())
+            .andReturn();
     final String contentAsString = result.getResponse().getContentAsString();
     assertThat(contentAsString).isEqualTo("false");
   }
@@ -443,10 +448,10 @@ public class NoteControllerTest {
   public void startEdit_WhenNoteDoesNotExist_ShouldReturn404() throws Exception {
     final long noteId = 1;
     given(noteService.getNote(noteId)).willReturn(Optional.empty());
-    
+   
     mvc.perform(get("/note/startEdit/" + noteId))
-        .andExpect(status().isNotFound())
-        .andExpect(status().reason("Note Not Found"));
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
   }
   
   @Test
@@ -467,9 +472,10 @@ public class NoteControllerTest {
     given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
     
     
+    
     mvc.perform(get("/note/startEdit/" + noteId))
-        .andExpect(status().isUnauthorized())
-        .andExpect(status().reason("User cannot edit this note"));
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot edit this note"));
   }
   
   @Test
@@ -487,15 +493,15 @@ public class NoteControllerTest {
     Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
     SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
-    
+  
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
     
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
     mvc.perform(put("/note/autoSave/" + noteId).content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
   }
   
   @Test
@@ -509,9 +515,9 @@ public class NoteControllerTest {
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
     mvc.perform(put("/note/autoSave/" + noteId).content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound())
-        .andExpect(status().reason("Note Not Found"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
   }
   
   @Test
@@ -535,9 +541,9 @@ public class NoteControllerTest {
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
     mvc.perform(put("/note/autoSave/" + noteId).content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized())
-        .andExpect(status().reason("User cannot edit this note"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot edit this note"));
   }
   
   @Test
@@ -555,15 +561,15 @@ public class NoteControllerTest {
     Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
     SecurityContextHolder.setContext(securityContext);
     given(userService.getByEmail("user")).willReturn(Optional.of(user));
-    
+  
     given(noteService.getNote(noteId)).willReturn(Optional.of(note));
     given(noteService.getUsersWithEditOrOwner(note)).willReturn(users);
-    
+  
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
     mvc.perform(put("/note/endEdit/" + noteId).content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk());
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk());
   }
   
   @Test
@@ -577,9 +583,9 @@ public class NoteControllerTest {
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
     mvc.perform(put("/note/endEdit/" + noteId).content(noteJson)
-        .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isNotFound())
-        .andExpect(status().reason("Note Not Found"));
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(status().reason("Note Not Found"));
   }
   
   @Test
@@ -603,8 +609,53 @@ public class NoteControllerTest {
     final ObjectMapper o = new ObjectMapper();
     String noteJson = o.writeValueAsString(note);
     mvc.perform(put("/note/endEdit/" + noteId).content(noteJson)
+            .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andExpect(status().reason("User cannot edit this note"));
+  }
+
+  @Test
+  public void copyNote_WhenNoteExists_ReturnNewNoteCopied() throws Exception {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Nueva Nota", "", ts);
+    final User user = new User();
+    noteService.addNote(note, user);
+
+    given(noteService.getNote(note.getUuid())).willReturn(Optional.of(note));
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(user));
+
+    Note noteCopied = new Note("Nueva Nota (Copia)", "", ts);
+    given(noteService.copyNote(note, user)).willReturn(noteCopied);
+
+    MvcResult result = mvc.perform(post("/note/copy/" + note.getUuid()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk()).andReturn();
+
+    String json = result.getResponse().getContentAsString();
+    System.out.println("json = " + json);
+    Note noteResult = objectMapper.readValue(json, Note.class);
+    System.out.println("noteCopied = " + noteResult);
+  }
+
+  @Test
+  public void copyNote_WhenNoteDoesNotExist_ReturnNotFound() throws Exception {
+    Timestamp ts = new Timestamp(new Date().getTime());
+    Note note = new Note("Nueva Nota", "", ts);
+
+    Authentication a = Mockito.mock(Authentication.class);
+    SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+    Mockito.when(securityContext.getAuthentication()).thenReturn(a);
+    Mockito.when(securityContext.getAuthentication().getPrincipal()).thenReturn("user");
+    SecurityContextHolder.setContext(securityContext);
+    given(userService.getByEmail("user")).willReturn(Optional.of(new User()));
+
+    mvc.perform(post("/note/copy/" + note.getUuid())
         .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isUnauthorized())
-        .andExpect(status().reason("User cannot edit this note"));
+        .andExpect(status().isNotFound());
   }
 }
