@@ -44,7 +44,7 @@
           {{note.content ? note.content : 'No se ha agregado contenido'}}
           </markdown>
         </div>
-        <mat-chip-list>
+        <mat-chip-list class="tags-padding">
           <mat-chip class="single-chip" *ngFor="let tag of note.tags.slice(0,4)">
             {{tag}}
           </mat-chip>
