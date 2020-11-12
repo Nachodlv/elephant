@@ -20,9 +20,13 @@
 
 .dialog-content {
   display: flex;
+  flex-direction: column;
+  margin-left: 2%;
+  margin-right: 2%;
 }
 
-.name-input {
+
+.input {
   width: 100%;
 }
 

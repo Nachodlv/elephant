@@ -25,7 +25,8 @@ export class NoteCreatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.noteForm = this.formBuilder.group({
-      title: ['', Validators.required]
+      title: ['', Validators.required],
+      template: ['noTemplate', Validators.required]
     });
 
   }
