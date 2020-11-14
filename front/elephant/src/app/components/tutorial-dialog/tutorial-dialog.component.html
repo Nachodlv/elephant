@@ -13,8 +13,8 @@
       [hideIndicators]="false"
       [timings]="'250ms ease-in'"
       [color]="'accent'"
-      [slideHeight]="'400px'"
-      [maintainAspectRatio]="false"
+      [maintainAspectRatio]="true"
+      [proportion]="40"
       (change)="onChange($event)"
       #matCarousel
     >
@@ -30,7 +30,7 @@
   </div>
 
   <div class="actions-div">
-    <button class="previous-btn" mat-button (click)="onPrevious(matCarousel)">Anterior</button>
+    <button class="previous-btn" mat-button (click)="onPrevious(matCarousel)" *ngIf="matCarousel.currentIndex !== 0">Anterior</button>
     <button class="next-btn" mat-button (click)="onNext(matCarousel)" *ngIf="matCarousel.currentIndex !== slidesList.length - 1">Siguiente</button>
     <button class="next-btn" mat-button (click)="onFinish()" *ngIf="matCarousel.currentIndex === slidesList.length - 1">Finalizar</button>
   </div>

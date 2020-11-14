@@ -40,7 +40,6 @@ export class NoteComponent implements OnInit, OnDestroy {
 
     if (localStorage.getItem('firstTime') === 'true') {
       this.openTutorialDialog();
-      localStorage.setItem('firstTime', 'true');
     }
   }
 

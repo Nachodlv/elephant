@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, Output, EventEmitter} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
@@ -23,7 +23,7 @@ export class AlertDialogComponent implements OnInit {
   }
 
   onConfirm(): void {
-    localStorage.setItem('firstTime', 'true');
+    localStorage.setItem('firstTime', 'false');
     this.dialogRef.close();
     this.parentDialog.close();
   }

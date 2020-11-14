@@ -12,11 +12,12 @@
 }
 
 .carousel-container {
-  margin-top: 4%;
+  margin-top: 2%;
 }
 
 .description-container {
-  margin-top: 4%;
+  margin-top: 2%;
+  text-align: justify;
 }
 
 .description {
@@ -38,10 +39,11 @@
 
 .previous-btn {
   background-color: $elephant-green;
-  color: $elephant-white
+  color: $elephant-white;
 }
 
 .next-btn {
   background-color: $elephant-green;
-  color: $elephant-white
+  color: $elephant-white;
+  margin-left: auto;
 }
