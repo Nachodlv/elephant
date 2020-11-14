@@ -18,6 +18,11 @@
   font-size: 1.5vw;
 }
 
+::ng-deep.mat-dialog-container {
+  max-height: none !important;
+  height: 135%;
+}
+
 .dialog-content {
   display: flex;
   flex-direction: column;

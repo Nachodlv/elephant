@@ -33,7 +33,8 @@ export class NoteCreatorComponent implements OnInit {
 
   createNote(): void {
     const title = this.noteForm.value.title;
-    this.noteService.createNote(new Note(null, title)).subscribe(res => {
+    const content = this.noteService.getContentByTemplateValue(this.noteForm.value.template);
+    this.noteService.createNote(new Note(null, title, content)).subscribe(res => {
       this.snackBar.openSnackbar('¡Creación de Nota Exitosa!', 0);
       this.dialogRef.close();
       this.router.navigate(['/note/', res.uuid]);
