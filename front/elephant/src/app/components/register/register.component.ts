@@ -48,6 +48,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           this.snackBar.openSnackbar('¡Registro Exitoso!', 0);
+          localStorage.setItem('firstTime', 'true');
           this.router.navigate(['/']);
         },
         error => {
