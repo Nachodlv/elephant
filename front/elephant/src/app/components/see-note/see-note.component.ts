@@ -8,6 +8,8 @@ import {Subscription} from 'rxjs';
 import {Comment} from '../../models/comment-model';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {EditNotePermissionsDialogComponent} from '../edit-note-permissions-dialog/edit-note-permissions-dialog.component';
+import {Note} from '../../models/note-model';
+import {DeleteNoteDialogComponent} from '../delete-note-dialog/delete-note-dialog.component';
 
 @Component({
   selector: 'app-see-note',
@@ -172,6 +174,23 @@ export class SeeNoteComponent implements OnInit, OnDestroy, AfterViewChecked {
       width: '40%',
       position: {top: '10%'},
       data: {noteId: this.id}
+    });
+  }
+  deleteNote(note: Note): void {
+    const dialogRef = this.dialog.open(DeleteNoteDialogComponent, {
+      width: '400px',
+      height: '230px',
+      data: note,
+    });
+
+    dialogRef.afterClosed().subscribe(resNote => {
+      if (resNote) {
+        this.noteService.deleteNoteByID(resNote.id).subscribe(resObs => {
+          this.snackBar.openSnackbar('La nota se ha eliminado correctamente!', 0);
+        }, error => {
+          this.snackBar.openSnackbar('Ha ocurrido un error y la nota no se pudo eliminar.', 0);
+        });
+      }
     });
   }
 }

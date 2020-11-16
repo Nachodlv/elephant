@@ -119,6 +119,9 @@ export class NoteService {
   deleteNote(note: Note): Observable<any> {
     return this.httpService.delete(`/note/delete/${note.uuid}`);
   }
+  deleteNoteByID(noteId): Observable<any> {
+    return this.httpService.delete(`/note/delete/${noteId}`);
+  }
 
   saveNoteToEdit(noteData): void {
     this.noteToEdit.next(noteData);

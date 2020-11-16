@@ -19,6 +19,7 @@
     <button mat-raised-button class="share-note-btn" (click)="openDialog()" *ngIf="hasOwnerPermission">Compartir</button>
     <button mat-raised-button class="edit-note-btn" (click)="startEdit()" *ngIf="hasEditPermission">Editar nota</button>
     <button mat-raised-button class="edit-note-btn" (click)="changePermissions()" *ngIf="hasOwnerPermission">Editar permisos</button>
+    <button mat-raised-button class="delete-note-btn" (click)="deleteNote(id)" *ngIf="hasEditPermission">Borrar nota</button>
     <app-comment
       [noteId]="id"
     ></app-comment>
