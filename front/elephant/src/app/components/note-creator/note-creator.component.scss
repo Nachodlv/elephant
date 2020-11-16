@@ -18,11 +18,20 @@
   font-size: 1.5vw;
 }
 
-.dialog-content {
-  display: flex;
+::ng-deep.mat-dialog-container {
+  max-height: none !important;
+  height: 135%;
 }
 
-.name-input {
+.dialog-content {
+  display: flex;
+  flex-direction: column;
+  margin-left: 2%;
+  margin-right: 2%;
+}
+
+
+.input {
   width: 100%;
 }
 
