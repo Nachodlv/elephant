@@ -9,7 +9,6 @@ import {Comment} from '../../models/comment-model';
 import {isNotNullOrUndefined} from 'codelyzer/util/isNotNullOrUndefined';
 import {EditNotePermissionsDialogComponent} from '../edit-note-permissions-dialog/edit-note-permissions-dialog.component';
 import {Note} from '../../models/note-model';
-import {DeleteNoteDialogFromNoteComponent} from '../delete-note-dialog-from-note/delete-note-dialog-from-note.component';
 import {DeleteNoteDialogComponent} from "../delete-note-dialog/delete-note-dialog.component";
 
 @Component({
