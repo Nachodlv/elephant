@@ -35,7 +35,6 @@ import { EditNotePermissionsDialogComponent } from './components/edit-note-permi
 import { TutorialDialogComponent } from './components/tutorial-dialog/tutorial-dialog.component';
 import {MatCarouselModule} from '@ngbmodule/material-carousel';
 import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.component';
-import { DeleteNoteDialogFromNoteComponent } from './components/delete-note-dialog-from-note/delete-note-dialog-from-note.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +61,6 @@ import { DeleteNoteDialogFromNoteComponent } from './components/delete-note-dial
     EditNotePermissionsDialogComponent,
     TutorialDialogComponent,
     AlertDialogComponent,
-    DeleteNoteDialogFromNoteComponent,
   ],
   imports: [
     BrowserModule,
