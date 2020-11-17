@@ -31,7 +31,10 @@ import {DeleteUserDialogComponent} from './components/delete-user-dialog/delete-
 import 'prismjs/prism';
 import 'prismjs/components/prism-typescript.min.js';
 import 'prismjs/plugins/line-numbers/prism-line-numbers.js';
-import {EditNotePermissionsDialogComponent} from './components/edit-note-permissions-dialog/edit-note-permissions-dialog.component';
+import { EditNotePermissionsDialogComponent } from './components/edit-note-permissions-dialog/edit-note-permissions-dialog.component';
+import { TutorialDialogComponent } from './components/tutorial-dialog/tutorial-dialog.component';
+import {MatCarouselModule} from '@ngbmodule/material-carousel';
+import { AlertDialogComponent } from './components/alert-dialog/alert-dialog.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +59,8 @@ import {EditNotePermissionsDialogComponent} from './components/edit-note-permiss
     PrintNoteComponent,
     DeleteUserDialogComponent,
     EditNotePermissionsDialogComponent,
+    TutorialDialogComponent,
+    AlertDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +71,7 @@ import {EditNotePermissionsDialogComponent} from './components/edit-note-permiss
     FormsModule,
     ReactiveFormsModule,
     MatDialogModule,
+    MatCarouselModule,
     MarkdownModule.forRoot(
       {
         loader: HttpClient,

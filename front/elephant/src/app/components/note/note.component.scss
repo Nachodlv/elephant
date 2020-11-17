@@ -60,26 +60,29 @@
   font-size: 20px;
 }
 
-::ng-deep {
-  .mat-focused .mat-form-field-label {
-    /*change color of label*/
-    color: $elephant-green !important;
-  }
+.searchable-input {
+  ::ng-deep {
+    .mat-focused .mat-form-field-label {
+      /*change color of label*/
+      color: $elephant-green !important;
+    }
 
-  .mat-form-field-underline {
-    /*change color of underline*/
-    background-color: black !important;
-  }
+    .mat-form-field-underline {
+      /*change color of underline*/
+      background-color: black !important;
+    }
 
-  .mat-form-field-ripple {
-    /*change color of underline when focused*/
-    background-color: $elephant-green !important;
-  }
+    .mat-form-field-ripple {
+      /*change color of underline when focused*/
+      background-color: $elephant-green !important;
+    }
 
-  .mat-form-field-infix {
-    width: 250px !important;
+    .mat-form-field-infix {
+      width: 250px !important;
+    }
   }
 }
+
 
 @media screen and (min-width: 901px) {
   .tags-padding {

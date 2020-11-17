@@ -25,14 +25,16 @@ export class NoteCreatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.noteForm = this.formBuilder.group({
-      title: ['', Validators.required]
+      title: ['', Validators.required],
+      template: ['noTemplate', Validators.required]
     });
 
   }
 
   createNote(): void {
     const title = this.noteForm.value.title;
-    this.noteService.createNote(new Note(null, title)).subscribe(res => {
+    const content = this.noteService.getContentByTemplateValue(this.noteForm.value.template);
+    this.noteService.createNote(new Note(null, title, content)).subscribe(res => {
       this.snackBar.openSnackbar('¡Creación de Nota Exitosa!', 0);
       this.dialogRef.close();
       this.router.navigate(['/note/', res.uuid]);
