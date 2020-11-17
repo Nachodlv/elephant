@@ -130,7 +130,7 @@ export class NoteComponent implements OnInit, OnDestroy {
     if (index >= 0) {
       this.noteService.pinNote(note.uuid).subscribe( res => {
         this.snackBar.openSnackbar('¡Se ha fijado la nota de manera exitosa!', 0);
-        note.pinUp = !note.pinUp;
+        note.pinned = !note.pinned;
         this.notes[index] = note;
         this.sortNotes(this.notes);
       }, error => {
@@ -141,9 +141,9 @@ export class NoteComponent implements OnInit, OnDestroy {
 
   sortNotes(noteList: Note[]): void {
     noteList.sort((a: Note, b: Note) => {
-      if (a.pinUp && !b.pinUp)
+      if (a.pinned && !b.pinned)
         return -1;
-      else if (b.pinUp && !a.pinUp)
+      else if (b.pinned && !a.pinned)
         return 1;
 
       if (new Date(a.created) > new Date(b.created))
