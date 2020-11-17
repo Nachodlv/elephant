@@ -124,6 +124,9 @@ export class NoteService {
   saveNoteToEdit(noteData): void {
     this.noteToEdit.next(noteData);
   }
+  pinNote(noteId): Observable<any> {
+   return this.httpService.put( `/changePin/${noteId}`, noteId);
+  }
 
   getContentByTemplateValue(template: string): string {
     switch (template) {

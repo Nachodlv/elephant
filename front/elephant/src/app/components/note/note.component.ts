@@ -126,17 +126,22 @@ export class NoteComponent implements OnInit, OnDestroy {
   toggleStickNote(note: Note): void {
     const index = this.notes.indexOf(note);
     if (index >= 0) {
-      note.pinUp = !note.pinUp;
-      this.notes[index] = note;
-      this.sortNotes(this.notes);
+      this.noteService.pinNote(note.uuid).subscribe( res => {
+        this.snackBar.openSnackbar('¡Se ha fijado la nota de manera exitosa!', 0);
+        note.pinned = !note.pinned;
+        this.notes[index] = note;
+        this.sortNotes(this.notes);
+      }, error => {
+        this.snackBar.openSnackbar('¡Ha ocurrido un error!', 0);
+      });
     }
   }
 
   sortNotes(noteList: Note[]): void {
     noteList.sort((a: Note, b: Note) => {
-      if (a.pinUp && !b.pinUp)
+      if (a.pinned && !b.pinned)
         return -1;
-      else if (b.pinUp && !a.pinUp)
+      else if (b.pinned && !a.pinned)
         return 1;
 
       if (new Date(a.created) > new Date(b.created))
