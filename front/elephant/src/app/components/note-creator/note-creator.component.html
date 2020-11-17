@@ -1,10 +1,21 @@
 <div class="dialog-container">
-  <h1 class="dialog-title" mat-dialog-title>Nueva Nota</h1>
+  <h1 mat-dialog-title class="dialog-title">Nueva Nota</h1>
   <form [formGroup]="noteForm" (ngSubmit)="createNote()">
     <div mat-dialog-content class="dialog-content">
-      <mat-form-field appearance="outline" class="name-input">
+      <mat-form-field appearance="outline">
         <mat-label>Nombre</mat-label>
         <input matInput id="note-name" type="text" formControlName="title" maxlength="60" value=""/>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Template</mat-label>
+        <mat-select formControlName="template">
+          <mat-option value="noTemplate">Sin template</mat-option>
+          <mat-option value="index">Indice</mat-option>
+          <mat-option value="checkbox">Checkbox</mat-option>
+          <mat-option value="title">Titulos</mat-option>
+          <mat-option value="image">Imagen</mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
 

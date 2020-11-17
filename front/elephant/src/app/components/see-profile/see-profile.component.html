@@ -1,17 +1,17 @@
-<div class="div-container" *ngIf="!loading">
+<mat-card class="div-container" *ngIf="!loading">
 
-  <div class="span-container">
+  <mat-card-title class="span-container">
     <span class="profile-span">Perfil</span>
-  </div>
+  </mat-card-title>
 
-  <div class="form-container">
+  <mat-card-content class="form-container">
     <mat-grid-list cols="1" rowHeight="5rem">
 
       <mat-grid-tile>
         <mat-form-field appearance="none">
           <label>Nombre y Apellido</label>
           <input class="profile-name-lastname" type="text" matInput [disabled]="!updating"
-                 [(ngModel)] = "fullName">
+                 [(ngModel)]="fullName">
         </mat-form-field>
       </mat-grid-tile>
 
@@ -27,8 +27,8 @@
     <button
       class="edit-button"
       *ngIf="updating == false"
-            mat-raised-button
-    (click)="updating = true">
+      mat-raised-button
+      (click)="updating = true">
       Editar
     </button>
     <button
@@ -37,22 +37,22 @@
       mat-raised-button
       (click)="saveProfile()"
       [disabled]="disabled()"
-      >
+    >
       Guardar
     </button>
-  </div>
+  </mat-card-content>
 
-  <mat-divider class="margin-top-1"></mat-divider>
+  <mat-divider class="divider"></mat-divider>
 
   <div class="flex-container">
 
-    <button class="change-password"
+    <button class="change-password-btn"
             mat-raised-button (click)="openUpdatePasswordDialog()">
       Cambiar Contraseña
     </button>
-    <button class="delete-user"
+    <button class="delete-user-btn"
             mat-stroked-button (click)="openDeleteUserDialog()">
       Eliminar usuario
     </button>
   </div>
-</div>
+</mat-card>

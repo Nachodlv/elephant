@@ -1,12 +1,24 @@
 @import "../../_vars.scss";
 
+
+.mat-card {
+  background-color: $elephant-white;
+  cursor: default;
+}
+
 .div-container {
   text-align: center;
-  border: 1px solid;
-  padding: 1% 1%;
-  margin: 6% 38%;
-  border-radius: 1rem;
+  width: 30%;
+  margin-left: 34%;
+}
 
+.mat-divider {
+  position: relative !important;
+}
+
+
+.divider {
+  margin-top: 20%;
 }
 
 .span-container {
@@ -26,25 +38,23 @@
 .edit-button {
   background-color: $elephant-green;
   color: $elephant-white;
+  font-size: 80%;
 }
 
-.change-password {
+.change-password-btn {
   background-color: $elephant-green;
   color: $elephant-white;
   height: 2.2rem;
-  font-size: 80%;
+  font-size: 70%;
+  width: 40%;
 }
 
-.delete-user {
+.delete-user-btn {
   background-color: $elephant-red;
   color: $elephant-white;
   height: 2.2rem;
-  font-size: 80%;
-}
-
-
-.margin-top-1 {
-  margin-top: 1rem;
+  font-size: 70%;
+  width: 40%;
 }
 
 .profile-name-lastname {
