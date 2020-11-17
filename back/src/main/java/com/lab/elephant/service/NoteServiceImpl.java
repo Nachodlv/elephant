@@ -25,7 +25,7 @@ public class NoteServiceImpl implements NoteService {
 
   @Override
   public Note addNote(Note note, User user) {
-    note.setContent("");
+    if (note.getContent() == null) note.setContent("");
     note.setCreated(new Timestamp(System.currentTimeMillis()));
     final Note savedNote = noteRepository.save(note);
     permissionService.addRelationship(user, note, PermissionType.Owner);
@@ -115,8 +115,8 @@ public class NoteServiceImpl implements NoteService {
   public Note copyNote(Note oldNote, User user) {
     Note newNote = new Note(oldNote.getTitle() + " (Copia)", oldNote.getContent(), new Timestamp(System.currentTimeMillis()));
     if (!oldNote.getTags().isEmpty()) {
-      List<String> strings = (List<String>) new ArrayList<>(oldNote.getTags()).clone();
-      newNote.setTags(strings);
+      List<String> tags = (List<String>) new ArrayList<>(oldNote.getTags()).clone();
+      newNote.setTags(tags);
     }
     final Note savedNote = noteRepository.save(newNote);
     permissionService.addRelationship(user, savedNote, PermissionType.Owner);

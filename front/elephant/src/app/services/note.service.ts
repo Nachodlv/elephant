@@ -125,4 +125,36 @@ export class NoteService {
     this.noteToEdit.next(noteData);
   }
 
+  getContentByTemplateValue(template: string): string {
+    switch (template) {
+      case 'noTemplate':
+        return '';
+
+      case 'index':
+        return '# Indice:\n' +
+          '1. # [Ejemplo](#example)\n\n' +
+          '2. # [Ejemplo2](#example2)\n\n' +
+          '3. ## [Tercer ejemplo](#third-example)\n\n' +
+          '4. ### [Cuarto ejemplo](#fourth-examplehttpwwwfourthexamplecom)';
+
+      case 'checkbox':
+        return '# Checkbox \n' +
+          '- [x] **Primer tarea**\n' +
+          '- [ ] Hacer la cama\n' +
+          '- [x] <del>Item completado<del>\n' +
+          '- [ ] Item no completado\n';
+
+      case 'title':
+        return '\n\n' +
+          '# Introducción \n' +
+          '# Contenido \n' +
+          '# Conclusión \n';
+
+      case 'image':
+        return '![Elephant](https://upload.wikimedia.org/wikipedia/commons/1/1f/Asian_Elephant_Icon.svg "Elephant")\n\n';
+
+      default:
+        return '';
+    }
+  }
 }
