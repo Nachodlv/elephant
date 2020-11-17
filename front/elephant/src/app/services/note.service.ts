@@ -120,7 +120,7 @@ export class NoteService {
   deleteNote(note: Note): Observable<any> {
     return this.httpService.delete(`/note/delete/${note.uuid}`);
   }
-  deleteNoteByID(noteId): Observable<any> {
+  deleteNoteByID(noteId: number): Observable<any> {
     return this.httpService.delete(`/note/delete/${noteId}`);
   }
 
